@@ -122,12 +122,12 @@ jobs:
       uses: hendrikmuhs/ccache-action@v1.2.2
 
     - name: CMake configuration on Linux and macOS
-      if: ${{ runner.os }} == 'Linux'
+      if: runner.os == 'Linux'
       run: |
         cmake --preset ${{ matrix.config.cmake_preset }}
 
     - name: CMake configuration on Windows
-      if: ${{ runner.os }} == 'Windows'
+      if: if: runner.os == 'Windows'
       run: |
         Write-Host "import cmd ENV vars into pwsh"
         pushd '${{ matrix.config.vcvars_dir }}'

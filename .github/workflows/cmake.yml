@@ -78,12 +78,12 @@ jobs:
           foreach {
             if ($_ -match "=") {
               $v = $_.split("=", 2); set-item -force -path "ENV:\$($v[0])" -value "$($v[1])"
-              write-host 
+              write-host
             }
           }
         popd
         $env:path.Split(";")
-        dir 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\HostX64\x64\'
+        & 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.32.31326\bin\HostX64\x64\cl.exe'
 
     - name: Install basic dependencies on macOS
       if: startsWith(matrix.config.image, 'macos')
@@ -114,6 +114,15 @@ jobs:
       run: |
         conan profile update settings.compiler.libcxx=libstdc++11 default
         conan profile update settings.compiler=g++
+
+    - name: Setup Github cache (Linux)
+      if: ${{ runner.os }} == 'Linux'
+      uses: actions/cache@v3
+      id: github-cache
+      with:
+        key: github-cache-${{ runner.os }}
+        path: |
+          ~/.conan
 
     - name: Checkout Repo
       uses: actions/checkout@v3

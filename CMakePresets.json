@@ -97,7 +97,6 @@
                 "use-ninja"
             ],
             "cacheVariables": {
-                "CMAKE_CXX_COMPILER": "cl"
             }
         },
         {

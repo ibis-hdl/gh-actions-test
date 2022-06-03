@@ -72,7 +72,7 @@ jobs:
         choco install ninja cmake
         ninja --version
         cmake --version
-        # import cmd ENV vars into pwsh
+        Write-Host "import cmd ENV vars into pwsh"
         pushd '${{ matrix.config.vcvars_dir }}'
         cmd /c "vcvars64.bat & set" |
           foreach {

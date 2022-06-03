@@ -65,13 +65,6 @@
             }
         },
         {
-            "name": "clang-tidy-fix",
-            "hidden": true,
-            "cacheVariables": {
-                "CMAKE_CXX_CLANG_TIDY": "clang-tidy;-checks='-*,modernize-concat-nested-namespaces';-fix;-fix-errors"
-            }
-        },
-        {
             "name": "compiler-clang",
             "description": "Clang C language family frontend for LLVM",
             "hidden": true,
@@ -301,19 +294,7 @@
         {
             "name": "ci-default",
             "hidden": true,
-            "cacheVariables": {
-                "IBIS_BUILD_TESTS": "ON",
-                "IBIS_ENABLE_PCH_DEFAULT": "OFF",
-                "IBIS_ENABLE_PCH_IBIS": "OFF",
-                "IBIS_ENABLE_TSAN": "OFF",
-                "IBIS_ENABLE_ASAN": "OFF",
-                "IBIS_ENABLE_LSAN": "OFF",
-                "DEVELOPER_CLANG_WARN_EVERYTHING": "OFF",
-                "DEVELOPER_RUN_IWYU": "OFF",
-                "DEVELOPER_BOOST_SPIRIT_X3_DEBUG": "OFF",
-                "DEVELOPER_RUN_ON_VALGRIND": "OFF",
-                "DEVELOPER_RUN_CLANG_FORMAT": "OFF"
-            }
+            "cacheVariables": {  }
         },
         {
             "name": "ci-windows",
@@ -439,6 +420,22 @@
             "name": "linux-clang-debug",
             "displayName": "Test-All",
             "configurePreset": "linux-clang-debug",
+            "inherits": [
+                "test-default"
+            ]
+        },
+        {
+            "name": "linux-gcc-release",
+            "displayName": "Test-All",
+            "configurePreset": "linux-gcc-release",
+            "inherits": [
+                "test-default"
+            ]
+        },
+        {
+            "name": "linux-gcc-debug",
+            "displayName": "Test-All",
+            "configurePreset": "linux-gcc-debug",
             "inherits": [
                 "test-default"
             ]

@@ -64,20 +64,21 @@ jobs:
       if: startsWith(matrix.config.image, 'windows')
       # see [GitHub Actions default shell on Windows runners is changing to PowerShell](
       #  https://github.blog/changelog/2019-10-17-github-actions-default-shell-on-windows-runners-is-changing-to-powershell/)
-      # hence use [Pscx - PowerShell Community Extensions](https://github.com/Pscx/Pscx)
-      #   Install-Module Pscx -Scope CurrentUser
-      #   Invoke-BatchFile "${{ matrix.config.vc_vars }}"
-      # but results into: "WARNING: User declined to install module (Pscx)."
-      shell: cmd
+      # [Pscx - PowerShell Community Extensions](https://github.com/Pscx/Pscx) won't work:
+      #  "WARNING: User declined to install module (Pscx)."
+      # [How can I use PowerShell with the Visual Studio Command Prompt?](
+      #  https://stackoverflow.com/questions/2124753/how-can-i-use-powershell-with-the-visual-studio-command-prompt)
       run: |
         choco install ninja cmake
         ninja --version
         cmake --version
-        call "${{ matrix.config.environment_script }}"
-        echo PATH=%PATH% >> %GITHUB_ENV%
-        echo INCLUDE=%INCLUDE% >> %GITHUB_ENV%
-        echo LIB=%LIB% >> %GITHUB_ENV%
-        echo LIBPATH=%LIBPATH% >> %GITHUB_ENV%
+        # import cmd ENV vars into pwsh
+        cmd /c "${{ matrix.config.vc_vars }} & set" |
+          foreach {
+            if ($_ -match "=") {
+              $v = $_.split("=", 2); set-item -force -path "ENV:\$($v[0])"  -value "$($v[1])" 
+            }
+          }
 
     - name: Install basic dependencies on macOS
       if: startsWith(matrix.config.image, 'macos')

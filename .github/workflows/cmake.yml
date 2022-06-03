@@ -32,20 +32,6 @@ jobs:
             cmake_preset: "linux-gcc-release",
             cxx: "g++",
           }
-        - {
-            name: "Ubuntu Clang 14",
-            os: "Linux",
-            image: ubuntu-22.04,
-            cmake_preset: "linux-clang-release",
-            cxx: "clang++",
-          }
-        - {
-            name: "macOS Clang",
-            os: "macOS",
-            image: macos-latest,
-            cmake_preset: "macos-clang-release",
-            cxx: "clang++",
-          }
 
     steps:
 
@@ -136,7 +122,7 @@ jobs:
       uses: hendrikmuhs/ccache-action@v1.2.2
 
     - name: CMake configuration on Linux and macOS
-      if: ${{ runner.os }} != 'Windows'
+      if: ${{ runner.os }} == 'Linux'
       run: |
         cmake --preset ${{ matrix.config.cmake_preset }}
 

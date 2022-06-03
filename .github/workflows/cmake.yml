@@ -10,52 +10,56 @@ on:
 jobs:
   build:
     name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
+    runs-on: ${{ matrix.config.image }}
     strategy:
       fail-fast: false
       matrix:
         config:
         - {
             name: "Windows MSVC",
-            os: windows-latest,
+            os: "Windows",
+            image: windows-latest,
             cmake_preset: "windows-msvc-release",
             cxx: "cl",
             environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
           }
         - {
-            name: "Linux GCC 11",
-            os: ubuntu-22.04,
+            name: "Ubuntu GCC 11",
+            os: "Linux",
+            image: ubuntu-22.04,
             cmake_preset: "linux-gcc-release",
             cxx: "g++",
           }
         - {
-            name: "Linux Clang 14",
-            os: ubuntu-22.04,
+            name: "Ubuntu Clang 14",
+            os: "Linux",
+            image: ubuntu-22.04,
             cmake_preset: "linux-clang-release",
             cxx: "g++",
           }
         - {
             name: "macOS Clang",
-            os: macos-latest,
+            os: "macOS",
+            image: macos-latest,
             cmake_preset: "macos-clang-release",
             cxx: "clang++",
           }
 
     steps:
 
-    - name: Print env
+    - name: Print Github event
       run: |
         echo github.event.action: ${{ github.event.action }}
         echo github.event_name: ${{ github.event_name }}
 
-    - name: Install basic dependencies on Linux
-      if: startsWith(matrix.config.os, 'ubuntu')
+    - name: Install basic dependencies on Ubuntu
+      if: startsWith(matrix.config.image, 'ubuntu')
       run: |
         sudo apt-get update
         sudo apt-get install --no-install-recommends -y cmake ninja-build ccache g++-11 clang-14
 
     - name: Install basic dependencies on Windows
-      if: startsWith(matrix.config.os, 'windows')
+      if: startsWith(matrix.config.image, 'windows')
       run: |
         choco install ninja cmake
         ninja --version
@@ -63,7 +67,7 @@ jobs:
         # cmd "${{ matrix.config.environment_script }}"
 
     - name: Install basic dependencies on macOS
-      if: startsWith(matrix.config.os, 'macos')
+      if: startsWith(matrix.config.image, 'macos')
       run: |
         brew install cmake ninja
         ninja --version
@@ -78,13 +82,19 @@ jobs:
       run: |
         conan profile new --detect --force default
         # enforce new CXX11 ABI
-        conan profile update settings.compiler.libcxx=libstdc++11 default
         conan profile update settings.compiler.cppstd=20 default
 
     - name: Specify conan's default profile for Clang compiler
       if: matrix.cxx == 'clang++'
       run: |
+        conan profile update settings.compiler.libcxx=libstdc++11 default
         conan profile update settings.compiler=clang
+
+    - name: Specify conan's default profile for GNUC++ compiler
+      if: matrix.cxx == 'clang++'
+      run: |
+        conan profile update settings.compiler.libcxx=libstdc++11 default
+        conan profile update settings.compiler=g++
 
     - name: Checkout Repo
       uses: actions/checkout@v3
@@ -96,7 +106,7 @@ jobs:
         conan install ${{ github.workspace }} --remote conancenter --build missing --profile default
 
     - name: Setup ccache Compiler Cache
-      if: startsWith(matrix.config.os, 'ubuntu')
+      if: startsWith(matrix.config.image, 'ubuntu')
       uses: hendrikmuhs/ccache-action@v1.2.2
 
     - name: CMake configuration
@@ -106,11 +116,6 @@ jobs:
     - name: CMake Build
       run: |
         cmake --build --preset ${{ matrix.config.cmake_preset }}
-
-    - name: Build l10n
-      if: startsWith(matrix.config.os, 'ubuntu')
-      run: |
-        cmake --build --preset ${{ matrix.config.cmake_preset }} --target l10n
 
     - name: Run Unit Test
       run: |

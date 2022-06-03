@@ -65,12 +65,19 @@ jobs:
       # see [GitHub Actions default shell on Windows runners is changing to PowerShell](
       #  https://github.blog/changelog/2019-10-17-github-actions-default-shell-on-windows-runners-is-changing-to-powershell/)
       # hence use [Pscx - PowerShell Community Extensions](https://github.com/Pscx/Pscx)
+      #   Install-Module Pscx -Scope CurrentUser
+      #   Invoke-BatchFile "${{ matrix.config.vc_vars }}"
+      # but results into: "WARNING: User declined to install module (Pscx)."
+      shell: cmd
       run: |
         choco install ninja cmake
         ninja --version
         cmake --version
-        Install-Module Pscx -Scope CurrentUser
-        Invoke-BatchFile "${{ matrix.config.vc_vars }}"
+        call "${{ matrix.config.environment_script }}"
+        echo PATH=%PATH% >> %GITHUB_ENV%
+        echo INCLUDE=%INCLUDE% >> %GITHUB_ENV%
+        echo LIB=%LIB% >> %GITHUB_ENV%
+        echo LIBPATH=%LIBPATH% >> %GITHUB_ENV%
 
     - name: Install basic dependencies on macOS
       if: startsWith(matrix.config.image, 'macos')
@@ -97,7 +104,7 @@ jobs:
         conan profile update settings.compiler=clang
 
     - name: Specify conan's default profile for GNUC++ compiler
-      if: matrix.cxx == 'clang++'
+      if: matrix.cxx == 'g++'
       run: |
         conan profile update settings.compiler.libcxx=libstdc++11 default
         conan profile update settings.compiler=g++

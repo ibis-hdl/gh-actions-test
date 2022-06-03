@@ -19,7 +19,6 @@ jobs:
             # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
             # https://github.com/actions/virtual-environments/blob/main/images/win/Windows2022-Readme.md
             name: "Windows MSVC",
-            os: "Windows",
             image: windows-latest,
             cmake_preset: "windows-msvc-release",
             cxx: "cl",
@@ -27,12 +26,22 @@ jobs:
           }
         - {
             name: "Ubuntu GCC 11",
-            os: "Linux",
             image: ubuntu-22.04,
             cmake_preset: "linux-gcc-release",
             cxx: "g++",
           }
-
+        - {
+            name: "Ubuntu Clang 14",
+            image: ubuntu-22.04,
+            cmake_preset: "linux-clang-release",
+            cxx: "clang++",
+          }
+        - {
+            name: "macOS Clang",
+            image: macos-latest,
+            cmake_preset: "macos-clang-release",
+            cxx: "clang++",
+          }
     steps:
 
     - name: Print Github event
@@ -62,9 +71,8 @@ jobs:
         pushd '${{ matrix.config.vcvars_dir }}'
         cmd /c "vcvars64.bat & set" |
           foreach {
-            if ($_ -match "=") {
-              $v = $_.split("=", 2); set-item -force -path "ENV:\$($v[0])" -value "$($v[1])"
-              write-host
+            if ($_ -match "^(.*?)=(.*)$") {
+              Set-Item -force -path "ENV:\$($matches[1])" -value "$($matches[2])"
             }
           }
         popd
@@ -100,7 +108,7 @@ jobs:
         conan profile update settings.compiler=g++
 
     - name: Setup Github cache (Linux)
-      if: ${{ runner.os }} == 'Linux'
+      if: runner.os == 'Linux'
       uses: actions/cache@v3
       id: github-cache
       with:
@@ -122,7 +130,7 @@ jobs:
       uses: hendrikmuhs/ccache-action@v1.2.2
 
     - name: CMake configuration on Linux and macOS
-      if: runner.os == 'Linux'
+      if: runner.os != 'Windows'
       run: |
         cmake --preset ${{ matrix.config.cmake_preset }}
 
@@ -133,12 +141,11 @@ jobs:
         pushd '${{ matrix.config.vcvars_dir }}'
         cmd /c "vcvars64.bat & set" |
           foreach {
-            if ($_ -match "=") {
-              $v = $_.split("=", 2); set-item -force -path "ENV:\$($v[0])" -value "$($v[1])"
-              write-host
+            if ($_ -match "^(.*?)=(.*)$") {
+              Set-Item -force -path "ENV:\$($matches[1])" -value "$($matches[2])"
             }
           }
-        popd      
+        popd
         cmake --preset ${{ matrix.config.cmake_preset }}
 
     - name: CMake Build

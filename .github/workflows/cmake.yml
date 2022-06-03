@@ -23,7 +23,7 @@ jobs:
             image: windows-latest,
             cmake_preset: "windows-msvc-release",
             cxx: "cl",
-            environment_script: "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat",
+            vc_vars: "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat",
           }
         - {
             name: "Ubuntu GCC 11",
@@ -62,13 +62,15 @@ jobs:
 
     - name: Install basic dependencies on Windows
       if: startsWith(matrix.config.image, 'windows')
-      # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsshell
-      shell: cmd
+      # see [GitHub Actions default shell on Windows runners is changing to PowerShell](
+      #  https://github.blog/changelog/2019-10-17-github-actions-default-shell-on-windows-runners-is-changing-to-powershell/)
+      # hence use [Pscx - PowerShell Community Extensions](https://github.com/Pscx/Pscx)
       run: |
         choco install ninja cmake
         ninja --version
         cmake --version
-        call "${{ matrix.config.environment_script }}"
+        Install-Module Pscx -Scope CurrentUser
+        Invoke-BatchFile "${{ matrix.config.vc_vars }}"
 
     - name: Install basic dependencies on macOS
       if: startsWith(matrix.config.image, 'macos')

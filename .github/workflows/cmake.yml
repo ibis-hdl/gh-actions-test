@@ -110,7 +110,7 @@ jobs:
     - name: Setup Github cache (Linux)
       if: runner.os == 'Linux'
       uses: actions/cache@v3
-      id: github-cache
+      id: github-cache-linux
       with:
         key: github-cache-${{ runner.os }}
         path: |
@@ -119,7 +119,7 @@ jobs:
     - name: Setup Github cache (Windows)
       if: runner.os == 'Windows'
       uses: actions/cache@v3
-      id: github-cache
+      id: github-cache-windows
       with:
         key: github-cache-${{ runner.os }}
         path: |

@@ -127,7 +127,7 @@ jobs:
         cmake --preset ${{ matrix.config.cmake_preset }}
 
     - name: CMake configuration on Windows
-      if: if: runner.os == 'Windows'
+      if: runner.os == 'Windows'
       run: |
         Write-Host "import cmd ENV vars into pwsh"
         pushd '${{ matrix.config.vcvars_dir }}'

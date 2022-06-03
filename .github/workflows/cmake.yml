@@ -77,10 +77,12 @@ jobs:
         cmd /c "vcvars64.bat & set" |
           foreach {
             if ($_ -match "=") {
-              $v = $_.split("=", 2); set-item -force -path "ENV:\$($v[0])"  -value "$($v[1])" 
+              $v = $_.split("=", 2); set-item -force -path "ENV:\$($v[0])"  -value "$($v[1])"
+              write-host 
             }
           }
         popd
+        $env:path.Split(";")
 
     - name: Install basic dependencies on macOS
       if: startsWith(matrix.config.image, 'macos')

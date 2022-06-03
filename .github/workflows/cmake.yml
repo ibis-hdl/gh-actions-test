@@ -99,13 +99,13 @@ jobs:
       if: matrix.config.cxx == 'clang++'
       run: |
         conan profile update settings.compiler.libcxx=libstdc++11 default
-        conan profile update settings.compiler=clang
+        conan profile update settings.compiler=clang default
 
     - name: Specify conan's default profile for GNUC++ compiler
       if: matrix.config.cxx == 'g++'
       run: |
         conan profile update settings.compiler.libcxx=libstdc++11 default
-        conan profile update settings.compiler=g++
+        conan profile update settings.compiler=g++ default
 
     - name: Setup Github cache (Linux)
       if: runner.os == 'Linux'
@@ -146,10 +146,10 @@ jobs:
             }
           }
         popd
-        write-host $env:INCLUDE
-        write-host $env:LIB
-        write-host $env:LIBPATH
-        write-host $env:PATH.Split(";")
+        Write-Host 'INCLUDE ' $env:INCLUDE.Split(";")
+        Write-Host 'LIB'  $env:LIB.Split(";")
+        Write-Host 'LIBPATH ' $env:LIBPATH.Split(";")
+        Write-Host 'PATH ' $env:PATH.Split(";")
         cmake --preset ${{ matrix.config.cmake_preset }}
 
     - name: CMake Build

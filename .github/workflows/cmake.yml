@@ -23,14 +23,14 @@ jobs:
             environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
             generators: "Ninja"
           }
-          - {
+        - {
             name: "Linux/Ubuntu 22.04 GCC 11",
             os: ubuntu-22.04,
             cmake_preset: "linux-gcc-release",
             cxx: "g++",
             generators: "Ninja"
           }
-          - {
+        - {
             name: "Linux/Ubuntu 22.04 Clang 14",
             os: ubuntu-22.04,
             cmake_preset: "linux-clang-release",

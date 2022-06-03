@@ -116,6 +116,16 @@ jobs:
         path: |
           ~/.conan
 
+    - name: Setup Github cache (Windows)
+      if: runner.os == 'Windows'
+      uses: actions/cache@v3
+      id: github-cache
+      with:
+        key: github-cache-${{ runner.os }}
+        path: |
+          C:\Users\runneradmin\.conan
+          C:\.conan
+
     - name: Checkout Repo
       uses: actions/checkout@v3
       with:
@@ -137,15 +147,7 @@ jobs:
     - name: CMake configuration on Windows
       if: runner.os == 'Windows'
       run: |
-        Write-Host "Import Visual Studio ENV vars batch file into Powershell"
-        pushd '${{ matrix.config.vcvars_dir }}'
-        cmd /c "vcvars64.bat & set" |
-          foreach {
-            if ($_ -match "^(.*?)=(.*)$") {
-              Set-Item -force -path "ENV:\$($matches[1])" -value "$($matches[2])"
-            }
-          }
-        popd
+        Write-Host "Show Visual Studio ENV vars imported into Powershell"
         Write-Host 'INCLUDE ' $env:INCLUDE
         Write-Host 'LIB'  $env:LIB
         Write-Host 'LIBPATH ' $env:LIBPATH

@@ -21,28 +21,24 @@ jobs:
             cmake_preset: "windows-msvc-release",
             cxx: "cl",
             environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
-            generators: "Ninja"
           }
         - {
             name: "Linux/Ubuntu 22.04 GCC 11",
             os: ubuntu-22.04,
             cmake_preset: "linux-gcc-release",
             cxx: "g++",
-            generators: "Ninja"
           }
         - {
             name: "Linux/Ubuntu 22.04 Clang 14",
             os: ubuntu-22.04,
             cmake_preset: "linux-clang-release",
             cxx: "g++",
-            generators: "Ninja"
           }
         - {
             name: "macOS Latest Clang",
             os: macos-latest,
             cmake_preset: "macos-clang-release",
             cxx: "clang++",
-            generators: "Ninja"
           }
 
     steps:
@@ -105,20 +101,20 @@ jobs:
 
     - name: CMake configuration
       run: |
-        cmake --preset ${{ matrix.cmake_preset }}
+        cmake --preset ${{ matrix.config.cmake_preset }}
 
     - name: CMake Build
       run: |
-        cmake --build --preset ${{ matrix.cmake_preset }}
+        cmake --build --preset ${{ matrix.config.cmake_preset }}
 
     - name: Build l10n
       if: startsWith(matrix.config.os, 'linux')
       run: |
-        cmake --build --preset ${{ matrix.cmake_preset }} --target l10n
+        cmake --build --preset ${{ matrix.config.cmake_preset }} --target l10n
 
     - name: Run Unit Test
       run: |
-        ctest --preset ${{ matrix.cmake_preset }}
+        ctest --preset ${{ matrix.config.cmake_preset }}
 
     - name: Clean up conan build & sources
       run: |

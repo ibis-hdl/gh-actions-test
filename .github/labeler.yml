@@ -1,0 +1,38 @@
+# https://github.com/actions/labeler
+# Note: https://github.com/actions/labeler/issues/103
+# - checkAll() equivalent to [Array.every()](https://www.tutorialspoint.com/typescript/typescript_array_every.htm)
+# - checkAny() equivalent to [Array.some()](https://www.tutorialspoint.com/typescript/typescript_array_some.htm)
+# - asterisk has a special meaning in yaml, hence quote it.
+
+repo:
+- '.*'
+
+workflow:
+- '.github/**'
+
+dictionaries:
+- any: ['.dictionaries/**', '.cspell.json']
+
+cmake:
+- 'cmake/**/*.cmake'
+- '**/CMakeLists.txt'
+- 'CMakePresets.json'
+
+python:
+- any: ['**/*.py', '**/*.py.in', 'requirements.txt', 'py_requirements.txt']
+
+doc:
+- any: ['doc/**', 'doc_ng/**', '**/*.{md,rst,txt}', '**/doxyfile.in', '**/*.dot']
+  all: ['!**/CMakeLists.txt']
+
+l10n:
+- any: ['l10n/**']
+  all: ['!**/CMakeLists.txt']
+
+source:
+- any: ['source/**']
+  all: ['!**/CMakeLists.txt']
+
+testsuite:
+- any: ['testsuite/**']
+  all: ['!**/CMakeLists.txt']

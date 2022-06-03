@@ -1,0 +1,31 @@
+name: 'Pylint'
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  # threshold to decide if the test was successful
+  THRESHOLD_FAIL: 5  # [0 ... 10.0]
+
+jobs:
+  pylint:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+      with:
+        submodules: true
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip3 --disable-pip-version-check --no-cache-dir install wheel pylint
+
+    - name: Analyzing the code with pylint
+      run: |
+        pylint --fail-under ${{env.THRESHOLD_FAIL}} $(git ls-files '*.py')

@@ -1,0 +1,73 @@
+# [Clang-Tidy Review](https://github.com/ZedThree/clang-tidy-review)
+name: Clang tidy review
+
+# You can be more specific, but it currently only works on pull requests
+on: [pull_request]
+workflow_dispatch:
+
+jobs:
+  review:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Install basic dependencies @Linux
+      if: ${{ runner.os }} == 'Linux'
+      # CMake and ninja are up-to-date with Ubuntu 22.04; otherwise use lukka/get-cmake@v3.23.0
+      run: |
+        sudo apt-get update
+        sudo apt-get install --no-install-recommends -y cmake ninja-build ccache g++-11 clang-14 clang-format clang-tidy
+
+    - name: Install conan package manager
+      run: |
+        python -m pip install --upgrade pip
+        pip --disable-pip-version-check --no-cache-dir install wheel conan
+
+    - name: Create conan default profile
+      run: |
+        conan profile new --detect --force default > /dev/null
+        # enforce new CXX11 ABI
+        conan profile update settings.compiler.libcxx=libstdc++11 default
+        # C++20 standard
+        conan profile update settings.compiler.cppstd=20 default
+
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+      with:
+        submodules: true
+
+    - name: Setup Github cache
+      if: ${{ runner.os }} == 'Linux'
+      uses: actions/cache@v3
+      id: github-cache
+      with:
+        key: github-cache-${{ runner.os }}
+        path: |
+          ~/.conan/
+          ~/.cache/ccache
+
+    - name: Build dependencies with conan
+      if: ${{ steps.github-cache.outputs.cache-hit == false }}
+      run: |
+        conan install ${{ github.workspace }} --remote conancenter --build missing --profile default
+
+    - name: CMake configuration
+      id: cmake_configured
+      run: |
+        cmake --preset ci-linux
+
+    - name: Clang tidy review
+      id: clang-tidy-review
+      uses: ZedThree/clang-tidy-review@v0.8.3
+      with:
+        config_file: .clang-tidy
+        cmake_command: cmake --preset ci-linux
+
+    - name: Passed C++ style guide checks?!
+      if: steps.clang-tidy-review.outputs.total_comments > 0
+      run: |
+        echo "Some files failed the Clang tidy review!"
+
+    - name: Clean up conan build & sources
+      run: |
+        conan remove -f "*" --builds
+        conan remove -f "*" --src

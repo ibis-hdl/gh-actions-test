@@ -49,13 +49,13 @@ jobs:
         echo github.event_name: ${{ github.event_name }}
 
     - name: Install basic dependencies on Linux
-      if: startsWith(matrix.config.os, 'Linux')
+      if: startsWith(matrix.config.os, 'ubuntu')
       run: |
         sudo apt-get update
         sudo apt-get install --no-install-recommends -y cmake ninja-build ccache g++-11 clang-14
 
     - name: Install basic dependencies on Windows
-      if: startsWith(matrix.config.os, 'Windows')
+      if: startsWith(matrix.config.os, 'windows')
       run: |
         choco install ninja cmake
         ninja --version
@@ -63,9 +63,9 @@ jobs:
         # cmd "${{ matrix.config.environment_script }}"
 
     - name: Install basic dependencies on macOS
-      if: startsWith(matrix.config.os, 'macOS')
+      if: startsWith(matrix.config.os, 'macos')
       run: |
-        brew install p7zip cmake ninja
+        brew install cmake ninja
         ninja --version
         cmake --version
 
@@ -96,7 +96,7 @@ jobs:
         conan install ${{ github.workspace }} --remote conancenter --build missing --profile default
 
     - name: Setup ccache Compiler Cache
-      if: startsWith(matrix.config.os, 'Linux')
+      if: startsWith(matrix.config.os, 'ubuntu')
       uses: hendrikmuhs/ccache-action@v1.2.2
 
     - name: CMake configuration
@@ -108,7 +108,7 @@ jobs:
         cmake --build --preset ${{ matrix.config.cmake_preset }}
 
     - name: Build l10n
-      if: startsWith(matrix.config.os, 'Linux')
+      if: startsWith(matrix.config.os, 'ubuntu')
       run: |
         cmake --build --preset ${{ matrix.config.cmake_preset }} --target l10n
 

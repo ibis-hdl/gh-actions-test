@@ -36,12 +36,12 @@ jobs:
             cmake_preset: "linux-clang-release",
             cxx: "clang++",
           }
-        - {
-            name: "macOS Clang",
-            image: macos-latest,
-            cmake_preset: "macos-clang-release",
-            cxx: "clang++",
-          }
+#        - {
+#            name: "macOS Clang",
+#            image: macos-latest,
+#            cmake_preset: "macos-clang-release",
+#            cxx: "clang++",
+#          }
     steps:
 
     - name: Print Github event
@@ -96,13 +96,13 @@ jobs:
         conan profile update settings.compiler.cppstd=20 default
 
     - name: Specify conan's default profile for Clang compiler
-      if: matrix.cxx == 'clang++'
+      if: matrix.config.cxx == 'clang++'
       run: |
         conan profile update settings.compiler.libcxx=libstdc++11 default
         conan profile update settings.compiler=clang
 
     - name: Specify conan's default profile for GNUC++ compiler
-      if: matrix.cxx == 'g++'
+      if: matrix.config.cxx == 'g++'
       run: |
         conan profile update settings.compiler.libcxx=libstdc++11 default
         conan profile update settings.compiler=g++
@@ -146,6 +146,10 @@ jobs:
             }
           }
         popd
+        write-host $env:INCLUDE
+        write-host $env:LIB
+        write-host $env:LIBPATH
+        write-host $env:PATH.Split(";")
         cmake --preset ${{ matrix.config.cmake_preset }}
 
     - name: CMake Build

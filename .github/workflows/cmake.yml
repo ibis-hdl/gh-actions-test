@@ -65,11 +65,10 @@ jobs:
 
     - name: Setup compiler cache (ccache)
       uses: hendrikmuhs/ccache-action@v1.2.2
-      run: |
-        ccache --show-stats && ccache --zero-stats
 
     - name: Configuration and build
       run: |
+        ccache --show-stats && ccache --zero-stats
         cmake --preset ${{ env.CMAKE_PRESET }}
         cmake --build --preset ${{ env.CMAKE_PRESET }}
         ccache --show-stats

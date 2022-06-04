@@ -41,7 +41,7 @@ jobs:
 
     - name: Install basic dependencies
       # fail-safe check, only Ubuntu this days
-      if: startsWith(matrix..image, 'ubuntu')
+      if: startsWith(matrix.image, 'ubuntu')
       run: |
         sudo apt-get update
         sudo apt-get install --no-install-recommends -y cmake ninja-build ccache g++-11 clang-14

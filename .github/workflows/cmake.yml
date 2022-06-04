@@ -22,7 +22,7 @@ jobs:
             image: windows-latest,
             cmake_preset: "windows-msvc-release",
             cxx: "cl",
-            vcvars_dir: "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build",
+            vcvars: "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat",
           }
         - {
             name: "Ubuntu GCC 11",
@@ -57,25 +57,10 @@ jobs:
 
     - name: Install basic dependencies on Windows
       if: startsWith(matrix.config.image, 'windows')
-      # see [GitHub Actions default shell on Windows runners is changing to PowerShell](
-      #  https://github.blog/changelog/2019-10-17-github-actions-default-shell-on-windows-runners-is-changing-to-powershell/)
-      # [Pscx - PowerShell Community Extensions](https://github.com/Pscx/Pscx) won't work:
-      #  "WARNING: User declined to install module (Pscx)."
-      # [How can I use PowerShell with the Visual Studio Command Prompt?](
-      #  https://stackoverflow.com/questions/2124753/how-can-i-use-powershell-with-the-visual-studio-command-prompt)
       run: |
         choco install ninja cmake
         ninja --version
         cmake --version
-        Write-Host "Import Visual Studio ENV vars batch file into Powershell"
-        pushd '${{ matrix.config.vcvars_dir }}'
-        cmd /c "vcvars64.bat & set" |
-          foreach {
-            if ($_ -match "^(.*?)=(.*)$") {
-              Set-Item -force -path "ENV:\$($matches[1])" -value "$($matches[2])"
-            }
-          }
-        popd
 
     - name: Install basic dependencies on macOS
       if: startsWith(matrix.config.image, 'macos')
@@ -146,12 +131,9 @@ jobs:
 
     - name: CMake configuration on Windows
       if: runner.os == 'Windows'
+      shell: cmd
       run: |
-        Write-Host "Show Visual Studio ENV vars imported into Powershell"
-        Write-Host 'INCLUDE ' $env:INCLUDE
-        Write-Host 'LIB'  $env:LIB
-        Write-Host 'LIBPATH ' $env:LIBPATH
-        Write-Host 'PATH ' $env:PATH
+        call "${{ matrix.config.vcvars }}"
         cmake --preset ${{ matrix.config.cmake_preset }}
 
     - name: CMake Build

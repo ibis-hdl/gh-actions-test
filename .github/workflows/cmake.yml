@@ -11,13 +11,14 @@ jobs:
   build:
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.image }}
+    env:
+      - CONAN_V2_MODE : 1
+
     strategy:
       fail-fast: false
       matrix:
         config:
         - {
-            # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
-            # https://github.com/actions/virtual-environments/blob/main/images/win/Windows2022-Readme.md
             name: "Windows MSVC",
             image: windows-latest,
             cmake_preset: "windows-msvc-release",
@@ -42,12 +43,8 @@ jobs:
 #            cmake_preset: "macos-clang-release",
 #            cxx: "clang++",
 #          }
-    steps:
 
-    - name: Print Github event
-      run: |
-        echo github.event.action: ${{ github.event.action }}
-        echo github.event_name: ${{ github.event_name }}
+    steps:
 
     - name: Install basic dependencies on Ubuntu
       if: startsWith(matrix.config.image, 'ubuntu')
@@ -59,54 +56,32 @@ jobs:
       if: startsWith(matrix.config.image, 'windows')
       run: |
         choco install ninja cmake
-        ninja --version
-        cmake --version
 
     - name: Install basic dependencies on macOS
       if: startsWith(matrix.config.image, 'macos')
       run: |
         brew install cmake ninja
-        ninja --version
-        cmake --version
 
     - name: Install conan package manager
       run: |
         python -m pip install --upgrade pip
         pip --disable-pip-version-check --no-cache-dir install wheel conan
 
-    - name: Create conan's default profile
-      run: |
-        conan profile new --detect --force default
-        # enforce new CXX11 ABI
-        conan profile update settings.compiler.cppstd=20 default
-
-    - name: Specify conan's default profile for Clang compiler
-      if: matrix.config.cxx == 'clang++'
-      run: |
-        conan profile update settings.compiler.libcxx=libstdc++11 default
-        conan profile update settings.compiler=clang default
-
-    - name: Specify conan's default profile for GNUC++ compiler
-      if: matrix.config.cxx == 'g++'
-      run: |
-        conan profile update settings.compiler.libcxx=libstdc++11 default
-        conan profile update settings.compiler=g++ default
-
-    - name: Setup Github cache (Linux)
+    - name: Setup Github conan cache (Linux)
       if: runner.os == 'Linux'
       uses: actions/cache@v3
-      id: github-cache-linux
+      id: linux-conan-cache
       with:
-        key: github-cache-${{ runner.os }}
+        key: ${{ runner.os }}-conan-cache-${{ hashFiles('**/conanfile.txt') }}
         path: |
           ~/.conan
 
-    - name: Setup Github cache (Windows)
+    - name: Setup Github conan cache (Windows)
       if: runner.os == 'Windows'
       uses: actions/cache@v3
-      id: github-cache-windows
+      id: windows-conan-cache
       with:
-        key: github-cache-${{ runner.os }}
+        key: ${{ runner.os }}-conan-cache-${{ hashFiles('**/conanfile.txt') }}
         path: |
           C:\Users\runneradmin\.conan
           C:\.conan
@@ -116,21 +91,17 @@ jobs:
       with:
         submodules: true
 
-    - name: Build dependencies with conan
-      run: |
-        conan install ${{ github.workspace }} --remote conancenter --build missing --profile default
-
     - name: Setup ccache Compiler Cache
       if: startsWith(matrix.config.image, 'ubuntu')
       uses: hendrikmuhs/ccache-action@v1.2.2
 
-    - name: CMake configuration and build on Linux and macOS
+    - name: Configuration and build on Linux and macOS
       if: runner.os != 'Windows'
       run: |
         cmake --preset ${{ matrix.config.cmake_preset }}
         cmake --build --preset ${{ matrix.config.cmake_preset }}
 
-    - name: CMake configuration and build on Windows
+    - name: Configuration and build on Windows
       if: runner.os == 'Windows'
       shell: cmd
       run: |

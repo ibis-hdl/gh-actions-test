@@ -121,15 +121,15 @@ jobs:
       with:
         key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-cache-${{ hashFiles('**/conanfile.txt') }}
         path: |
-          C:\Users\runneradmin\.conan
-          C:\.conan
+          C:\\Users\\runneradmin\\.conan
+          C:\\.conan
 
     - name: Setup compiler cache (sccache)
       uses: actions/cache@v3
       with:
         key: ${{ runner.os }}-${{ matrix.config.compiler }}-sccache
         path: |
-          %LOCALAPPDATA%\Mozilla\sccache
+          %LOCALAPPDATA%\\Mozilla\\sccache
 
     - name: Configuration and build on Windows
       shell: cmd
@@ -153,6 +153,7 @@ jobs:
   macOS:
     name: macOS ${{ matrix.config.compiler }}
     runs-on: ${{ matrix.image }}
+    #if: false # always skip job
     strategy:
       fail-fast: false
       matrix:
@@ -165,7 +166,8 @@ jobs:
 
  
     env:
-      CMAKE_PRESET : ci-${{ matrix.os }}-${{ matrix.config.compiler }}
+      #CMAKE_PRESET : ci-${{ matrix.os }}-${{ matrix.config.compiler }}
+      CMAKE_PRESET : ci-linux-clang
 
     steps:
 

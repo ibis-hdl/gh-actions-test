@@ -67,10 +67,14 @@ jobs:
         python -m pip install --upgrade pip
         pip --disable-pip-version-check --no-cache-dir install wheel conan
 
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+      with:
+        submodules: true
+
     - name: Setup Github conan cache (Linux)
       if: runner.os == 'Linux'
       uses: actions/cache@v3
-      id: linux-conan-cache
       with:
         key: ${{ runner.os }}-conan-cache-${{ hashFiles('**/conanfile.txt') }}
         path: |
@@ -79,19 +83,13 @@ jobs:
     - name: Setup Github conan cache (Windows)
       if: runner.os == 'Windows'
       uses: actions/cache@v3
-      id: windows-conan-cache
       with:
         key: ${{ runner.os }}-conan-cache-${{ hashFiles('**/conanfile.txt') }}
         path: |
           C:\Users\runneradmin\.conan
           C:\.conan
 
-    - name: Checkout Repo
-      uses: actions/checkout@v3
-      with:
-        submodules: true
-
-    - name: Setup ccache Compiler Cache
+    - name: Setup compiler cache (ccache)
       if: startsWith(matrix.config.image, 'ubuntu')
       uses: hendrikmuhs/ccache-action@v1.2.2
 

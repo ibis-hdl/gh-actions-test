@@ -2,61 +2,49 @@ name: 'CMake build'
 
 on:
   push:
-    branches: [ main ]
+    branches: [  main  ]
   pull_request:
-    branches: [ main ]
+    branches: [  main  ]
   workflow_dispatch:
 
-jobs:
-  build:
-    name: ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.image }}
-    env:
-      CONAN_V2_MODE : 1
+env:
+  CONAN_V2_MODE : 1
+  # GitHub actions automatically zstd compresses caches
+  CCACHE_NOCOMPRESS : true
+  # 3GB; 10GB total for 4 compile jobs and conan data
+  CCACHE_MAXSIZE : 3G  
+  SCCACHE_CACHE_SIZE : 3G
 
+jobs:
+
+  # ---------------------------------------------------------------------------
+  Linux:
+    name: Linux ${{ matrix.config.compiler }}
+    runs-on: ${{ matrix.image }}
     strategy:
       fail-fast: false
       matrix:
+        image:    [ ubuntu-latest ]
+        os:       [ linux ]
         config:
         - {
-            name: "Windows MSVC",
-            image: windows-latest,
-            cmake_preset: "ci-windows-msvc",
-            vcvars: "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat",
+            compiler: "clang",
           }
         - {
-            name: "Ubuntu GCC 11",
-            image: ubuntu-22.04,
-            cmake_preset: "ci-linux-gcc",
+            compiler: "gcc",
           }
-        - {
-            name: "Ubuntu Clang 14",
-            image: ubuntu-22.04,
-            cmake_preset: "ci-linux-clang",
-          }
-#        - {
-#            name: "macOS Clang",
-#            image: macos-latest,
-#            cmake_preset: "macos-clang-release",
-#          }
+ 
+    env:
+      CMAKE_PRESET : ci-${{ matrix.os }}-${{ matrix.config.compiler }}
 
     steps:
 
-    - name: Install basic dependencies on Ubuntu
-      if: startsWith(matrix.config.image, 'ubuntu')
+    - name: Install basic dependencies
+      # fail-safe check, only Ubuntu this days
+      if: startsWith(matrix..image, 'ubuntu')
       run: |
         sudo apt-get update
         sudo apt-get install --no-install-recommends -y cmake ninja-build ccache g++-11 clang-14
-
-    - name: Install basic dependencies on Windows
-      if: startsWith(matrix.config.image, 'windows')
-      run: |
-        choco install ninja cmake
-
-    - name: Install basic dependencies on macOS
-      if: startsWith(matrix.config.image, 'macos')
-      run: |
-        brew install cmake ninja
 
     - name: Install conan package manager
       run: |
@@ -68,44 +56,158 @@ jobs:
       with:
         submodules: true
 
-    - name: Setup Github conan cache (Linux)
-      if: runner.os == 'Linux'
+    - name: Setup Github cache for conan
       uses: actions/cache@v3
       with:
-        key: ${{ runner.os }}-conan-cache-${{ hashFiles('**/conanfile.txt') }}
+        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-cache-${{ hashFiles('**/conanfile.txt') }}
         path: |
           ~/.conan
 
-    - name: Setup Github conan cache (Windows)
-      if: runner.os == 'Windows'
+    - name: Setup compiler cache (ccache)
+      uses: hendrikmuhs/ccache-action@v1.2.2
+      run: |
+        ccache --show-stats && ccache --zero-stats
+
+    - name: Configuration and build
+      run: |
+        cmake --preset ${{ env.CMAKE_PRESET }}
+        cmake --build --preset ${{ env.CMAKE_PRESET }}
+        ccache --show-stats
+
+    - name: Run Unit Test
+      run: |
+        ctest --preset ${{ env.CMAKE_PRESET }}
+
+    - name: Clean up conan's build & sources
+      run: |
+        conan remove -f "*" --builds
+        conan remove -f "*" --src
+
+  # ---------------------------------------------------------------------------
+  Windows:
+    name: Windows ${{ matrix.config.compiler }}
+    runs-on: ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        image:    [ windows-latest ]
+        os:       [ windows ]
+        config:
+        - {
+            compiler: "msvc",
+            vcvars:   "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat",
+          }
+ 
+    env:
+      CMAKE_PRESET : ci-${{ matrix.os }}-${{ matrix.config.compiler }}
+
+    steps:
+
+    - name: Install basic dependencies
+      run: |
+        choco install ninja cmake sccache
+
+    - name: Install conan package manager
+      run: |
+        python -m pip install --upgrade pip
+        pip --disable-pip-version-check --no-cache-dir install wheel conan
+
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+      with:
+        submodules: true
+
+    - name: Setup Github conan cache
       uses: actions/cache@v3
       with:
-        key: ${{ runner.os }}-conan-cache-${{ hashFiles('**/conanfile.txt') }}
+        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-cache-${{ hashFiles('**/conanfile.txt') }}
         path: |
           C:\Users\runneradmin\.conan
           C:\.conan
 
-    - name: Setup compiler cache (ccache)
-      if: startsWith(matrix.config.image, 'ubuntu')
-      uses: hendrikmuhs/ccache-action@v1.2.2
-
-    - name: Configuration and build on Linux and macOS
-      if: runner.os != 'Windows'
-      run: |
-        cmake --preset ${{ matrix.config.cmake_preset }}
-        cmake --build --preset ${{ matrix.config.cmake_preset }}
+    - name: Setup compiler cache (sccache)
+      uses: actions/cache@v3
+      with:
+        key: ${{ runner.os }}-${{ matrix.config.compiler }}-sccache
+        path: |
+          %LOCALAPPDATA%\Mozilla\sccache
 
     - name: Configuration and build on Windows
-      if: runner.os == 'Windows'
       shell: cmd
       run: |
+        sccache --show-stats && sccache --zero-stats
         call "${{ matrix.config.vcvars }}"
-        cmake --preset ${{ matrix.config.cmake_preset }}
-        cmake --build --preset ${{ matrix.config.cmake_preset }}
+        cmake --preset ${{ env.CMAKE_PRESET }}
+        cmake --build --preset ${{ env.CMAKE_PRESET }}
+        sccache --show-stats && sccache --stop-server
 
     - name: Run Unit Test
       run: |
-        ctest --preset ${{ matrix.config.cmake_preset }}
+        ctest --preset ${{ env.CMAKE_PRESET }}
+
+    - name: Clean up conan's build & sources
+      run: |
+        conan remove -f "*" --builds
+        conan remove -f "*" --src
+
+  # ---------------------------------------------------------------------------
+  macOS:
+    name: macOS ${{ matrix.config.compiler }}
+    runs-on: ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        image:    [ macos-latest ]
+        os:       [ macos ]
+        config:
+        - {
+            compiler: "clang",
+          }
+
+ 
+    env:
+      CMAKE_PRESET : ci-${{ matrix.os }}-${{ matrix.config.compiler }}
+
+    steps:
+
+    - name: Install basic dependencies
+      run: |
+        brew install cmake ninja sccache
+
+    - name: Install conan package manager
+      run: |
+        python -m pip install --upgrade pip
+        pip --disable-pip-version-check --no-cache-dir install wheel conan
+
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+      with:
+        submodules: true
+
+    - name: Setup Github conan cache
+      uses: actions/cache@v3
+      with:
+        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-cache-${{ hashFiles('**/conanfile.txt') }}
+        path: |
+          ~/.conan
+
+    - name: Setup compiler cache (sccache)
+      uses: actions/cache@v3
+      with:
+        key: ${{ runner.os }}-${{ matrix.config.compiler }}-sccache
+        path: |
+          ~/Library/Caches/Mozilla.sccache
+
+    - name: Configuration and build
+      run: |
+        sccache --show-stats && sccache --zero-stats
+        cmake --preset ${{ env.CMAKE_PRESET }}
+        cmake --build --preset ${{ env.CMAKE_PRESET }}
+        sccache --show-stats && sccache --stop-server
+
+    - name: Run Unit Test
+      run: |
+        ctest --preset ${{ env.CMAKE_PRESET }}
 
     - name: Clean up conan's build & sources
       run: |

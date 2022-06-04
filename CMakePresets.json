@@ -316,7 +316,7 @@
                 "ci-default"
             ],            
             "cacheVariables": { 
-
+                "CMAKE_CXX_COMPILER_LAUNCHER": "sccache"
              }
         },
         {

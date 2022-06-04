@@ -506,9 +506,17 @@
             ]
         },
         {
-            "name": "ci-linux",
+            "name": "ci-linux-clang",
             "displayName": "Test-All",
-            "configurePreset": "ci-default",
+            "configurePreset": "ci-linux-clang",
+            "inherits": [
+                "test-default"
+            ]
+        },
+        {
+            "name": "ci-linux-gcc",
+            "displayName": "Test-All",
+            "configurePreset": "ci-linux-gcc",
             "inherits": [
                 "test-default"
             ]

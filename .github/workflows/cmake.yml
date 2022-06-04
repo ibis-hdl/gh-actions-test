@@ -153,11 +153,11 @@ jobs:
   macOS:
     name: macOS ${{ matrix.config.compiler }}
     runs-on: ${{ matrix.image }}
-    #if: false # always skip job
+    if: false # always skip job
     strategy:
       fail-fast: false
       matrix:
-        image:    [ macos-latest ]
+        image:    [ macos-12 ]
         os:       [ macos ]
         config:
         - {
@@ -166,14 +166,16 @@ jobs:
 
  
     env:
-      #CMAKE_PRESET : ci-${{ matrix.os }}-${{ matrix.config.compiler }}
-      CMAKE_PRESET : ci-linux-clang
+      # CMake preset for macOS not created yet - missing hardware ...
+      CMAKE_PRESET : ci-${{ matrix.os }}-${{ matrix.config.compiler }}
 
     steps:
 
     - name: Install basic dependencies
+      # Only Clang-13, see [macOS 12.4 info](
+      #  https://github.com/actions/virtual-environments/blob/main/images/macos/macos-12-Readme.md)
       run: |
-        brew install python3 cmake ninja sccache clang-14
+        brew install python3 cmake ninja sccache clang
 
     - name: Install conan package manager
       run: |

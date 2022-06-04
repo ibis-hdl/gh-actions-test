@@ -138,6 +138,7 @@ jobs:
 
     - name: CMake Build
       run: |
+        call "${{ matrix.config.vcvars }}"
         cmake --build --preset ${{ matrix.config.cmake_preset }}
 
     - name: Run Unit Test

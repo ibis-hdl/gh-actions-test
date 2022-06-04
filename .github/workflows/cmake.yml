@@ -129,7 +129,7 @@ jobs:
       with:
         key: ${{ runner.os }}-${{ matrix.config.compiler }}-sccache
         path: |
-          %LOCALAPPDATA%\\Mozilla\\sccache
+          C:\\Users\\runneradmin\\AppData\\Local\\Mozilla\\sccache
 
     - name: Configuration and build on Windows
       shell: cmd
@@ -173,12 +173,12 @@ jobs:
 
     - name: Install basic dependencies
       run: |
-        brew install cmake ninja sccache
+        brew install python3 cmake ninja sccache
 
     - name: Install conan package manager
       run: |
-        python -m pip install --upgrade pip
-        pip --disable-pip-version-check --no-cache-dir install wheel conan
+        python3 -m pip install --upgrade pip
+        pip3 --disable-pip-version-check --no-cache-dir install wheel conan
 
     - name: Checkout Repo
       uses: actions/checkout@v3

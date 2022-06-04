@@ -12,7 +12,7 @@ jobs:
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.image }}
     env:
-      - CONAN_V2_MODE : 1
+      CONAN_V2_MODE : 1
 
     strategy:
       fail-fast: false

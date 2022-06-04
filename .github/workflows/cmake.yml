@@ -21,27 +21,23 @@ jobs:
         - {
             name: "Windows MSVC",
             image: windows-latest,
-            cmake_preset: "windows-msvc-release",
-            cxx: "cl",
+            cmake_preset: "ci-windows-msvc",
             vcvars: "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat",
           }
         - {
             name: "Ubuntu GCC 11",
             image: ubuntu-22.04,
-            cmake_preset: "linux-gcc-release",
-            cxx: "g++",
+            cmake_preset: "ci-linux-gcc",
           }
         - {
             name: "Ubuntu Clang 14",
             image: ubuntu-22.04,
-            cmake_preset: "linux-clang-release",
-            cxx: "clang++",
+            cmake_preset: "ci-linux-clang",
           }
 #        - {
 #            name: "macOS Clang",
 #            image: macos-latest,
 #            cmake_preset: "macos-clang-release",
-#            cxx: "clang++",
 #          }
 
     steps:

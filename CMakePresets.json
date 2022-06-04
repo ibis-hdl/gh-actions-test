@@ -293,27 +293,55 @@
         },
         {
             "name": "ci-default",
+            "description": "OS shared settings for ci pipeline",
             "hidden": true,
             "cacheVariables": {  }
         },
         {
-            "name": "ci-windows",
+            "name": "ci-linux-default",
+            "description": "settings for ci pipeline for Linux",
+            "hidden": true,
+            "inherits": [
+                "ci-default"
+            ],
+            "cacheVariables": { 
+                "CMAKE_CXX_COMPILER_LAUNCHER": "ccache"
+             }
+        },
+        {
+            "name": "ci-windows-default",
+            "description": "settings for ci pipeline for Windows",
+            "hidden": true,
+            "inherits": [
+                "ci-default"
+            ],            
+            "cacheVariables": { 
+
+             }
+        },
+        {
+            "name": "ci-linux-clang",
             "description": "used by the ci pipeline",
             "inherits": [
-                "ci-default",
-                "windows-msvc-release"
+                "ci-linux-default",
+                "linux-clang-release"
             ]
         },
         {
-            "name": "ci-linux",
+            "name": "ci-linux-gcc",
             "description": "used by the ci pipeline",
             "inherits": [
-                "ci-default",
-                "linux-clang-release"
-            ],
-            "cacheVariables": {
-                "CMAKE_CXX_COMPILER_LAUNCHER": "ccache"
-            }
+                "ci-linux-default",
+                "linux-gcc-release"
+            ]
+        },
+        {
+            "name": "ci-windows-msvc",
+            "description": "used by the ci pipeline",
+            "inherits": [
+                "ci-windows-default",
+                "windows-msvc-release"
+            ]
         },
         {
             "name": "linux-dev",
@@ -381,14 +409,19 @@
             "configurePreset": "windows-clang-release"
         },
         {
-            "name": "ci-windows",
+            "name": "ci-linux-clang",
             "displayName": "CI",
-            "configurePreset": "ci-windows"
+            "configurePreset": "ci-linux-clang"
         },
         {
-            "name": "ci-linux",
+            "name": "ci-linux-gcc",
             "displayName": "CI",
-            "configurePreset": "ci-linux"
+            "configurePreset": "ci-linux-gcc"
+        },
+        {
+            "name": "ci-windows-msvc",
+            "displayName": "CI",
+            "configurePreset": "ci-windows-msvc"
         },
         {
             "name": "linux-dev",
@@ -473,17 +506,17 @@
             ]
         },
         {
-            "name": "ci-windows",
+            "name": "ci-linux",
             "displayName": "Test-All",
-            "configurePreset": "ci-windows",
+            "configurePreset": "ci-default",
             "inherits": [
                 "test-default"
             ]
         },
         {
-            "name": "ci-linux",
+            "name": "ci-windows-msvc",
             "displayName": "Test-All",
-            "configurePreset": "ci-linux",
+            "configurePreset": "ci-windows-msvc",
             "inherits": [
                 "test-default"
             ]

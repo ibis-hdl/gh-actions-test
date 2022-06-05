@@ -66,9 +66,12 @@ jobs:
     - name: Setup compiler cache (ccache)
       uses: hendrikmuhs/ccache-action@v1.2.2
 
-    - name: Configuration and build
+    - name: CCache clear statistics
       run: |
         ccache --zero-stats
+
+    - name: Configuration and build
+      run: |
         cmake --preset ${{ env.CMAKE_PRESET }}
         cmake --build --preset ${{ env.CMAKE_PRESET }}
 
@@ -134,10 +137,13 @@ jobs:
         path: |
           C:\\Users\\runneradmin\\AppData\\Local\\Mozilla\\sccache
 
+    - name: SCCache clear statistics
+      run: |
+        sccache --zero-stats
+
     - name: Configuration and build on Windows
       shell: cmd
       run: |
-        sccache --zero-stats
         call "${{ matrix.config.vcvars }}"
         cmake --preset ${{ env.CMAKE_PRESET }}
         cmake --build --preset ${{ env.CMAKE_PRESET }}
@@ -170,7 +176,6 @@ jobs:
             compiler: "clang",
           }
 
- 
     env:
       CMAKE_PRESET : ci-${{ matrix.os }}-${{ matrix.config.compiler }}
 
@@ -206,9 +211,12 @@ jobs:
         path: |
           ~/Library/Caches/Mozilla.sccache
 
-    - name: Configuration and build
+    - name: SCCache clear statistics
       run: |
         sccache --zero-stats
+
+    - name: Configuration and build
+      run: |
         cmake --preset ${{ env.CMAKE_PRESET }}
         cmake --build --preset ${{ env.CMAKE_PRESET }}
 

@@ -17,9 +17,12 @@ jobs:
     - name: Gather Markdown files from git
       run: |
         echo "MARKDOWN_FILES=$(git ls-files '*.md')" >> $GITHUB_ENV
-        echo ${{ env.MARKDOWN_FILES }}
+    
+    - name: Show files to spell check
+      run: |
+        echo "Markdown: ${{ env.MARKDOWN_FILES }}"
 
-    - name: Check Spelling
+    - name: Check Spelling [Markdown]
       uses: rojopolis/spellcheck-github-actions@0.24.0
       with:
         config_path: .github/config/spellcheck.yml

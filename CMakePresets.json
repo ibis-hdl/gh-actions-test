@@ -292,6 +292,48 @@
             ]
         },
         {
+            "name": "macos-default",
+            "description": "macOS common settings",
+            "hidden": true,
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "hostOS": [
+                        "macOS"
+                    ]
+                },
+                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+                }
+            }
+        },
+        {
+            "name": "macos-clang-default",
+            "displayName": "macOS Clang",
+            "hidden" : true,
+            "description": "macOS LLVM Clang compiler",
+            "inherits": [
+                "macos-default",
+                "compiler-clang"
+            ]
+        },
+        {
+            "name": "macos-clang-debug",
+            "displayName": "macOS Clang: Debug",
+            "description": "macOS LLVM Clang compiler: Debug",
+            "inherits": [
+                "macos-clang-default",
+                "debug-build"
+            ]
+        },
+        {
+            "name": "macos-clang-release",
+            "displayName": "macOS Clang: Release",
+            "description": "macOS LLVM Clang compiler: Release",
+            "inherits": [
+                "macos-clang-default",
+                "release-build"
+            ]
+        },
+        {
             "name": "ci-default",
             "description": "OS shared settings for ci pipeline",
             "hidden": true,
@@ -320,7 +362,19 @@
              }
         },
         {
+            "name": "ci-macos-default",
+            "description": "settings for ci pipeline for macOS",
+            "hidden": true,
+            "inherits": [
+                "ci-default"
+            ],            
+            "cacheVariables": { 
+                "CMAKE_CXX_COMPILER_LAUNCHER": "sccache"
+             }
+        },
+        {
             "name": "ci-linux-clang",
+            "displayName": "CI",
             "description": "used by the ci pipeline",
             "inherits": [
                 "ci-linux-default",
@@ -329,6 +383,7 @@
         },
         {
             "name": "ci-linux-gcc",
+            "displayName": "CI",
             "description": "used by the ci pipeline",
             "inherits": [
                 "ci-linux-default",
@@ -337,10 +392,20 @@
         },
         {
             "name": "ci-windows-msvc",
+            "displayName": "CI",
             "description": "used by the ci pipeline",
             "inherits": [
                 "ci-windows-default",
                 "windows-msvc-release"
+            ]
+        },
+        {
+            "name": "ci-macos-clang",
+            "displayName": "CI",
+            "description": "used by the ci pipeline",
+            "inherits": [
+                "ci-macos-default",
+                "macos-clang-release"
             ]
         },
         {
@@ -409,6 +474,16 @@
             "configurePreset": "windows-clang-release"
         },
         {
+            "name": "macos-clang-debug",
+            "displayName": "Debug",
+            "configurePreset": "macos-clang-debug"
+        },
+        {
+            "name": "macos-clang-release",
+            "displayName": "Release",
+            "configurePreset": "macos-clang-release"
+        },
+        {
             "name": "ci-linux-clang",
             "displayName": "CI",
             "configurePreset": "ci-linux-clang"
@@ -422,6 +497,11 @@
             "name": "ci-windows-msvc",
             "displayName": "CI",
             "configurePreset": "ci-windows-msvc"
+        },
+        {
+            "name": "ci-macos-clang",
+            "displayName": "CI",
+            "configurePreset": "ci-macos-clang"
         },
         {
             "name": "linux-dev",
@@ -506,6 +586,22 @@
             ]
         },
         {
+            "name": "macos-clang-release",
+            "displayName": "Test-All",
+            "configurePreset": "macos-clang-release",
+            "inherits": [
+                "test-default"
+            ]
+        },
+        {
+            "name": "macos-clang-debug",
+            "displayName": "Test-All",
+            "configurePreset": "macos-clang-debug",
+            "inherits": [
+                "test-default"
+            ]
+        },
+        {
             "name": "ci-linux-clang",
             "displayName": "Test-All",
             "configurePreset": "ci-linux-clang",
@@ -525,6 +621,14 @@
             "name": "ci-windows-msvc",
             "displayName": "Test-All",
             "configurePreset": "ci-windows-msvc",
+            "inherits": [
+                "test-default"
+            ]
+        },
+        {
+            "name": "ci-macos-clang",
+            "displayName": "Test-All",
+            "configurePreset": "ci-macos-clang",
             "inherits": [
                 "test-default"
             ]

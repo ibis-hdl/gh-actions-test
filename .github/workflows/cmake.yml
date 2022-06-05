@@ -68,9 +68,12 @@ jobs:
 
     - name: Configuration and build
       run: |
-        ccache --show-stats && ccache --zero-stats
+        ccache --zero-stats
         cmake --preset ${{ env.CMAKE_PRESET }}
         cmake --build --preset ${{ env.CMAKE_PRESET }}
+
+    - name: CCache statistics
+      run: |
         ccache --show-stats
 
     - name: Run Unit Test
@@ -134,10 +137,13 @@ jobs:
     - name: Configuration and build on Windows
       shell: cmd
       run: |
-        sccache --show-stats && sccache --zero-stats
+        sccache --zero-stats
         call "${{ matrix.config.vcvars }}"
         cmake --preset ${{ env.CMAKE_PRESET }}
         cmake --build --preset ${{ env.CMAKE_PRESET }}
+
+    - name: SCCache statistics
+      run: |
         sccache --show-stats && sccache --stop-server
 
     - name: Run Unit Test
@@ -153,7 +159,7 @@ jobs:
   macOS:
     name: macOS ${{ matrix.config.compiler }}
     runs-on: ${{ matrix.image }}
-    if: false # always skip job
+    #if: false # always skip job
     strategy:
       fail-fast: false
       matrix:
@@ -166,7 +172,6 @@ jobs:
 
  
     env:
-      # CMake preset for macOS not created yet - missing hardware ...
       CMAKE_PRESET : ci-${{ matrix.os }}-${{ matrix.config.compiler }}
 
     steps:
@@ -203,9 +208,12 @@ jobs:
 
     - name: Configuration and build
       run: |
-        sccache --show-stats && sccache --zero-stats
+        sccache --zero-stats
         cmake --preset ${{ env.CMAKE_PRESET }}
         cmake --build --preset ${{ env.CMAKE_PRESET }}
+
+    - name: SCCache statistics
+      run: |
         sccache --show-stats && sccache --stop-server
 
     - name: Run Unit Test

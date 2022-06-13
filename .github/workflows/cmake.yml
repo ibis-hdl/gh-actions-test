@@ -55,16 +55,21 @@ jobs:
     - name: Setup Github cache for conan
       uses: actions/cache@v3
       with:
-        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-cache-${{ hashFiles('**/conanfile.txt') }}
+        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('**/conanfile.txt') }}
         path: |
           ~/.conan
 
     - name: Setup compiler cache (ccache)
-      uses: hendrikmuhs/ccache-action@v1.2.2
+      uses: actions/cache@v3
+      with:
+        key: ${{ runner.os }}-${{ matrix.config.compiler }}-ccache
+        path: |
+          ~/.config/ccache
+          ~/.cache/ccache
 
     - name: CCache clear statistics
       run: |
-        ccache --zero-stats
+        ccache --show-config && ccache --zero-stats
 
     - name: Setup CMake's preset string
       id: cmake_preset_string
@@ -123,7 +128,7 @@ jobs:
     - name: Setup Github conan cache
       uses: actions/cache@v3
       with:
-        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-cache-${{ hashFiles('**/conanfile.txt') }}
+        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('**/conanfile.txt') }}
         path: |
           C:\\Users\\runneradmin\\.conan
           C:\\.conan
@@ -201,7 +206,7 @@ jobs:
     - name: Setup Github conan cache
       uses: actions/cache@v3
       with:
-        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-cache-${{ hashFiles('**/conanfile.txt') }}
+        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('**/conanfile.txt') }}
         path: |
           ~/.conan
 

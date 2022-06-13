@@ -17,7 +17,6 @@ target_include_directories(${PROJECT_NAME}
         $<INSTALL_INTERFACE:include>
     PRIVATE
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
-        $<BUILD_INTERFACE:${fmt_INCLUDE_DIR}>
 )
 
 add_test(NAME github-action-main

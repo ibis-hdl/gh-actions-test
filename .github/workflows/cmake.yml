@@ -55,7 +55,7 @@ jobs:
     - name: Setup Github cache for conan
       uses: actions/cache@v3
       with:
-        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('**/conanfile.txt') }}
+        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('conanfile.txt') }}
         path: |
           ~/.conan
 
@@ -128,7 +128,7 @@ jobs:
     - name: Setup Github conan cache
       uses: actions/cache@v3
       with:
-        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('**/conanfile.txt') }}
+        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('conanfile.txt') }}
         path: |
           C:\\Users\\runneradmin\\.conan
           C:\\.conan
@@ -206,7 +206,7 @@ jobs:
     - name: Setup Github conan cache
       uses: actions/cache@v3
       with:
-        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('**/conanfile.txt') }}
+        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('conanfile.txt') }}
         path: |
           ~/.conan
 

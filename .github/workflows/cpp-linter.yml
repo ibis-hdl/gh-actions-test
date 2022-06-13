@@ -19,10 +19,11 @@ jobs:
         sudo apt-get update
         sudo apt-get install --no-install-recommends -y cmake ninja-build ccache clang-14 clang-format clang-tidy
 
-    - name: Install conan package manager
+    - name: Install conan package manager and cpp-linter
       run: |
         python -m pip install --upgrade pip
-        pip --disable-pip-version-check --no-cache-dir install wheel conan
+        pip --disable-pip-version-check --no-cache-dir install wheel conan \
+          git+https://github.com/cpp-linter/cpp-linter-action@v1
 
     - name: Checkout Repo
       uses: actions/checkout@v3
@@ -48,18 +49,10 @@ jobs:
       run: |
         cmake --preset ci-linux-clang
 
-    - name: clang-format & clang-tidy
-      uses: cpp-linter/cpp-linter-action@v1.4.2
+    - name: Run cpp-linter (clang-{format,tidy})
       id: linter
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        style: file
-        version: 14
-        # directory containing compilation database (compile_commands.json)
-        database: build/ci-linux-clang
-        # don't use action's default
-        tidy-checks: ''
+      run: |
+        cpp-linter --version=14 --style=file --tidy-checks='' --ignore=build --database=build/ci-linux-clang
 
     - name: Passed C++ style guide checks?!
       if: steps.linter.outputs.checks-failed > 0

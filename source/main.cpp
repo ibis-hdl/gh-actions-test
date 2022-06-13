@@ -5,9 +5,14 @@
 #include <fmt/ostream.h>
 
 #include <iostream>
+#include <string_view>
 
-int main()
-{
-    std::cout << fmt::format("Hello {0}!\n", "World");
+void print(std::ostream& os, std::string_view name) {
+    os << fmt::format("Hello {0}!\n", name);
+}
+
+
+int main() {
+    print(std::cout, "World");
     return 0;
 }

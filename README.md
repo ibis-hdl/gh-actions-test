@@ -1,3 +1,3 @@
 # Github actions test
 
-Testing Github action on simple C++ project
+Testing Github actions on simple C++ project

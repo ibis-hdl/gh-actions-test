@@ -68,9 +68,9 @@ jobs:
 
     - name: Setup CMake's preset string
       id: cmake_preset_string
-        uses: ASzc/change-string-case-action@v2
-        with:
-          string: ci-${{ runner.os }}-${{ matrix.config.compiler }}
+      uses: ASzc/change-string-case-action@v2
+      with:
+        string: ci-${{ runner.os }}-${{ matrix.config.compiler }}
 
     - name: Configuration and build
       run: |
@@ -141,9 +141,9 @@ jobs:
 
     - name: Setup CMake's preset string
       id: cmake_preset_string
-        uses: ASzc/change-string-case-action@v2
-        with:
-          string: ci-${{ runner.os }}-${{ matrix.config.compiler }}
+      uses: ASzc/change-string-case-action@v2
+      with:
+        string: ci-${{ runner.os }}-${{ matrix.config.compiler }}
 
     - name: Configuration and build on Windows
       shell: cmd
@@ -218,9 +218,9 @@ jobs:
 
     - name: Setup CMake's preset string
       id: cmake_preset_string
-        uses: ASzc/change-string-case-action@v2
-        with:
-          string: ci-${{ runner.os }}-${{ matrix.config.compiler }}
+      uses: ASzc/change-string-case-action@v2
+      with:
+        string: ci-${{ runner.os }}-${{ matrix.config.compiler }}
 
     - name: Configuration and build
       run: |

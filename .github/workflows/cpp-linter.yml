@@ -60,6 +60,10 @@ jobs:
         database: build/ci-linux-clang
         # don't use action's default
         tidy-checks: ''
+        
+    - run: |
+        ls build/ci-linux-clang
+        ls  build/ci-linux-clang/compile_commands.json
 
     - name: Passed C++ style guide checks?!
       if: steps.linter.outputs.checks-failed > 0

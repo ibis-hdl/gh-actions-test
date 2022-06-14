@@ -14,7 +14,8 @@ jobs:
     - name: Install basic dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install --no-install-recommends -y cmake ninja-build ccache clang-14 clang-format clang-tidy
+        sudo apt-get install --no-install-recommends -y \
+          cmake ninja-build ccache clang-14 clang-format clang-tidy
 
     - name: Install conan package manager
       run: |
@@ -33,7 +34,7 @@ jobs:
         path: |
           ~/.conan
 
-    - name: Setup compiler cache (ccache)
+    - name: Setup compiler cache
       uses: actions/cache@v3
       with:
         key: ${{ runner.os }}-clang-ccache

@@ -1,4 +1,4 @@
-name: 'Self-hosted build'
+name: 'CI Self-hosted'
 
 on:
   push:
@@ -7,71 +7,70 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+env:
+  CONAN_V2_MODE : 1
+
 jobs:
   build:
-    # Dockerfile @Ubuntu 22.04 LTS
-    name: Self-hosted Runner
-    runs-on: [self-hosted, x64]
+    # see https://github.com/ibis-hdl/ci-github-runner
+    name: Self-hosted CI Runner
+    runs-on: [ self-hosted ]
     strategy:
+      fail-fast: false
       matrix:
-        os: [Linux, Windows]
-        include:
-          - os: Linux
-            cmake_preset: ci-linux
-          - os: Windows
-            cmake_preset: ci-windows
+        config:
+        - {
+            compiler: clang
+          }
+        - {
+            compiler: gcc
+          }
 
     steps:
-    - name: Install basic dependencies on ${{matrix.os}}
-      if: matrix.os == 'Linux'
+    - name: Install basic dependencies
+      # redundant by use ibis-hdl/ci-github-runner
       run: |
         sudo apt-get update
-        sudo apt-get install --no-install-recommends -y cmake ninja-build ccache g++-11 clang-14 gettext
+        sudo apt-get install --no-install-recommends -y \
+          cmake ninja-build ccache g++-11 clang-14 
 
     - name: Install conan package manager
       run: |
-        python -m pip install --upgrade pip
+        python3 -m pip install --upgrade pip
         pip --disable-pip-version-check --no-cache-dir install wheel conan
-
-    - name: Create conan default profile
-      run: |
-        conan profile new --detect --force default > /dev/null
-        # enforce new CXX11 ABI
-        conan profile update settings.compiler.libcxx=libstdc++11 default
-        # C++20 standard, not yet, stick @ 20.04 LTS
-        conan profile update settings.compiler.cppstd=20 default
-        # clang
-        conan profile update settings.compiler=clang
 
     - name: Checkout Repo
       uses: actions/checkout@v3
       with:
         submodules: true
 
-    - name: Build dependencies with conan
-      run: |
-        conan install ${{ github.workspace }} --remote conancenter --build missing --profile default
+    - name: Setup Github cache for conan
+      uses: actions/cache@v3
+      with:
+        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('conanfile.txt') }}
+        path: |
+          ~/.conan
 
-    - name: Setup ccache Compiler Cache
-      if: matrix.os == 'Linux'
-      uses: hendrikmuhs/ccache-action@v1.2.2
+    - name: Setup Github cache for ccache
+      uses: actions/cache@v3
+      with:
+        key: ${{ runner.os }}-${{ matrix.config.compiler }}-ccache
+        path: |
+          ~/.config/ccache
+          ~/.cache/ccache
 
-    - name: CMake configuration
+    - name: Configuration and build
       run: |
-        cmake --preset ${{ matrix.cmake_preset }}
+        cmake --preset ci-linux-${{ matrix.config.compiler }}
+        cmake --build --preset ci-linux-${{ matrix.config.compiler }}
 
-    - name: CMake Build
+    - name: CCache statistics
       run: |
-        cmake --build --preset ${{ matrix.cmake_preset }}
-
-    - name: Build l10n
-      if: matrix.os == 'Linux'
-      run: |
-        cmake --build --preset ${{ matrix.cmake_preset }} --target l10n
+        ccache --show-stats
 
     - name: Run Unit Test
       run: |
-        ctest --preset ${{ matrix.cmake_preset }}
+        ctest --preset ci-linux-${{ matrix.config.compiler }}
 
     - name: Clean up conan build & sources
       run: |

@@ -1,0 +1,45 @@
+{
+   "$schema": "./node_modules/@cspell/cspell-types/cspell.schema.json",
+   "version": "0.2",
+   "language": "en",
+   "cache": {
+      "useCache": true,
+      "cacheLocation": "./.dictionaries/.cspellcache",
+      "cacheStrategy": "content"
+   },
+   "ignorePaths": [
+      ".git",
+      ".gitignore",
+      "*.log",
+      "**/__snapshots__/**"
+   ],
+   "dictionaryDefinitions": [
+      {
+         "name": "dev_terms",
+         "path": ".dictionaries/dev_terms.txt"
+      },
+      {
+         "name": "words",
+         "path": ".dictionaries/words.txt"
+      }
+   ],
+   "dictionaries": [
+      "dev_terms",
+      "words",
+      "vhdl"
+   ],
+   "languageSettings": [
+      {
+         "languageId": "markdown",
+         "dictionaries": [
+            "markup"
+         ]
+      },
+      {
+         "languageId": "plaintext",
+         "dictionaries": [
+            "markup"
+         ]
+      }
+   ]
+}

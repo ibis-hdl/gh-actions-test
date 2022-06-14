@@ -27,10 +27,10 @@ jobs:
         image:    [ ubuntu-22.04 ]
         config:
         - {
-            compiler: "clang",
+            compiler: "clang"
           }
         - {
-            compiler: "gcc",
+            compiler: "gcc"
           }
 
     steps:
@@ -52,14 +52,14 @@ jobs:
       with:
         submodules: true
 
-    - name: Setup Github cache for conan
+    - name: Setup Github's cache for conan
       uses: actions/cache@v3
       with:
         key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('conanfile.txt') }}
         path: |
           ~/.conan
 
-    - name: Setup compiler cache (ccache)
+    - name: Setup Github's cache for compiler cache
       uses: actions/cache@v3
       with:
         key: ${{ runner.os }}-${{ matrix.config.compiler }}-ccache
@@ -67,11 +67,7 @@ jobs:
           ~/.config/ccache
           ~/.cache/ccache
 
-    - name: CCache clear statistics
-      run: |
-        ccache --show-config && ccache --zero-stats
-
-    - name: Setup CMake's preset string
+    - name: Build CMake's preset string
       id: cmake_preset_string
       uses: ASzc/change-string-case-action@v2
       with:
@@ -125,7 +121,7 @@ jobs:
       with:
         submodules: true
 
-    - name: Setup Github conan cache
+    - name: Setup Github's cache for conan
       uses: actions/cache@v3
       with:
         key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('conanfile.txt') }}
@@ -133,18 +129,14 @@ jobs:
           C:\\Users\\runneradmin\\.conan
           C:\\.conan
 
-    - name: Setup compiler cache (sccache)
+    - name: Setup Github's cache for compiler cache
       uses: actions/cache@v3
       with:
         key: ${{ runner.os }}-${{ matrix.config.compiler }}-sccache
         path: |
           C:\\Users\\runneradmin\\AppData\\Local\\Mozilla\\sccache
 
-    - name: SCCache clear statistics
-      run: |
-        sccache --zero-stats
-
-    - name: Setup CMake's preset string
+    - name: Build CMake's preset string
       id: cmake_preset_string
       uses: ASzc/change-string-case-action@v2
       with:
@@ -181,7 +173,7 @@ jobs:
         image:    [ macos-12 ]
         config:
         - {
-            compiler: "clang",
+            compiler: "clang"
           }
 
     steps:
@@ -203,25 +195,21 @@ jobs:
       with:
         submodules: true
 
-    - name: Setup Github conan cache
+    - name: Setup Github's cache for conan
       uses: actions/cache@v3
       with:
         key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('conanfile.txt') }}
         path: |
           ~/.conan
 
-    - name: Setup compiler cache (sccache)
+    - name: Setup Github's cache for compiler cache
       uses: actions/cache@v3
       with:
         key: ${{ runner.os }}-${{ matrix.config.compiler }}-sccache
         path: |
           ~/Library/Caches/Mozilla.sccache
 
-    - name: SCCache clear statistics
-      run: |
-        sccache --zero-stats
-
-    - name: Setup CMake's preset string
+    - name: Build CMake's preset string
       id: cmake_preset_string
       uses: ASzc/change-string-case-action@v2
       with:

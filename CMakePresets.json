@@ -25,6 +25,14 @@
             }
         },
         {
+            "name": "default-env",
+            "description": "Default environment variables for the CMake process",
+            "hidden": true,
+            "environment": {
+                "CONAN_V2_MODE": "1"
+            }
+        },
+        {
             "name": "use-stdlib-libc++",
             "description": "Enforce to compile and link with libc++",
             "hidden": true,
@@ -70,6 +78,7 @@
             "hidden": true,
             "inherits": [
                 "default-dirs",
+                "default-env",
                 "use-ninja"
             ],
             "cacheVariables": {
@@ -82,6 +91,7 @@
             "hidden": true,
             "inherits": [
                 "default-dirs",
+                "default-env",
                 "use-ninja"
             ],
             "cacheVariables": {
@@ -94,6 +104,7 @@
             "hidden": true,
             "inherits": [
                 "default-dirs",
+                "default-env",
                 "use-ninja"
             ],
             "cacheVariables": {
@@ -106,6 +117,7 @@
             "hidden": true,
             "inherits": [
                 "default-dirs",
+                "default-env",
                 "use-ninja"
             ],
             "cacheVariables": {
@@ -346,7 +358,7 @@
             "inherits": [
                 "ci-default"
             ],
-            "cacheVariables": { 
+            "cacheVariables": {
                 "CMAKE_CXX_COMPILER_LAUNCHER": "ccache"
              }
         },
@@ -356,10 +368,10 @@
             "hidden": true,
             "inherits": [
                 "ci-default"
-            ],            
-            "cacheVariables": { 
+            ],
+            "cacheVariables": {
                 "CMAKE_CXX_COMPILER_LAUNCHER": "sccache"
-             }
+            }
         },
         {
             "name": "ci-macos-default",
@@ -367,14 +379,14 @@
             "hidden": true,
             "inherits": [
                 "ci-default"
-            ],            
-            "cacheVariables": { 
+            ],
+            "cacheVariables": {
                 "CMAKE_CXX_COMPILER_LAUNCHER": "sccache"
              }
         },
         {
             "name": "ci-linux-clang",
-            "displayName": "CI [clang]",
+            "displayName": "CI [Linux/clang]",
             "description": "used by the ci pipeline",
             "inherits": [
                 "ci-linux-default",
@@ -383,7 +395,7 @@
         },
         {
             "name": "ci-linux-gcc",
-            "displayName": "CI [gcc]",
+            "displayName": "CI [Linux/gcc]",
             "description": "used by the ci pipeline",
             "inherits": [
                 "ci-linux-default",
@@ -392,7 +404,7 @@
         },
         {
             "name": "ci-windows-msvc",
-            "displayName": "CI [msvc]",
+            "displayName": "CI [Windows/msvc]",
             "description": "used by the ci pipeline",
             "inherits": [
                 "ci-windows-default",
@@ -401,7 +413,7 @@
         },
         {
             "name": "ci-macos-clang",
-            "displayName": "CI [clang]",
+            "displayName": "CI [macOS/clang]",
             "description": "used by the ci pipeline",
             "inherits": [
                 "ci-macos-default",

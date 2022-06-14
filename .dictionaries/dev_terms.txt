@@ -1,6 +1,8 @@
 buildsystems
 clang
+ccache
 cmake
+conanfile
 devcontainer
 doxygen
 icompare
@@ -10,6 +12,7 @@ NOLINT
 NOLINTNEXTLINE
 NOLINTBEGIN
 NOLINTEND
+sccache
 stdlib
 toolset
 vcpkg

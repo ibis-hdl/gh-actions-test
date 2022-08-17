@@ -181,10 +181,11 @@ jobs:
     - name: Install basic dependencies
       run: |
         brew update
-        brew install python3 cmake ninja sccache
-        # https://github.com/actions/runner-images/issues/5835
-        brew uninstall llvm
-        brew install llvm@14
+        brew install cmake ninja sccache
+        # [LLVM will be updated to version 14 on July, 11 #5835](
+        #  https://github.com/actions/runner-images/issues/5835)
+        # set the path to homebrew's LLVM
+        echo "/opt/homebrew/opt/llvm@14/bin" >> $GITHUB_PATH
 
     - name: Install conan package manager
       run: |
@@ -218,7 +219,7 @@ jobs:
 
     - name: Configuration and build
       run: |
-        cmake --preset ${{ steps.cmake_preset_string.outputs.lowercase }}
+        cmake -DCMAKE_CXX_COMPILER=$(brew --prefix llvm@14)/bin/clang++ --preset ${{ steps.cmake_preset_string.outputs.lowercase }}
         cmake --build --preset ${{ steps.cmake_preset_string.outputs.lowercase }}
 
     - name: SCCache statistics

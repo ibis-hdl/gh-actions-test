@@ -179,11 +179,12 @@ jobs:
     steps:
 
     - name: Install basic dependencies
-      # Only Clang-13 shipped, see [macOS 12.4 info](
-      #  https://github.com/actions/virtual-environments/blob/main/images/macos/macos-12-Readme.md)
       run: |
         brew update
         brew install python3 cmake ninja sccache
+        # https://github.com/actions/runner-images/issues/5835
+        brew uninstall llvm
+        brew install llvm@14
 
     - name: Install conan package manager
       run: |

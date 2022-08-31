@@ -24,23 +24,36 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
         image:    [ ubuntu-22.04 ]
+        os:       [ linux ]
         config:
         - {
-            compiler: "clang"
+            compiler: "clang",
+            preset:   "linux-clang-release",
           }
         - {
-            compiler: "gcc"
+            compiler: "clang-13-libc++",
+            preset:   "linux-clang-13-libc++-release",
+            apt-pkgs:  "clang-13 libc++-13-dev libc++abi-13-dev",
+          }
+        - {
+            compiler: "gcc",
+            preset:   "linux-gcc-release",
           }
 
     steps:
 
     - name: Install basic dependencies (Ubuntu)
-      # fail-safe check, only Ubuntu this days
+      # fail-safe check - only Ubuntu this days
       if: startsWith(matrix.image, 'ubuntu')
       run: |
         sudo apt-get update
-        sudo apt-get install --no-install-recommends -y cmake ninja-build ccache g++-11 clang-14
+        sudo apt-get install --no-install-recommends -y cmake ninja-build ccache g++-11
+        if [[ -n "${{ matrix.config.apt-pkgs }}" ]]; then
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y ${{ matrix.config.apt-pkgs }};
+        fi
 
     - name: Install conan package manager
       run: |
@@ -55,28 +68,22 @@ jobs:
     - name: Setup Github's cache for conan
       uses: actions/cache@v3
       with:
-        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('conanfile.txt') }}
+        key: ${{ matrix.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('conanfile.txt') }}
         path: |
           ~/.conan
 
     - name: Setup Github's cache for compiler cache
       uses: actions/cache@v3
       with:
-        key: ${{ runner.os }}-${{ matrix.config.compiler }}-ccache
+        key: ${{ matrix.os }}-${{ matrix.config.compiler }}-ccache
         path: |
           ~/.config/ccache
           ~/.cache/ccache
 
-    - name: Build CMake's preset string
-      id: cmake_preset_string
-      uses: ASzc/change-string-case-action@v2
-      with:
-        string: ci-${{ runner.os }}-${{ matrix.config.compiler }}
-
     - name: Configuration and build
       run: |
-        cmake --preset ${{ steps.cmake_preset_string.outputs.lowercase }}
-        cmake --build --preset ${{ steps.cmake_preset_string.outputs.lowercase }}
+        cmake --preset ${{ matrix.config.preset }}
+        cmake --build --preset ${{ matrix.config.preset }} -v
 
     - name: CCache statistics
       run: |
@@ -84,7 +91,7 @@ jobs:
 
     - name: Run Unit Test
       run: |
-        ctest --preset ${{ steps.cmake_preset_string.outputs.lowercase }}
+        ctest --preset ${{ matrix.config.preset }}
 
     - name: Clean up conan's build & sources
       run: |
@@ -98,10 +105,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
         image:    [ windows-2022 ]
+        os:       [ windows ]
         config:
         - {
             compiler: "msvc",
+            preset:   "windows-msvc-release",
+            vcvars:   "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat",
+          }
+        - {
+            compiler: "clang",
+            preset:   "windows-msvc-clang-release",
             vcvars:   "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat",
           }
 
@@ -124,7 +139,7 @@ jobs:
     - name: Setup Github's cache for conan
       uses: actions/cache@v3
       with:
-        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('conanfile.txt') }}
+        key: ${{ matrix.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('conanfile.txt') }}
         path: |
           C:\\Users\\runneradmin\\.conan
           C:\\.conan
@@ -132,22 +147,16 @@ jobs:
     - name: Setup Github's cache for compiler cache
       uses: actions/cache@v3
       with:
-        key: ${{ runner.os }}-${{ matrix.config.compiler }}-sccache
+        key: ${{ matrix.os }}-${{ matrix.config.compiler }}-sccache
         path: |
           C:\\Users\\runneradmin\\AppData\\Local\\Mozilla\\sccache
-
-    - name: Build CMake's preset string
-      id: cmake_preset_string
-      uses: ASzc/change-string-case-action@v2
-      with:
-        string: ci-${{ runner.os }}-${{ matrix.config.compiler }}
 
     - name: Configuration and build on Windows
       shell: cmd
       run: |
         call "${{ matrix.config.vcvars }}"
-        cmake --preset ${{ steps.cmake_preset_string.outputs.lowercase }}
-        cmake --build --preset ${{ steps.cmake_preset_string.outputs.lowercase }}
+        cmake --preset ${{ matrix.config.preset }}
+        cmake --build --preset ${{ matrix.config.preset }} -v
 
     - name: SCCache statistics
       run: |
@@ -155,7 +164,7 @@ jobs:
 
     - name: Run Unit Test
       run: |
-        ctest --preset ${{ steps.cmake_preset_string.outputs.lowercase }}
+        ctest --preset ${{ matrix.config.preset }}
 
     - name: Clean up conan's build & sources
       run: |
@@ -170,10 +179,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # https://github.com/actions/runner-images/blob/main/images/macos/macos-12-Readme.md
         image:    [ macos-12 ]
+        os:       [ macos ]
         config:
         - {
-            compiler: "clang"
+            compiler: "clang",
+            preset:   "macos-clang-release",
           }
 
     steps:
@@ -185,7 +197,7 @@ jobs:
         # [LLVM will be updated to version 14 on July, 11 #5835](
         #  https://github.com/actions/runner-images/issues/5835)
         # set the path to homebrew's LLVM
-        echo "/opt/homebrew/opt/llvm@14/bin" >> $GITHUB_PATH
+        #echo "/opt/homebrew/opt/llvm@14/bin" >> $GITHUB_PATH
 
     - name: Install conan package manager
       run: |
@@ -200,27 +212,21 @@ jobs:
     - name: Setup Github's cache for conan
       uses: actions/cache@v3
       with:
-        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('conanfile.txt') }}
+        key: ${{ matrix.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('conanfile.txt') }}
         path: |
           ~/.conan
 
     - name: Setup Github's cache for compiler cache
       uses: actions/cache@v3
       with:
-        key: ${{ runner.os }}-${{ matrix.config.compiler }}-sccache
+        key: ${{ matrix.os }}-${{ matrix.config.compiler }}-sccache
         path: |
           ~/Library/Caches/Mozilla.sccache
 
-    - name: Build CMake's preset string
-      id: cmake_preset_string
-      uses: ASzc/change-string-case-action@v2
-      with:
-        string: ci-${{ runner.os }}-${{ matrix.config.compiler }}
-
     - name: Configuration and build
       run: |
-        cmake -DCMAKE_CXX_COMPILER=$(brew --prefix llvm@14)/bin/clang++ --preset ${{ steps.cmake_preset_string.outputs.lowercase }}
-        cmake --build --preset ${{ steps.cmake_preset_string.outputs.lowercase }}
+        cmake -DCMAKE_CXX_COMPILER=$(brew --prefix llvm@14)/bin/clang++ --preset ${{ matrix.config.preset }}
+        cmake --build --preset ${{ matrix.config.preset }} -v
 
     - name: SCCache statistics
       run: |
@@ -228,7 +234,7 @@ jobs:
 
     - name: Run Unit Test
       run: |
-        ctest --preset ${{ steps.cmake_preset_string.outputs.lowercase }}
+        ctest --preset ${{ matrix.config.preset }}
 
     - name: Clean up conan's build & sources
       run: |

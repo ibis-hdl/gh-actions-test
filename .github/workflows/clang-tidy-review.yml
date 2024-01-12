@@ -48,7 +48,7 @@ jobs:
 
     - name: Clang tidy review
       id: clang-tidy-review
-      uses: ZedThree/clang-tidy-review@v0.9.0
+      uses: ZedThree/clang-tidy-review@v0.15.1
       with:
         config_file: .clang-tidy
         cmake_command: cmake --preset ci-linux-clang

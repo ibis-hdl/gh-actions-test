@@ -28,14 +28,14 @@ jobs:
         submodules: true
 
     - name: Setup Github's cache for conan
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         key: ${{ runner.os }}-clang-conan-${{ hashFiles('conanfile.txt') }}
         path: |
           ~/.conan
 
     - name: Setup Github's cache for compiler cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         key: ${{ runner.os }}-clang-ccache
         path: |

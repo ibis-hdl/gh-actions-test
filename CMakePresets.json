@@ -28,9 +28,7 @@
             "name": "default-env",
             "description": "Default environment variables for the CMake process",
             "hidden": true,
-            "environment": {
-                "CONAN_V2_MODE": "1"
-            }
+            "environment": { }
         },
         {
             "name": "default-presets",
@@ -91,11 +89,11 @@
         },
         {
             "name": "compiler-clang-18",
-            "description": "Clang 13 C language family frontend for LLVM",
+            "description": "Clang 18 C language family frontend for LLVM",
             "hidden": true,
             "cacheVariables": {
-                "CXX": "clang++-13",
-                "CMAKE_CXX_COMPILER": "clang++-13"
+                "CXX": "clang++-18",
+                "CMAKE_CXX_COMPILER": "clang++-18"
             }
         },
         {
@@ -163,7 +161,7 @@
         },
         {
             "name": "linux-clang-18-libc++-release",
-            "displayName": "Linux Clang 13 (libc++): Release",
+            "displayName": "Linux Clang 18 (libc++): Release",
             "description": "Linux/WSL2 LLVM Clang with libc++ compiler: Release",
             "inherits": [
                 "linux-default",

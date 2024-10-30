@@ -1,21 +1,22 @@
 name: 'Clang tidy review'
 
 on:
-  [ pull_request ]
+  push:
+  pull_request:
+  workflow_dispatch:
 
 env:
-  CONAN_V2_MODE : 1
 
 jobs:
   review:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
     - name: Install basic dependencies
       run: |
         sudo apt-get update
         sudo apt-get install --no-install-recommends -y \
-          cmake ninja-build ccache clang-14 clang-format clang-tidy
+          cmake ninja-build ccache clang clang-format clang-tidy
 
     - name: Install conan package manager
       run: |
@@ -23,19 +24,19 @@ jobs:
         pip --disable-pip-version-check --no-cache-dir install wheel conan
 
     - name: Checkout Repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: true
 
     - name: Setup Github's cache for conan
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         key: ${{ runner.os }}-clang-conan-${{ hashFiles('conanfile.txt') }}
         path: |
           ~/.conan
 
     - name: Setup Github's cache for compiler cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         key: ${{ runner.os }}-clang-ccache
         path: |
@@ -48,7 +49,7 @@ jobs:
 
     - name: Clang tidy review
       id: clang-tidy-review
-      uses: ZedThree/clang-tidy-review@v0.9.0
+      uses: ZedThree/clang-tidy-review@v0.14.0
       with:
         config_file: .clang-tidy
         cmake_command: cmake --preset ci-linux-clang
@@ -57,8 +58,3 @@ jobs:
       if: steps.clang-tidy-review.outputs.total_comments > 0
       run: |
         echo "Some files failed the Clang tidy review!"
-
-    - name: Clean up conan build & sources
-      run: |
-        conan remove -f "*" --builds
-        conan remove -f "*" --src

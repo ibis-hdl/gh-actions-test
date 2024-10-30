@@ -2,10 +2,7 @@ name: 'Python Lint'
 
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches:
-    - '**'
   workflow_dispatch:
 
 jobs:
@@ -17,18 +14,18 @@ jobs:
     steps:
 
     - name: Checkout Repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{github.event.pull_request.head.ref}}
-        repository: ${{github.event.pull_request.head.repo.full_name}}    
+        repository: ${{github.event.pull_request.head.repo.full_name}}
 
     - name: Gather Python files from git
       run: |
         echo "PYTHON_FILES=$(git ls-files '*.py')" >> $GITHUB_ENV
-    
+
     - name: autopep8
       id: autopep8
-      uses: peter-evans/autopep8@v1
+      uses: peter-evans/autopep8@v2
       with:
         args: --exit-code --recursive --in-place --aggressive --aggressive ${{ env.PYTHON_FILES }}
 
@@ -36,12 +33,12 @@ jobs:
       id: vars
       run: |
         echo ::set-output name=branch-name::"autopep8-patches/${{ github.head_ref }}"
-      
+
     - name: Create Pull Request
       # ... also check if the PR is not from a fork
       if: steps.autopep8.outputs.exit-code == 2 && github.event.pull_request.head.repo.full_name == github.repository
-      uses: peter-evans/create-pull-request@v4
-      id: cpr      
+      uses: peter-evans/create-pull-request@v7
+      id: cpr
       with:
         commit-message: autopep8 action fixes
         title: Fixes by autopep8 action
@@ -55,12 +52,12 @@ jobs:
       if: ${{ steps.cpr.outputs.pull-request-number }}
       run: |
         echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
-        echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"        
-        
+        echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
+
     - name: Fail if autopep8 made changes
       if: steps.autopep8.outputs.exit-code == 2
       run: exit 1
-      
+
   pylint:
     runs-on: ubuntu-latest
     env:
@@ -70,14 +67,14 @@ jobs:
     steps:
 
     - name: Checkout Repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: true
 
     - name: Gather Python files from git
       run: |
         echo "PYTHON_FILES=$(git ls-files '*.py')" >> $GITHUB_ENV
-    
+
     - name: Show files to lint
       run: |
         echo "Python: ${{ env.PYTHON_FILES }}"

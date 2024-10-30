@@ -1,10 +1,8 @@
-name: 'SpellCheck'
+name: 'SpellCheck Action'
 
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -12,18 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Gather Markdown files from git
       run: |
         echo "MARKDOWN_FILES=$(git ls-files '*.md')" >> $GITHUB_ENV
-    
+
     - name: Show files to spell check
       run: |
         echo "Markdown: ${{ env.MARKDOWN_FILES }}"
 
     - name: Check Spelling [Markdown]
-      uses: rojopolis/spellcheck-github-actions@0.26.0
+      uses: rojopolis/spellcheck-github-actions@v0
       with:
         config_path: .github/config/spellcheck.yml
         source_files: ${{ env.MARKDOWN_FILES }}

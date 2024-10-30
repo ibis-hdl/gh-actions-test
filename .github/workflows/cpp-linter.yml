@@ -12,12 +12,12 @@ env:
 
 jobs:
   cpp-linter:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
     - name: Install basic dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install --no-install-recommends -y cmake ninja-build ccache clang-14 clang-format clang-tidy
+        sudo apt-get install --no-install-recommends -y cmake ninja-build ccache clang clang-tools
 
     - name: Install conan package manager and cpp-linter
       run: |
@@ -26,19 +26,19 @@ jobs:
           cpp-linter
 
     - name: Checkout Repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: true
 
     - name: Setup Github's cache for conan
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         key: ${{ runner.os }}-clang-conan-${{ hashFiles('conanfile.txt') }}
         path: |
           ~/.conan
 
     - name: Setup Github's cache for compiler cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         key: ${{ runner.os }}-clang-ccache
         path: |
@@ -52,14 +52,9 @@ jobs:
     - name: Run cpp-linter (clang format && tidy)
       id: linter
       run: |
-        cpp-linter --version=14 --style=file --tidy-checks='' --ignore=build --database=build/ci-linux-clang
+        cpp-linter --version=18 --style=file --tidy-checks='' --ignore=build --database=build/ci-linux-clang
 
     - name: Passed C++ style guide checks?!
       if: steps.linter.outputs.checks-failed > 0
       run: |
         echo "Some files failed the Clang tidy/format checks!"
-
-    - name: Clean up conan build & sources
-      run: |
-        conan remove -f "*" --builds
-        conan remove -f "*" --src

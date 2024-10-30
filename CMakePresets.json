@@ -90,7 +90,7 @@
             }
         },
         {
-            "name": "compiler-clang-13",
+            "name": "compiler-clang-18",
             "description": "Clang 13 C language family frontend for LLVM",
             "hidden": true,
             "cacheVariables": {
@@ -162,12 +162,12 @@
             ]
         },
         {
-            "name": "linux-clang-13-libc++-release",
+            "name": "linux-clang-18-libc++-release",
             "displayName": "Linux Clang 13 (libc++): Release",
             "description": "Linux/WSL2 LLVM Clang with libc++ compiler: Release",
             "inherits": [
                 "linux-default",
-                "compiler-clang-13",
+                "compiler-clang-18",
                 "release-build",
                 "use-stdlib-libc++"
             ]
@@ -408,9 +408,9 @@
             "configurePreset": "linux-clang-release"
         },
         {
-            "name": "linux-clang-13-libc++-release",
+            "name": "linux-clang-18-libc++-release",
             "displayName": "Debug",
-            "configurePreset": "linux-clang-13-libc++-release"
+            "configurePreset": "linux-clang-18-libc++-release"
         },
         {
             "name": "linux-gcc-debug",
@@ -512,9 +512,9 @@
             ]
         },
         {
-            "name": "linux-clang-13-libc++-release",
+            "name": "linux-clang-18-libc++-release",
             "displayName": "Test-All",
-            "configurePreset": "linux-clang-13-libc++-release",
+            "configurePreset": "linux-clang-18-libc++-release",
             "inherits": [
                 "test-default"
             ]

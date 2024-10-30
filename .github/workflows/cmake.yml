@@ -2,13 +2,10 @@ name: 'CMake build'
 
 on:
   push:
-    branches: [  main  ]
   pull_request:
-    branches: [  main  ]
   workflow_dispatch:
 
 env:
-  CONAN_V2_MODE : 1
   # GitHub actions automatically zstd compresses caches
   CCACHE_NOCOMPRESS : true
   # 3GB; 10GB total for 4 compile jobs and conan data
@@ -19,13 +16,13 @@ jobs:
 
   # ---------------------------------------------------------------------------
   Linux:
-    name: Linux ${{ matrix.config.compiler }}
+    name: Ubuntu Linux ${{ matrix.config.compiler }}
     runs-on: ${{ matrix.image }}
     strategy:
       fail-fast: false
       matrix:
         # https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
-        image:    [ ubuntu-22.04 ]
+        image:    [ ubuntu-24.04 ]
         os:       [ linux ]
         config:
         - {
@@ -33,9 +30,9 @@ jobs:
             preset:   "linux-clang-release",
           }
         - {
-            compiler: "clang-13-libc++",
-            preset:   "linux-clang-13-libc++-release",
-            apt-pkgs:  "clang-13 libc++-13-dev libc++abi-13-dev",
+            compiler: "clang-18-libc++",
+            preset:   "linux-clang-18-libc++-release",
+            apt-pkgs:  "clang-18 libc++-18-dev libc++abi-18-dev",
           }
         - {
             compiler: "gcc",
@@ -49,31 +46,26 @@ jobs:
       if: startsWith(matrix.image, 'ubuntu')
       run: |
         sudo apt-get update
-        sudo apt-get install --no-install-recommends -y cmake ninja-build ccache g++-11
+        sudo apt-get install --no-install-recommends -y cmake ninja-build ccache g++
         if [[ -n "${{ matrix.config.apt-pkgs }}" ]]; then
           sudo apt-get update
           sudo apt-get install --no-install-recommends -y ${{ matrix.config.apt-pkgs }};
         fi
 
-    - name: Install conan package manager
-      run: |
-        python -m pip install --upgrade pip
-        pip --disable-pip-version-check --no-cache-dir install wheel conan
-
     - name: Checkout Repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: true
 
-    - name: Setup Github's cache for conan
-      uses: actions/cache@v3
+    - name: Setup Github's cache for conan2 (dummy)
+      uses: actions/cache@v4
       with:
         key: ${{ matrix.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('conanfile.txt') }}
         path: |
-          ~/.conan
+          ~/.conan2
 
     - name: Setup Github's cache for compiler cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         key: ${{ matrix.os }}-${{ matrix.config.compiler }}-ccache
         path: |
@@ -93,10 +85,6 @@ jobs:
       run: |
         ctest --preset ${{ matrix.config.preset }}
 
-    - name: Clean up conan's build & sources
-      run: |
-        conan remove -f "*" --builds
-        conan remove -f "*" --src
 
   # ---------------------------------------------------------------------------
   Windows:
@@ -132,20 +120,20 @@ jobs:
         pip --disable-pip-version-check --no-cache-dir install wheel conan
 
     - name: Checkout Repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: true
 
-    - name: Setup Github's cache for conan
-      uses: actions/cache@v3
+    - name: Setup Github's cache for conan2
+      uses: actions/cache@v4
       with:
         key: ${{ matrix.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('conanfile.txt') }}
         path: |
-          C:\\Users\\runneradmin\\.conan
+          C:\\Users\\runneradmin\\.conan2
           C:\\.conan
 
     - name: Setup Github's cache for compiler cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         key: ${{ matrix.os }}-${{ matrix.config.compiler }}-sccache
         path: |
@@ -166,11 +154,6 @@ jobs:
       run: |
         ctest --preset ${{ matrix.config.preset }}
 
-    - name: Clean up conan's build & sources
-      run: |
-        conan remove -f "*" --builds
-        conan remove -f "*" --src
-
   # ---------------------------------------------------------------------------
   macOS:
     name: macOS ${{ matrix.config.compiler }}
@@ -179,8 +162,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # https://github.com/actions/runner-images/blob/main/images/macos/macos-12-Readme.md
-        image:    [ macos-12 ]
+        # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md
+        image:    [ macos-15 ]
         os:       [ macos ]
         config:
         - {
@@ -194,7 +177,7 @@ jobs:
       run: |
         brew update
         brew install cmake ninja sccache
-        # [LLVM will be updated to version 14 on July, 11 #5835](
+        # historical: [LLVM will be updated to version 14 on July, 11 #5835](
         #  https://github.com/actions/runner-images/issues/5835)
         # set the path to homebrew's LLVM
         #echo "/opt/homebrew/opt/llvm@14/bin" >> $GITHUB_PATH
@@ -205,19 +188,19 @@ jobs:
         pip3 --disable-pip-version-check --no-cache-dir install wheel conan
 
     - name: Checkout Repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: true
 
     - name: Setup Github's cache for conan
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         key: ${{ matrix.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('conanfile.txt') }}
         path: |
-          ~/.conan
+          ~/.conan2
 
     - name: Setup Github's cache for compiler cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         key: ${{ matrix.os }}-${{ matrix.config.compiler }}-sccache
         path: |
@@ -235,8 +218,3 @@ jobs:
     - name: Run Unit Test
       run: |
         ctest --preset ${{ matrix.config.preset }}
-
-    - name: Clean up conan's build & sources
-      run: |
-        conan remove -f "*" --builds
-        conan remove -f "*" --src

@@ -6,8 +6,6 @@ on:
   push:
   workflow_dispatch:
 
-env:
-
 jobs:
   cpp-linter:
     runs-on: ubuntu-24.04

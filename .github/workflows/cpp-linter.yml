@@ -28,21 +28,23 @@ jobs:
       id: conan2-cache
       uses: actions/cache@v4
       with:
-        key: ${{ runner.os }}-clang-conan-${{ hashFiles('conanfile.txt') }}
+        key: ${{ runner.os }}-conan-${{ hashFiles('conanfile.txt') }}
         path: |
-          ~/.conan2       # settings
-          build/conan     # CMake modules
+          ~/.conan2         # dependency binaries
+          build/conan       # CMake modules
 
     - if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
       name: Check the state of installed dependencies by Conan2
       run: |
         conan profile detect --force --name default
         conan install . --settings=compiler.cppstd=17 -s build_type=Release --output-folder build/conan --build=missing
+        ls -la ~/.conan2
+        ls -la build/conan
 
     - name: Setup Github's cache for compiler cache (ccache)
       uses: actions/cache@v4
       with:
-        key: ${{ runner.os }}-clang-ccache
+        key: ${{ runner.os }}-ccache
         path: |
           ~/.config/ccache  # Config file
           ~/.cache/ccache   # Cache directory

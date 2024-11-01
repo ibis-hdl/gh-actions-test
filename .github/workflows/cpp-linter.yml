@@ -15,14 +15,14 @@ jobs:
         sudo apt-get update
         sudo apt-get install --no-install-recommends -y cmake ninja-build ccache clang clang-tools
 
-    - name: Install conan package manager and cpp-linter
-      run: |
-        pip --disable-pip-version-check --no-cache-dir install wheel conan cpp-linter
-
     - name: Checkout Repo
       uses: actions/checkout@v4
       with:
         submodules: true
+
+    - name: Install Conan package manager and cpp-linter
+      run: |
+        pip --disable-pip-version-check --no-cache-dir install wheel conan cpp-linter
 
     - name: Cache Conan2' dependencies
       id: conan2-cache
@@ -30,24 +30,22 @@ jobs:
       with:
         key: ${{ runner.os }}-conan-${{ hashFiles('conanfile.txt') }}
         path: |
-          ~/.conan2         # dependency binaries
-          build/conan       # CMake modules
+          ~/.conan2
+          build/conan
 
     - if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
       name: Check the state of installed dependencies by Conan2
       run: |
         conan profile detect --force --name default
         conan install . --settings=compiler.cppstd=17 -s build_type=Release --output-folder build/conan --build=missing
-        ls -la ~/.conan2
-        ls -la build/conan
 
     - name: Setup Github's cache for compiler cache (ccache)
       uses: actions/cache@v4
       with:
         key: ${{ runner.os }}-ccache
         path: |
-          ~/.config/ccache  # Config file
-          ~/.cache/ccache   # Cache directory
+          ~/.config/ccache
+          ~/.cache/ccache
 
     - name: CMake configuration
       run: |

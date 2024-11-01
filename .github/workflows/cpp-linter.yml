@@ -35,9 +35,10 @@ jobs:
 
     - if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
       name: Check the state of installed dependencies by Conan2
+      # no build required for linting
       run: |
         conan profile detect --force --name default
-        conan install . --settings=compiler.cppstd=17 -s build_type=Release --output-folder build/conan --build=missing
+        conan install . --settings=compiler.cppstd=17 -s build_type=Release --output-folder build/conan
 
     - name: CMake configuration
       run: |
@@ -51,12 +52,11 @@ jobs:
       with:
         style: 'file'  # Use .clang-format config file
         tidy-checks: '' # Use .clang-tidy config file
+        database: build/ci-linux-clang
         # only 'update' a single comment in a pull request thread.
         thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
-      #run: |
-      #  cpp-linter --version=18 --style=file --tidy-checks='' --ignore=build --database=build/ci-linux-clang
 
-    - name: Passed C++ style guide checks?!
+    - name: Check for passed C++ style
       if: steps.linter.outputs.checks-failed > 0
       run: |
         echo "Some files failed the Clang tidy/format checks!"

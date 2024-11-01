@@ -165,7 +165,6 @@ jobs:
     - name: CMake build
       shell: cmd
       run: |
-        # call "${{ matrix.config.vcvars }}"
         cmake --build --preset ${{ matrix.config.preset }}
 
     - name: Run Mozilla' sccache stat for check

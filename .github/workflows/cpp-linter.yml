@@ -20,7 +20,7 @@ jobs:
       with:
         submodules: true
 
-    - name: Install Conan package manager and cpp-linter
+    - name: Install Conan package manager
       run: |
         pip --disable-pip-version-check --no-cache-dir install wheel conan
 
@@ -38,14 +38,6 @@ jobs:
       run: |
         conan profile detect --force --name default
         conan install . --settings=compiler.cppstd=17 -s build_type=Release --output-folder build/conan --build=missing
-
-    - name: Setup Github's cache for compiler cache (ccache)
-      uses: actions/cache@v4
-      with:
-        key: ${{ runner.os }}-ccache
-        path: |
-          ~/.config/ccache
-          ~/.cache/ccache
 
     - name: CMake configuration
       run: |

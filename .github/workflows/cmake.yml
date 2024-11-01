@@ -21,7 +21,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
         image:    [ ubuntu-24.04 ]
         os:       [ linux ]
         config:
@@ -32,7 +31,7 @@ jobs:
         - {
             compiler: "clang-18-libc++",
             preset:   "linux-clang-18-libc++-release",
-            apt-pkgs:  "clang-18 libc++-18-dev libc++abi-18-dev",
+            apt-pkgs: "clang-18 libc++-18-dev libc++abi-18-dev",
           }
         - {
             compiler: "gcc",
@@ -41,12 +40,12 @@ jobs:
 
     steps:
 
-    - name: Install basic dependencies (Ubuntu)
+    - name: Install basic dependencies
       # fail-safe check - only Ubuntu this days
       if: startsWith(matrix.image, 'ubuntu')
       run: |
         sudo apt-get update
-        sudo apt-get install --no-install-recommends -y cmake ninja-build ccache g++
+        sudo apt-get install --no-install-recommends -y cmake ninja-build ccache clang g++
         if [[ -n "${{ matrix.config.apt-pkgs }}" ]]; then
           sudo apt-get update
           sudo apt-get install --no-install-recommends -y ${{ matrix.config.apt-pkgs }};
@@ -57,14 +56,26 @@ jobs:
       with:
         submodules: true
 
-    - name: Setup Github's cache for conan2 (dummy)
+    - name: Install Conan package manager
+      run: |
+        pip --disable-pip-version-check --no-cache-dir install wheel conan
+
+    - name: Cache Conan2' dependencies
+      id: conan2-cache
       uses: actions/cache@v4
       with:
-        key: ${{ matrix.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('conanfile.txt') }}
+        key: ${{ runner.os }}-conan-${{ hashFiles('conanfile.txt') }}
         path: |
           ~/.conan2
+          build/conan
 
-    - name: Setup Github's cache for compiler cache
+    - if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
+      name: Check the state of installed dependencies by Conan2
+      run: |
+        conan profile detect --force --name default
+        conan install . --settings=compiler.cppstd=17 -s build_type=Release --output-folder build/conan --build=missing
+
+    - name: etup Github's cache for compiler cache (ccache)
       uses: actions/cache@v4
       with:
         key: ${{ matrix.os }}-${{ matrix.config.compiler }}-ccache
@@ -72,9 +83,12 @@ jobs:
           ~/.config/ccache
           ~/.cache/ccache
 
-    - name: Configuration and build
+    - name: CMake configuration
       run: |
         cmake --preset ${{ matrix.config.preset }}
+
+    - name: CMake build
+      run: |
         cmake --build --preset ${{ matrix.config.preset }} -v
 
     - name: CCache statistics

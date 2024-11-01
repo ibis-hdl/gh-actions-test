@@ -22,7 +22,7 @@ jobs:
 
     - name: Install Conan package manager and cpp-linter
       run: |
-        pip --disable-pip-version-check --no-cache-dir install wheel conan cpp-linter
+        pip --disable-pip-version-check --no-cache-dir install wheel conan
 
     - name: Cache Conan2' dependencies
       id: conan2-cache
@@ -53,8 +53,16 @@ jobs:
 
     - name: Run cpp-linter (clang format && tidy)
       id: linter
-      run: |
-        cpp-linter --version=18 --style=file --tidy-checks='' --ignore=build --database=build/ci-linux-clang
+      uses: cpp-linter/cpp-linter-action@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        style: 'file'  # Use .clang-format config file
+        tidy-checks: '' # Use .clang-tidy config file
+        # only 'update' a single comment in a pull request thread.
+        thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
+      #run: |
+      #  cpp-linter --version=18 --style=file --tidy-checks='' --ignore=build --database=build/ci-linux-clang
 
     - name: Passed C++ style guide checks?!
       if: steps.linter.outputs.checks-failed > 0

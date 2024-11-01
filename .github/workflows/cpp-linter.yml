@@ -18,7 +18,6 @@ jobs:
     - name: Install conan package manager and cpp-linter
       run: |
         pip --disable-pip-version-check --no-cache-dir install wheel conan cpp-linter
-        ccache -s -v
 
     - name: Checkout Repo
       uses: actions/checkout@v4
@@ -31,11 +30,11 @@ jobs:
       with:
         key: ${{ runner.os }}-clang-conan-${{ hashFiles('conanfile.txt') }}
         path: |
-          ~/.conan2
+          ~/.conan2       # settings
+          build/conan     # CMake modules
 
     - if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
       name: Check the state of installed dependencies by Conan2
-      continue-on-error: false
       run: |
         conan profile detect --force --name default
         conan install . --settings=compiler.cppstd=17 -s build_type=Release --output-folder build/conan --build=missing
@@ -45,8 +44,8 @@ jobs:
       with:
         key: ${{ runner.os }}-clang-ccache
         path: |
-          ~/.config/ccache
-          ~/.cache/ccache
+          ~/.config/ccache  # Config file
+          ~/.cache/ccache   # Cache directory
 
     - name: CMake configuration
       run: |

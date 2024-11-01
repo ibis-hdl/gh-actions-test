@@ -145,6 +145,12 @@ jobs:
         path: |
           C:\\Users\\runneradmin\\.conan2
 
+    - if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
+      name: Check the state of installed dependencies by Conan2
+      run: |
+        conan profile detect --force --name default
+        conan install . --settings=compiler.cppstd=17 -s build_type=Release --output-folder build/conan --build=missing
+
     - name: Run Mozilla' sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.6
       env:

@@ -14,7 +14,7 @@ env:
 
 jobs:
 
-  # --------------------------------- LINUX ------------------------------------------
+  # --------------------------------- Linux ------------------------------------------
   Linux:
     name: Ubuntu Linux ${{ matrix.config.compiler }}
     runs-on: ${{ matrix.image }}
@@ -87,8 +87,11 @@ jobs:
     - name: Check CMake configure and build conditions
       if: true
       run: |
+        env
+        pwd
+        echo "GITHUB_WORKSPACE = $${{ env.GITHUB_WORKSPACE }}"
         ls -alF  ~/.conan2
-        ls -alF build/conan
+        ls -alFR build/conan
         
     - name: CMake configuration
       run: |
@@ -107,7 +110,7 @@ jobs:
         ctest --preset ${{ matrix.config.preset }}
 
 
-  # --------------------------------- WINDOWS ------------------------------------------
+  # --------------------------------- Windows ------------------------------------------
   Windows:
     name: Windows ${{ matrix.config.compiler }}
     runs-on: ${{ matrix.image }}
@@ -168,7 +171,11 @@ jobs:
       if: true
       shell: cmd
       run: |
-        dir /s /b C:\\Users\\runneradmin\\.conan2
+        env
+        echo %cd%
+        echo env.GITHUB_WORKSPACE
+        echo Sys.getenv("USERPROFILE")
+        dir /s /b ${{Sys.getenv("USERPROFILE")}}/.conan2
         dir /s /b build\\conan
 
     - name: CMake configuration
@@ -257,8 +264,11 @@ jobs:
 
     - name: Check CMake configure and build conditions
       if: true
+      shell: bash      
       run: |
-        ls --help
+        env
+        pwd
+        echo env.GITHUB_WORKSPACE
         ls -alF  ~/.conan2
         ls -alF build/conan
         

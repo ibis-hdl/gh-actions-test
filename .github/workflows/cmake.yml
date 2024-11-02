@@ -32,11 +32,11 @@ jobs:
             compiler: "gcc",
             preset:   "linux-gcc-release",
           }
-#        - {
-#            compiler: "clang-18-libc++",
-#            preset:   "linux-clang-18-libc++-release",
-#            apt-pkgs: "clang-18 libc++-18-dev libc++abi-18-dev",
-#          }
+        - {
+            compiler: "clang-libc++",
+            preset:   "linux-clang-libc++-release",
+            apt-pkgs: "libc++-dev libc++abi-dev",
+          }
 
     steps:
 
@@ -83,7 +83,14 @@ jobs:
         path: |
           ~/.config/ccache
           ~/.cache/ccache
-
+          
+    - name: Check CMake configure and build conditions
+      if: true
+      run: |
+        ls -r  ~/.conan2
+        ls -r build/conan
+        ls -r build/${{ matrix.config.preset }}
+        
     - name: CMake configuration
       run: |
         cmake --preset ${{ matrix.config.preset }}
@@ -157,6 +164,14 @@ jobs:
       uses: mozilla-actions/sccache-action@v0.0.6
       env:
         SCCACHE_GHA_ENABLED: "true"
+
+    - name: Check CMake configure and build conditions
+      if: true
+      shell: cmd
+      run: |
+        dir /s /b C:\\Users\\runneradmin\\.conan2
+        dir /s /b build\\conan
+        dir /s /b build\\${{ matrix.config.preset }}
 
     - name: CMake configuration
       shell: cmd
@@ -242,6 +257,13 @@ jobs:
       env:
         SCCACHE_GHA_ENABLED: "true"
 
+    - name: Check CMake configure and build conditions
+      if: true
+      run: |
+        ls -r  ~/.conan2
+        ls -r build/conan
+        ls -r build/${{ matrix.config.preset }}
+        
     - name: CMake configuration
       run: |
         cmake -DCMAKE_CXX_COMPILER=clang++ --preset ${{ matrix.config.preset }}

@@ -182,7 +182,7 @@ jobs:
         rem env
         echo %cd%
         dir 
-        dir /s /b C:\\Users\\runneradmin\\.conan2
+        rem dir /s /b C:\\Users\\runneradmin\\.conan2
         rem dir /s /b build\\conan
 
     - name: CMake configuration
@@ -196,10 +196,6 @@ jobs:
       run: |
         call "${{ matrix.config.vcvars }}"
         cmake --build --preset ${{ matrix.config.preset }}
-
-    - name: Run Mozilla sccache stat for check
-      shell: bash
-      run: ${SCCACHE_PATH} --show-stats
 
     - name: Run Unit Test
       run: |
@@ -292,10 +288,6 @@ jobs:
       run: |
         cmake --build --preset ${{ matrix.config.preset }}
         
-    - name: Run Mozilla sccache stat for check
-      shell: bash
-      run: ${SCCACHE_PATH} --show-stats
-
     - name: Run Unit Test
       run: |
         ctest --preset ${{ matrix.config.preset }}

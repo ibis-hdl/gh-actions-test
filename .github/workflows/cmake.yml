@@ -183,9 +183,9 @@ jobs:
       run: |
         env
         echo %cd%
-        echo env.GITHUB_WORKSPACE
-        echo $HOME
-        dir /s /b ${HOME}/.conan2
+        echo $env.GITHUB_WORKSPACE
+        echo $env.HOME
+        dir /s /b ${env.HOME}\\.conan2
         dir /s /b build\\conan
 
     - name: CMake configuration

@@ -182,8 +182,10 @@ jobs:
         env
         echo %cd%
         echo env.GITHUB_WORKSPACE
-        echo ${{ Sys.getenv("USERPROFILE") }}
-        dir /s /b ${{Sys.getenv("USERPROFILE")}}/.conan2
+        # echo ${{ Sys.getenv("USERPROFILE") }}
+        echo $HOME
+        # dir /s /b ${{Sys.getenv("USERPROFILE")}}/.conan2
+        dir /s /b ${HOME}/.conan2
         dir /s /b build\\conan
 
     - name: CMake configuration

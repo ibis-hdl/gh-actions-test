@@ -87,9 +87,8 @@ jobs:
     - name: Check CMake configure and build conditions
       if: true
       run: |
-        ls -r  ~/.conan2
-        ls -r build/conan
-        ls -r build/${{ matrix.config.preset }}
+        ls -alF  ~/.conan2
+        ls -alF build/conan
         
     - name: CMake configuration
       run: |
@@ -171,7 +170,6 @@ jobs:
       run: |
         dir /s /b C:\\Users\\runneradmin\\.conan2
         dir /s /b build\\conan
-        dir /s /b build\\${{ matrix.config.preset }}
 
     - name: CMake configuration
       shell: cmd
@@ -260,9 +258,9 @@ jobs:
     - name: Check CMake configure and build conditions
       if: true
       run: |
-        ls -r  ~/.conan2
-        ls -r build/conan
-        ls -r build/${{ matrix.config.preset }}
+        ls --help
+        ls -alF  ~/.conan2
+        ls -alF build/conan
         
     - name: CMake configuration
       run: |

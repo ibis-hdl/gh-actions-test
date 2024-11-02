@@ -176,15 +176,15 @@ jobs:
         SCCACHE_GHA_ENABLED: "true"
 
     - name: Check CMake configure and build conditions
+      # echo ${{ Sys.getenv("USERPROFILE") }}
+      #  dir /s /b ${{Sys.getenv("USERPROFILE")}}/.conan2
       if: true
       shell: cmd
       run: |
         env
         echo %cd%
         echo env.GITHUB_WORKSPACE
-        # echo ${{ Sys.getenv("USERPROFILE") }}
         echo $HOME
-        # dir /s /b ${{Sys.getenv("USERPROFILE")}}/.conan2
         dir /s /b ${HOME}/.conan2
         dir /s /b build\\conan
 

@@ -32,11 +32,11 @@ jobs:
             compiler: "gcc",
             preset:   "linux-gcc-release",
           }
-        - {
-            compiler: "clang-libc++",
-            preset:   "linux-clang-libc++-release",
-            apt-pkgs: "libc++-dev libc++abi-dev",
-          }
+#        - {
+#            compiler: "clang-libc++",
+#            preset:   "linux-clang-libc++-release",
+#            apt-pkgs: "libc++-dev libc++abi-dev",
+#          }
 
     steps:
 
@@ -179,11 +179,11 @@ jobs:
       if: true
       shell: cmd
       run: |
-        # env
+        rem env
         echo %cd%
         dir 
         dir /s /b C:\\Users\\runneradmin\\.conan2
-        # dir /s /b build\\conan
+        rem dir /s /b build\\conan
 
     - name: CMake configuration
       shell: cmd

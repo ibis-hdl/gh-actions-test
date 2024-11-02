@@ -61,7 +61,7 @@ jobs:
       run: |
         pip --disable-pip-version-check --no-cache-dir install wheel conan
 
-    - name: Cache Conan2' dependencies
+    - name: Cache Conan2 dependencies
       id: conan2-cache
       uses: actions/cache@v4
       with:
@@ -76,7 +76,7 @@ jobs:
         conan profile detect --force --name default
         conan install . --settings=compiler.cppstd=17 -s build_type=Release --output-folder build/conan --build=missing
 
-    - name: Setup Github's cache for compiler cache (ccache)
+    - name: Setup Github cache for compiler cache (ccache)
       uses: actions/cache@v4
       with:
         key: ${{ matrix.os }}-${{ matrix.config.compiler }}-ccache
@@ -139,7 +139,7 @@ jobs:
       run: |
         pip --disable-pip-version-check --no-cache-dir install wheel conan
 
-    - name: Cache Conan2' dependencies
+    - name: Cache Conan2 dependencies
       id: conan2-cache
       uses: actions/cache@v4
       with:
@@ -153,7 +153,7 @@ jobs:
         conan profile detect --force --name default
         conan install . --settings=compiler.cppstd=17 -s build_type=Release --output-folder build/conan --build=missing
 
-    - name: Run Mozilla' sccache-cache
+    - name: Run Mozilla sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.6
       env:
         SCCACHE_GHA_ENABLED: "true"
@@ -170,7 +170,7 @@ jobs:
         call "${{ matrix.config.vcvars }}"
         cmake --build --preset ${{ matrix.config.preset }}
 
-    - name: Run Mozilla' sccache stat for check
+    - name: Run Mozilla sccache stat for check
       shell: bash
       run: ${SCCACHE_PATH} --show-stats
 
@@ -221,7 +221,7 @@ jobs:
         pip3 --disable-pip-version-check --no-cache-dir install wheel conan
         deactivate
 
-    - name: Cache Conan2' dependencies
+    - name: Cache Conan2 dependencies
       id: conan2-cache
       uses: actions/cache@v4
       with:
@@ -237,21 +237,20 @@ jobs:
         conan install . --settings=compiler.cppstd=17 -s build_type=Release --output-folder build/conan --build=missing
         deactivate
 
-    - name: Run Mozilla' sccache-cache
+    - name: Run Mozilla sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.6
       env:
         SCCACHE_GHA_ENABLED: "true"
 
     - name: CMake configuration
       run: |
-        clang++ --version
         cmake -DCMAKE_CXX_COMPILER=clang++ --preset ${{ matrix.config.preset }}
 
     - name: CMake build
       run: |
         cmake --build --preset ${{ matrix.config.preset }}
         
-    - name: Run Mozilla' sccache stat for check
+    - name: Run Mozilla sccache stat for check
       shell: bash
       run: ${SCCACHE_PATH} --show-stats
 

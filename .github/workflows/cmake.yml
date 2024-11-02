@@ -14,7 +14,7 @@ env:
 
 jobs:
 
-  # ---------------------------------------------------------------------------
+  # --------------------------------- LINUX ------------------------------------------
   Linux:
     name: Ubuntu Linux ${{ matrix.config.compiler }}
     runs-on: ${{ matrix.image }}
@@ -101,7 +101,7 @@ jobs:
         ctest --preset ${{ matrix.config.preset }}
 
 
-  # ---------------------------------------------------------------------------
+  # --------------------------------- WINDOWS ------------------------------------------
   Windows:
     name: Windows ${{ matrix.config.compiler }}
     runs-on: ${{ matrix.image }}
@@ -178,7 +178,7 @@ jobs:
       run: |
         ctest --preset ${{ matrix.config.preset }}
 
-  # ---------------------------------------------------------------------------
+  # ----------------------------------- macOS ----------------------------------------
   macOS:
     name: macOS ${{ matrix.config.compiler }}
     runs-on: ${{ matrix.image }}

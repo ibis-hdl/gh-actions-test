@@ -144,7 +144,7 @@ jobs:
 
     - name: Install basic dependencies on ${{matrix.os}}
       run: |
-        choco install ninja cmake
+        choco install cmake ninja
 
     - name: Checkout Repo
       uses: actions/checkout@v4  
@@ -229,7 +229,7 @@ jobs:
       #  https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md)
       run: |
         brew update
-        brew install cmake ninja sccache
+        brew install ninja
         # set the path to homebrew's LLVM
         echo "$(brew --prefix llvm@18)/bin" >> $GITHUB_PATH
 

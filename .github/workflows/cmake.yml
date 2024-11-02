@@ -53,6 +53,8 @@ jobs:
 
     - name: Checkout Repo
       uses: actions/checkout@v4
+      run: |
+        echo "Triggered by ${{ github.event_name }}"
       with:
         submodules: true
 
@@ -140,6 +142,8 @@ jobs:
 
     - name: Checkout Repo
       uses: actions/checkout@v4
+      run: |
+        echo "Triggered by ${{ github.event_name }}"      
       with:
         submodules: true
 
@@ -174,7 +178,7 @@ jobs:
         env
         echo %cd%
         echo env.GITHUB_WORKSPACE
-        echo Sys.getenv("USERPROFILE")
+        echo ${{ Sys.getenv("USERPROFILE") }}
         dir /s /b ${{Sys.getenv("USERPROFILE")}}/.conan2
         dir /s /b build\\conan
 
@@ -228,6 +232,8 @@ jobs:
 
     - name: Checkout Repo
       uses: actions/checkout@v4
+      run: |
+        echo "Triggered by ${{ github.event_name }}"      
       with:
         submodules: true
 

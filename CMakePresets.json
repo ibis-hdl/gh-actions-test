@@ -155,8 +155,8 @@
             ]
         },
         {
-            "name": "linux-clang-18-libc++-release",
-            "displayName": "Linux Clang 18 (libc++): Release",
+            "name": "linux-clang-libc++-release",
+            "displayName": "Linux Clang (libc++): Release",
             "description": "Linux/WSL2 LLVM Clang with libc++ compiler: Release",
             "inherits": [
                 "linux-default",

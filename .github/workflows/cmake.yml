@@ -69,7 +69,7 @@ jobs:
       id: conan2-cache
       uses: actions/cache@v4
       with:
-        key: ${{ runner.os }}-conan-${{ hashFiles('conanfile.txt') }}
+        key: ${{ runner.os }}-conan-${{ matrix.config.compiler }}-${{ hashFiles('conanfile.txt') }}
         path: |
           ~/.conan2
           build/conan
@@ -91,9 +91,9 @@ jobs:
     - name: Check CMake configure and build conditions
       if: true
       run: |
-        env
+        # env
         pwd
-        echo "GITHUB_WORKSPACE = $${{ env.GITHUB_WORKSPACE }}"
+        echo "GITHUB_WORKSPACE = ${{ env.GITHUB_WORKSPACE }}"
         ls -alF  ~/.conan2
         ls -alFR build/conan
         
@@ -103,7 +103,7 @@ jobs:
 
     - name: CMake build
       run: |
-        cmake --build --preset ${{ matrix.config.preset }} -v
+        cmake --build --preset ${{ matrix.config.preset }}
 
     - name: CCache statistics
       run: |
@@ -181,11 +181,10 @@ jobs:
       if: true
       shell: cmd
       run: |
-        env
+        # env
         echo %cd%
-        echo ${{ env.GITHUB_WORKSPACE }}
-        echo ${{ env.HOME }}
-        dir /s /b ${{ env.HOME }}\\.conan2
+        dir 
+        dir /s /b C:\\Users\\runneradmin\\.conan2
         dir /s /b build\\conan
 
     - name: CMake configuration
@@ -280,12 +279,12 @@ jobs:
       if: true
       shell: bash      
       run: |
-        env
+        # env
         pwd
         ls -alF .
-        echo $env.GITHUB_WORKSPACE
+        echo ${{ env.GITHUB_WORKSPACE }}
         ls -alF  ~/.conan2
-        # ls -alF build/conan
+        ls -alF build/conan
         
     - name: CMake configuration
       run: |

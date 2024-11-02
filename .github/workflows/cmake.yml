@@ -40,6 +40,10 @@ jobs:
 
     steps:
 
+    - name: Trigger event
+      run: |
+        echo "Triggered by ${{ github.event_name }}"
+        
     - name: Install basic dependencies
       # fail-safe check - only Ubuntu this days
       if: startsWith(matrix.image, 'ubuntu')
@@ -53,8 +57,6 @@ jobs:
 
     - name: Checkout Repo
       uses: actions/checkout@v4
-      run: |
-        echo "Triggered by ${{ github.event_name }}"
       with:
         submodules: true
 
@@ -136,14 +138,16 @@ jobs:
 
     steps:
 
+    - name: Trigger event
+      run: |
+        echo "Triggered by ${{ github.event_name }}"
+
     - name: Install basic dependencies on ${{matrix.os}}
       run: |
         choco install ninja cmake
 
     - name: Checkout Repo
-      uses: actions/checkout@v4
-      run: |
-        echo "Triggered by ${{ github.event_name }}"      
+      uses: actions/checkout@v4  
       with:
         submodules: true
 
@@ -221,6 +225,10 @@ jobs:
 
     steps:
 
+    - name: Trigger event
+      run: |
+        echo "Triggered by ${{ github.event_name }}"
+
     - name: Install basic dependencies
       # [macOS15](
       #  https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md)
@@ -232,8 +240,6 @@ jobs:
 
     - name: Checkout Repo
       uses: actions/checkout@v4
-      run: |
-        echo "Triggered by ${{ github.event_name }}"      
       with:
         submodules: true
 

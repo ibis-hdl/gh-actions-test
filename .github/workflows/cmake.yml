@@ -88,7 +88,7 @@ jobs:
           ~/.config/ccache
           ~/.cache/ccache
           
-    - name: Check CMake configure and build conditions
+    - name: Check CMake configure and build pre-conditions
       if: true
       run: |
         # env
@@ -165,7 +165,7 @@ jobs:
           C:\\Users\\runneradmin\\.conan2
 
     - name: Check the state of installed dependencies by Conan2
-      if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
+      # if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
       run: |
         conan profile detect --force --name default
         conan install . --settings=compiler.cppstd=17 -s build_type=Release --output-folder build/conan --build=missing
@@ -175,9 +175,7 @@ jobs:
       env:
         SCCACHE_GHA_ENABLED: "true"
 
-    - name: Check CMake configure and build conditions
-      # echo ${{ Sys.getenv("USERPROFILE") }}
-      #  dir /s /b ${{Sys.getenv("USERPROFILE")}}/.conan2
+    - name: Check CMake configure and build pre-conditions
       if: true
       shell: cmd
       run: |
@@ -185,7 +183,7 @@ jobs:
         echo %cd%
         dir 
         dir /s /b C:\\Users\\runneradmin\\.conan2
-        dir /s /b build\\conan
+        # dir /s /b build\\conan
 
     - name: CMake configuration
       shell: cmd
@@ -263,7 +261,7 @@ jobs:
           ~/.conan2
 
     - name: Check the state of installed dependencies by Conan2
-      if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
+      # if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
       run: |
         source .venv/bin/activate
         conan profile detect --force --name default
@@ -275,7 +273,7 @@ jobs:
       env:
         SCCACHE_GHA_ENABLED: "true"
 
-    - name: Check CMake configure and build conditions
+    - name: Check CMake configure and build pre-conditions
       if: true
       shell: bash      
       run: |
@@ -284,7 +282,7 @@ jobs:
         ls -alF .
         echo ${{ env.GITHUB_WORKSPACE }}
         ls -alF  ~/.conan2
-        ls -alF build/conan
+        # ls -alF build/conan
         
     - name: CMake configuration
       run: |

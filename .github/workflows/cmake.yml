@@ -28,15 +28,15 @@ jobs:
             compiler: "clang",
             preset:   "linux-clang-release",
           }
+        - {
+            compiler: "gcc",
+            preset:   "linux-gcc-release",
+          }
 #        - {
 #            compiler: "clang-18-libc++",
 #            preset:   "linux-clang-18-libc++-release",
 #            apt-pkgs: "clang-18 libc++-18-dev libc++abi-18-dev",
 #          }
-        - {
-            compiler: "gcc",
-            preset:   "linux-gcc-release",
-          }
 
     steps:
 
@@ -165,6 +165,7 @@ jobs:
     - name: CMake build
       shell: cmd
       run: |
+        call "${{ matrix.config.vcvars }}"
         cmake --build --preset ${{ matrix.config.preset }}
 
     - name: Run Mozilla' sccache stat for check

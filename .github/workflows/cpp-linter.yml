@@ -33,30 +33,32 @@ jobs:
           ~/.conan2
           build/conan
 
-    - if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
-      name: Check the state of installed dependencies by Conan2
-      # no build required for linting
+    - name: Check the state of installed dependencies by Conan2
+      if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
+      # note, no build required for linting but it fills the cache!
       run: |
         conan profile detect --force --name default
-        conan install . --settings=compiler.cppstd=17 -s build_type=Release --output-folder build/conan
+        conan install . --settings=compiler.cppstd=17 -s build_type=Release --output-folder build/conan --build=missing
 
     - name: CMake configuration
       run: |
         cmake --preset ci-linux-clang
 
     - name: Run cpp-linter (clang format && tidy)
-      id: linter
+      id: cpp-linter
       uses: cpp-linter/cpp-linter-action@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        style: 'file'  # Use .clang-format config file
-        tidy-checks: '' # Use .clang-tidy config file
-        database: build/ci-linux-clang
+        version: 18
+        ignore: '.github|scripts|docs'
+        style: 'file'     # Use .clang-format config file
+        tidy-checks: ''   # appended to the value of the 'Checks' option in a .clang-tidy file
+        database: build/ci-linux-clang  #  directory containing compilation database (like compile_commands.json) file.
         # only 'update' a single comment in a pull request thread.
         thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
 
-    - name: Check for passed C++ style
+    - name: Check for passed C++ checks
       if: steps.linter.outputs.checks-failed > 0
       run: |
         echo "Some files failed the Clang tidy/format checks!"

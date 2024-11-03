@@ -1,9 +1,5 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include <iostream>
-
-
->
 // https://github.com/catchorg/catch2/blob/devel/docs/tutorial.md
 
 unsigned int Factorial( unsigned int number ) {

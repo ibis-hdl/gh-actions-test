@@ -2,7 +2,8 @@
 
 #include <iostream>
 
-// quite simple, quick & dirty from
+
+>
 // https://github.com/catchorg/catch2/blob/devel/docs/tutorial.md
 
 unsigned int Factorial( unsigned int number ) {

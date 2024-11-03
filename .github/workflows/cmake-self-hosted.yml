@@ -2,13 +2,8 @@ name: 'CI Self-hosted'
 
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
   workflow_dispatch:
-
-env:
-  CONAN_V2_MODE : 1
 
 jobs:
   build:
@@ -32,7 +27,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install --no-install-recommends -y \
-          cmake ninja-build ccache g++-11 clang-14 
+          cmake ninja-build ccache g++ clang clang-tools
 
     - name: Install conan package manager
       run: |
@@ -40,19 +35,19 @@ jobs:
         pip --disable-pip-version-check --no-cache-dir install wheel conan
 
     - name: Checkout Repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: true
 
     - name: Setup Github's cache for conan
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('conanfile.txt') }}
         path: |
-          ~/.conan
+          ~/.conan2
 
     - name: Setup Github's cache for compiler cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         key: ${{ runner.os }}-${{ matrix.config.compiler }}-ccache
         path: |
@@ -71,8 +66,3 @@ jobs:
     - name: Run Unit Test
       run: |
         ctest --preset ci-linux-${{ matrix.config.compiler }}
-
-    - name: Clean up conan build & sources
-      run: |
-        conan remove -f "*" --builds
-        conan remove -f "*" --src

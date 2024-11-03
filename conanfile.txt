@@ -1,9 +1,9 @@
 [requires]
-fmt/8.1.1
+catch2/3.7.1
 
 [generators]
-cmake_find_package
+CMakeDeps
+CMakeToolchain
 
-[imports]
-
-[options]
+[layout]
+cmake_layout

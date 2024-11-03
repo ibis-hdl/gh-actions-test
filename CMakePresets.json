@@ -1,5 +1,5 @@
 {
-    "version": 3,
+    "version": 4,
     "cmakeMinimumRequired": {
         "major": 3,
         "minor": 20,
@@ -28,9 +28,7 @@
             "name": "default-env",
             "description": "Default environment variables for the CMake process",
             "hidden": true,
-            "environment": {
-                "CONAN_V2_MODE": "1"
-            }
+            "environment": { }
         },
         {
             "name": "default-presets",
@@ -85,17 +83,15 @@
             "description": "Clang C language family frontend for LLVM",
             "hidden": true,
             "cacheVariables": {
-                "CXX": "clang++",
                 "CMAKE_CXX_COMPILER": "clang++"
             }
         },
         {
-            "name": "compiler-clang-13",
-            "description": "Clang 13 C language family frontend for LLVM",
+            "name": "compiler-clang-18",
+            "description": "Clang 18 C language family frontend for LLVM",
             "hidden": true,
             "cacheVariables": {
-                "CXX": "clang++-13",
-                "CMAKE_CXX_COMPILER": "clang++-13"
+                "CMAKE_CXX_COMPILER": "clang++-18"
             }
         },
         {
@@ -103,7 +99,6 @@
             "description": "GNU Compiler Collection (GCC)",
             "hidden": true,
             "cacheVariables": {
-                "CXX": "g++",
                 "CMAKE_CXX_COMPILER": "g++"
             }
         },
@@ -112,7 +107,6 @@
             "description": "Microsoft Visual Studio C++ compiler",
             "hidden": true,
             "cacheVariables": {
-                "CXX": "cl",
                 "CMAKE_CXX_COMPILER": "cl"
             }
         },
@@ -121,7 +115,6 @@
             "description": "Microsoft Visual Studio bundled Clang-Cl",
             "hidden": true,
             "cacheVariables": {
-                "CXX": "clang-cl",
                 "CMAKE_CXX_COMPILER": "clang-cl"
             }
         },
@@ -162,12 +155,12 @@
             ]
         },
         {
-            "name": "linux-clang-13-libc++-release",
-            "displayName": "Linux Clang 13 (libc++): Release",
+            "name": "linux-clang-libc++-release",
+            "displayName": "Linux Clang (libc++): Release",
             "description": "Linux/WSL2 LLVM Clang with libc++ compiler: Release",
             "inherits": [
                 "linux-default",
-                "compiler-clang-13",
+                "compiler-clang-18",
                 "release-build",
                 "use-stdlib-libc++"
             ]
@@ -408,9 +401,9 @@
             "configurePreset": "linux-clang-release"
         },
         {
-            "name": "linux-clang-13-libc++-release",
+            "name": "linux-clang-libc++-release",
             "displayName": "Debug",
-            "configurePreset": "linux-clang-13-libc++-release"
+            "configurePreset": "linux-clang-libc++-release"
         },
         {
             "name": "linux-gcc-debug",
@@ -512,9 +505,9 @@
             ]
         },
         {
-            "name": "linux-clang-13-libc++-release",
+            "name": "linux-clang-libc++-release",
             "displayName": "Test-All",
-            "configurePreset": "linux-clang-13-libc++-release",
+            "configurePreset": "linux-clang-libc++-release",
             "inherits": [
                 "test-default"
             ]

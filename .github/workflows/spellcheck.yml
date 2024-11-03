@@ -1,10 +1,8 @@
-name: 'SpellCheck'
+name: 'SpellCheck Action'
 
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -12,19 +10,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Gather Markdown files from git
+      # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#multiline-strings
+      # echo "MARKDOWN_FILES=$(git ls-files '*.md')" >> $GITHUB_ENV
       run: |
-        echo "MARKDOWN_FILES=$(git ls-files '*.md')" >> $GITHUB_ENV
-    
+        {
+          echo 'MARKDOWN_FILES<<EOF'
+          git ls-files '*.md'
+          echo EOF
+        } >> "$GITHUB_ENV"
+
     - name: Show files to spell check
       run: |
         echo "Markdown: ${{ env.MARKDOWN_FILES }}"
 
     - name: Check Spelling [Markdown]
-      uses: rojopolis/spellcheck-github-actions@0.26.0
+      id: spellcheck
+      uses: rojopolis/spellcheck-github-actions@0.44.0
       with:
         config_path: .github/config/spellcheck.yml
         source_files: ${{ env.MARKDOWN_FILES }}
         task_name: Markdown
+        output_file: spellcheck-output.txt
+
+    - name: Upload Spellcheck Artifact
+      uses: actions/upload-artifact@v3
+      if: '!cancelled()' # Do not upload artifact if job was cancelled
+      with:
+        name: Spellcheck Output
+        path: spellcheck-output.txt

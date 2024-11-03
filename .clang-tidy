@@ -21,7 +21,6 @@ Checks: "-*,
   bugprone-*
 "
 FormatStyle: file
-HeaderFilterRegex: '^((?!(/external/|\.?conan/data/|/boost/|/CLI/|/testsuite/)).)*$'
 HeaderFilterRegex: '*\.(hpp|h|.hpp.in)$'
 CheckOptions:
   - key:   cppcoreguidelines-macro-usage.AllowedRegexp

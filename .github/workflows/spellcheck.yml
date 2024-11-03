@@ -13,8 +13,14 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Gather Markdown files from git
+      # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#multiline-strings
+      # echo "MARKDOWN_FILES=$(git ls-files '*.md')" >> $GITHUB_ENV
       run: |
-        echo "MARKDOWN_FILES=$(git ls-files '*.md')" >> $GITHUB_ENV
+        {
+          echo 'MARKDOWN_FILES<<EOF'
+          git ls-files '*.md'
+          echo EOF
+        } >> "$GITHUB_ENV"
 
     - name: Show files to spell check
       run: |

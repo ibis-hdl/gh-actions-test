@@ -45,12 +45,16 @@ jobs:
         conan profile detect --force --name default
         conan install . --settings=compiler.cppstd=17 -s build_type=Release --output-folder build/conan --build=missing
 
+    - name: CMake configuration
+      run: |
+        cmake --preset ${{ matrix.config.preset }}
+        
     - name: Run Clang tidy review
       id: clang-tidy-review
       uses: ZedThree/clang-tidy-review@v0.19.0
+      # with: cmake_command: cmake --preset ci-linux-clang
       with:
         config_file: .clang-tidy
-        cmake_command: cmake --preset ci-linux-clang
 
     - name: Uploads an artefact containing clang_fixes.json
       id: clang-tidy-upload-review

@@ -1,58 +1,63 @@
 name: 'Clang tidy review'
 
 on:
-  push:
-  pull_request:
-  workflow_dispatch:
+  [ pull_request ]
 
 jobs:
   review:
     runs-on: ubuntu-24.04
 
     steps:
+
+    - name: Trigger event
+      run: |
+        echo "Triggered by ${{ github.event_name }}"
+        
     - name: Install basic dependencies
       run: |
         sudo apt-get update
         sudo apt-get install --no-install-recommends -y \
-          cmake ninja-build ccache clang clang-format clang-tidy
-
-    - name: Install conan package manager
-      run: |
-        python -m pip install --upgrade pip
-        pip --disable-pip-version-check --no-cache-dir install wheel conan
+          cmake ninja-build clang clang-tools clang-tidy
 
     - name: Checkout Repo
       uses: actions/checkout@v4
       with:
         submodules: true
-
-    - name: Setup Github's cache for conan
-      uses: actions/cache@v4
-      with:
-        key: ${{ runner.os }}-clang-conan-${{ hashFiles('conanfile.txt') }}
-        path: |
-          ~/.conan
-
-    - name: Setup Github's cache for compiler cache
-      uses: actions/cache@v4
-      with:
-        key: ${{ runner.os }}-clang-ccache
-        path: |
-          ~/.config/ccache
-          ~/.cache/ccache
-
-    - name: CMake configuration
+        
+    - name: Install Conan package manager
+      id: conan2    
       run: |
-        cmake --preset ci-linux-clang
+        pip --disable-pip-version-check --no-cache-dir install wheel conan
 
-    - name: Clang tidy review
+    - name: Cache Conan2 dependencies
+      id: conan2-cache
+      uses: actions/cache@v4
+      with:
+        key: ${{ runner.os }}-conan-${{ matrix.config.compiler }}-${{ hashFiles('conanfile.txt') }}
+        path: |
+          ~/.conan2
+          build/conan
+          
+    - name: Check the state of installed dependencies by Conan2
+      if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
+      # note, no build required, but it fills the cache!
+      run: |
+        conan profile detect --force --name default
+        conan install . --settings=compiler.cppstd=17 -s build_type=Release --output-folder build/conan --build=missing
+
+    - name: Run Clang tidy review
       id: clang-tidy-review
-      uses: ZedThree/clang-tidy-review@v0.14.0
+      uses: ZedThree/clang-tidy-review@v0.19.0
       with:
         config_file: .clang-tidy
         cmake_command: cmake --preset ci-linux-clang
+
+    - name: Uploads an artefact containing clang_fixes.json
+      id: clang-tidy-upload-review
+      uses: ZedThree/clang-tidy-review/upload@v0.14.0
 
     - name: Passed C++ style guide checks?!
       if: steps.clang-tidy-review.outputs.total_comments > 0
       run: |
         echo "Some files failed the Clang tidy review!"
+        

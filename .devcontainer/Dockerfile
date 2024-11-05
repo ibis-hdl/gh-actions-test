@@ -18,4 +18,4 @@ RUN if [ "${REINSTALL_CMAKE_VERSION_FROM_SOURCE}" != "none" ]; then \
 
 # [Optional] Uncomment this section to install additional packages.
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends ccache git g++ clang clang-tools clang-format clang-tidy doxygen python3 python3-venv
+    && apt-get -y install --no-install-recommends ccache git g++ clang clang-tools clang-format clang-tidy libc++-dev doxygen python3 python3-venv

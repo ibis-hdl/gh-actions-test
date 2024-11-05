@@ -32,18 +32,18 @@ jobs:
             compiler: "gcc",
             preset:   "linux-gcc-release",
           }
-#        - {
-#            compiler: "clang-libc++",
-#            preset:   "linux-clang-libc++-release",
-#            apt-pkgs: "libc++-dev libc++abi-dev",
-#          }
+        - {
+            compiler: "clang-libc++",
+            preset:   "linux-clang-libc++-release",
+            apt-pkgs: "libc++-dev",
+          }
 
     steps:
 
     - name: Trigger event
       run: |
         echo "Triggered by ${{ github.event_name }}"
-        
+
     - name: Install basic dependencies
       # fail-safe check - only Ubuntu this days
       if: startsWith(matrix.image, 'ubuntu')
@@ -61,7 +61,7 @@ jobs:
         submodules: true
 
     - name: Install Conan package manager
-      id: conan2    
+      id: conan2
       run: |
         pip --disable-pip-version-check --no-cache-dir install wheel conan
 
@@ -87,7 +87,7 @@ jobs:
         path: |
           ~/.config/ccache
           ~/.cache/ccache
-          
+
     - name: Check CMake configure and build pre-conditions
       if: true
       run: |
@@ -96,7 +96,7 @@ jobs:
         echo "GITHUB_WORKSPACE = ${{ env.GITHUB_WORKSPACE }}"
         ls -alF  ~/.conan2
         ls -alFR build/conan
-        
+
     - name: CMake configuration
       run: |
         cmake --preset ${{ matrix.config.preset }}
@@ -147,12 +147,12 @@ jobs:
         choco install cmake ninja
 
     - name: Checkout Repo
-      uses: actions/checkout@v4  
+      uses: actions/checkout@v4
       with:
         submodules: true
 
     - name: Install conan package manager
-      id: conan2    
+      id: conan2
       run: |
         pip --disable-pip-version-check --no-cache-dir install wheel conan
 
@@ -181,7 +181,7 @@ jobs:
       run: |
         rem env
         echo %cd%
-        dir 
+        dir
         rem dir /s /b C:\\Users\\runneradmin\\.conan2
         rem dir /s /b build\\conan
 
@@ -271,7 +271,7 @@ jobs:
 
     - name: Check CMake configure and build pre-conditions
       if: true
-      shell: bash      
+      shell: bash
       run: |
         # env
         pwd
@@ -279,7 +279,7 @@ jobs:
         echo ${{ env.GITHUB_WORKSPACE }}
         ls -alF  ~/.conan2
         # ls -alF build/conan
-        
+
     - name: CMake configuration
       run: |
         cmake -DCMAKE_CXX_COMPILER=clang++ --preset ${{ matrix.config.preset }}
@@ -287,7 +287,7 @@ jobs:
     - name: CMake build
       run: |
         cmake --build --preset ${{ matrix.config.preset }}
-        
+
     - name: Run Unit Test
       run: |
         ctest --preset ${{ matrix.config.preset }}

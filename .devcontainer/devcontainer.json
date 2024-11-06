@@ -53,8 +53,7 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": "/bin/sh .devcontainer/scripts/postCreateCommand.sh",
-	// postStartCommand hasn't the effect expected
-	//"postStartCommand": "/bin/sh .devcontainer/scripts/postStartCommand.sh",
+	"postStartCommand": "/bin/sh .devcontainer/scripts/postStartCommand.sh",
 
 	"remoteUser": "vscode",
 	"containerUser": "vscode",

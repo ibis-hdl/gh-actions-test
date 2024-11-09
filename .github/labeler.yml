@@ -1,6 +1,6 @@
 # https://github.com/actions/labeler
 
-workflow:
+github_actions:
 - changed-files:
   - any-glob-to-any-file:
     - '.github/**'

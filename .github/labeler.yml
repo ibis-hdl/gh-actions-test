@@ -1,11 +1,4 @@
 # https://github.com/actions/labeler
-# Note: https://github.com/actions/labeler/issues/103
-# - checkAll() equivalent to [Array.every()](https://www.tutorialspoint.com/typescript/typescript_array_every.htm)
-# - checkAny() equivalent to [Array.some()](https://www.tutorialspoint.com/typescript/typescript_array_some.htm)
-# - asterisk has a special meaning in yaml, hence quote it.
-
-repo:
-- '.*'
 
 workflow:
 - '.github/**'

@@ -1,4 +1,8 @@
 build/**
 .venv/**
 
+*.url
+*.7z
+*.zip
+
 CMakeUserPresets.json

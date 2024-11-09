@@ -1,31 +1,74 @@
 # https://github.com/actions/labeler
 
 workflow:
-- '.github/**'
+- changed-files:
+  - any-glob-to-any-file:
+    - '.github/**'
 
 dictionaries:
-- any: ['.dictionaries/**', '.cspell.json']
+- changed-files:
+  - any-glob-to-any-file:
+    - '.dictionaries/**'
+    - '.cspell.json'
 
 cmake:
-- 'cmake/**/*.cmake'
-- '**/CMakeLists.txt'
-- 'CMakePresets.json'
+- changed-files:
+  - any-glob-to-any-file:
+    - 'cmake/**/*.cmake'
+    - '**/CMakeLists.txt'
+    - 'CMakePresets.json'
 
 python:
-- any: ['**/*.py', '**/*.py.in', 'requirements.txt', 'py_requirements.txt']
+- changed-files:
+  - any-glob-to-any-file:
+    - '**/*.py'
+    - '**/*.py.in'
+    - 'requirements.txt'
+    - 'py_requirements.txt'
 
 doc:
-- any: ['doc/**', 'doc_ng/**', '**/*.{md,rst,txt}', '**/doxyfile.in', '**/*.dot']
-  all: ['!**/CMakeLists.txt']
+- changed-files:
+  - any-glob-to-any-file:
+    - 'doc/**'
+    - 'doc_ng/**'
+    - '**/*.{md,rst,txt}'
+    - '**/doxyfile.in'
+    - '**/*.dot'
+  - all-globs-to-all-files:
+    - '!**/CMakeLists.txt'
 
 l10n:
-- any: ['l10n/**']
-  all: ['!**/CMakeLists.txt']
+- changed-files:
+  - any-glob-to-any-file:
+    - 'l10n/**'
+  - all-globs-to-all-files:
+    - '!**/CMakeLists.txt'
 
 source:
-- any: ['source/**']
-  all: ['!**/CMakeLists.txt']
+- changed-files:
+  - any-glob-to-any-file:
+    - 'source/**'
+  - all-globs-to-all-files:
+    - '!**/CMakeLists.txt'
 
 testsuite:
-- any: ['testsuite/**']
-  all: ['!**/CMakeLists.txt']
+- changed-files:
+  - any-glob-to-any-file:
+    - 'testsuite/**'
+  - all-globs-to-all-files:
+    - '!**/CMakeLists.txt'
+
+# branch related
+
+feature:
+ - head-branch: ['^feature', 'feature']
+
+update:
+ - head-branch: ['^update', 'update']
+
+fix:
+ - head-branch: ['^fix', 'fix']
+
+# Add 'release' label to any PR that is opened against the `main` branch
+release:
+ - base-branch: 'main'

@@ -17,6 +17,7 @@ cmake:
     - 'cmake/**/*.cmake'
     - '**/CMakeLists.txt'
     - 'CMakePresets.json'
+    - 'conanfile.py'
 
 python:
 - changed-files:
@@ -25,6 +26,8 @@ python:
     - '**/*.py.in'
     - 'requirements.txt'
     - 'py_requirements.txt'
+  - all-globs-to-all-files:
+    - '!conanfile.py'    
 
 doc:
 - changed-files:

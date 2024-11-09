@@ -3,7 +3,7 @@
 set -ex
 
 install_conan() {
-    # cope with error: externally-managed-environment on creating venv
+    # cope with python3's pip error: externally-managed-environment on creating venv
     pipx install conan
 }
 
@@ -55,6 +55,10 @@ EOF
     cat ~/.conan2/profiles/${conan_profile}
 }
 
+# Fixme: use conan presets
+# - https://docs.conan.io/2/examples/tools/cmake/cmake_toolchain/extend_own_cmake_presets.html
+# - https://docs.conan.io/2/examples/tools/cmake/cmake_toolchain/build_project_cmake_presets.html
+# => conan_install
 # Linux
 # conan install .
 # conan install . -s build_type=Debug
@@ -106,7 +110,3 @@ conan_install2() {
 
 install_conan
 configure_conan_profile
-# Fixme: use conan presets
-# - https://docs.conan.io/2/examples/tools/cmake/cmake_toolchain/extend_own_cmake_presets.html
-# - https://docs.conan.io/2/examples/tools/cmake/cmake_toolchain/build_project_cmake_presets.html
-#conan_install

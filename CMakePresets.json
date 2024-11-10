@@ -4,11 +4,12 @@
         "cmake/presets/GnuC.json",
         "cmake/presets/Clang.json",
         "cmake/presets/msvc.json",
-        "cmake/presets/OS.json"
+        "cmake/presets/OS.json",
+        "CMakeConanPresets.json"
     ],
     "configurePresets": [
         {
-            "name": "linux-gcc-release",
+            "name": "gcc-release",
             "displayName": "Linux GnuC: Release",
             "description": "Linux/WSL2 GnuC compiler: Release",
             "inherits": [
@@ -21,7 +22,7 @@
             ]
         },
         {
-            "name": "linux-gcc-debug",
+            "name": "gcc-debug",
             "displayName": "Linux GnuC: Debug",
             "description": "Linux/WSL2 GnuC compiler: Debug",
             "inherits": [
@@ -32,35 +33,22 @@
                 "default-install-settings",
                 "default-environment"
             ]
-        },
-        {
-            "name": "linux-gcc-release-with-debug",
-            "displayName": "Linux GnuC: RelWithDebInfo",
-            "description": "Linux/WSL2 GnuC compiler: RelWithDebInfo",
-            "inherits": [
-                "condition-linux",
-                "ninja-config",
-                "gcc-build-type-release-with-debug",
-                "conan-release",
-                "default-install-settings",
-                "default-environment"
-            ]
         }
     ],
     "buildPresets": [
         {
-            "name": "linux-gcc-release",
+            "name": "gcc-release",
             "displayName": "Release",
-            "configurePreset": "linux-gcc-release",
+            "configurePreset": "gcc-release",
             "configuration": "Release",
             "inherits": [
                 "conan-release"
             ]
         },
         {
-            "name": "linux-gcc-debug",
+            "name": "gcc-debug",
             "displayName": "Debug",
-            "configurePreset": "linux-gcc-debug",
+            "configurePreset": "gcc-debug",
             "configuration": "Debug",
             "inherits": [
                 "conan-debug"
@@ -69,16 +57,20 @@
     ],
     "testPresets": [
         {
-            "name": "linux-gcc-release",
+            "name": "gcc-release",
             "displayName": "Test-All",
-            "configurePreset": "linux-gcc-release",
-            "inherits": []
+            "configurePreset": "gcc-release",
+            "inherits": [
+                "conan-release"
+            ]
         },
         {
-            "name": "linux-gcc-debug",
+            "name": "gcc-debug",
             "displayName": "Test-All",
-            "configurePreset": "linux-gcc-debug",
-            "inherits": []
+            "configurePreset": "gcc-debug",
+            "inherits": [
+                "conan-debug"
+            ]
         }
     ]
 }

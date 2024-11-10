@@ -1,0 +1,34 @@
+{
+    "version": 3,
+    "vendor": {
+        "conan": {}
+    },
+    "configurePresets": [
+        {
+            "name": "conan-debug"
+        },
+        {
+            "name": "conan-release"
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "conan-debug",
+            "configurePreset": "conan-debug"
+        },
+        {
+            "name": "conan-release",
+            "configurePreset": "conan-release"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "conan-debug",
+            "configurePreset": "conan-debug"
+        },
+        {
+            "name": "conan-release",
+            "configurePreset": "conan-release"
+        }
+    ]
+}

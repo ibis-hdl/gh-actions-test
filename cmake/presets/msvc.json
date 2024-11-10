@@ -1,0 +1,32 @@
+{
+    "version": 8,
+    "include": [
+        "Common.json"
+    ],
+    "configurePresets": [
+        {
+            "name": "compiler.msvc",
+            "description": "Microsoft Visual Studio C++ compiler",
+            "hidden": true,
+            "inherits": [
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "cl",
+                "CMAKE_CXX_COMPILER": "cl"
+            }
+        },
+        {
+            "name": "compiler.msvc-clang",
+            "description": "Microsoft Visual Studio bundled Clang-Cl",
+            "hidden": true,
+            "inherits": [
+            ],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang-cl",
+                "CMAKE_CXX_COMPILER": "clang-cl"
+            }
+        }
+    ],
+    "buildPresets": [],
+    "testPresets": []
+}

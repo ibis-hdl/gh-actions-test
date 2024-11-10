@@ -6,3 +6,4 @@ build/**
 *.zip
 
 CMakeUserPresets.json
+CMakeConanPresets.json

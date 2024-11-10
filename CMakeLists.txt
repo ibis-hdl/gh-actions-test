@@ -14,17 +14,17 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 ## CMake config modules from Conan2
 # Mote:
 # - Conan's path differ at Windows and Linux/macOS
-if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set(CMAKE_CONAN_CONFIG_PATH build/conan/build/${CMAKE_BUILD_TYPE}/generators)
-elseif (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    set(CMAKE_CONAN_CONFIG_PATH build/conan/build/generators)
-elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    set(CMAKE_CONAN_CONFIG_PATH build/conan/build/${CMAKE_BUILD_TYPE}/generators)
-else()
-    message(FATAL_ERROR "CMAKE_SYSTEM_NAME >>> ${CMAKE_SYSTEM_NAME} <<< *not* supported.")
-endif()
-
-list(PREPEND CMAKE_PREFIX_PATH ${CMAKE_CONAN_CONFIG_PATH})
+#if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+#    set(CMAKE_CONAN_CONFIG_PATH build/conan/build/${CMAKE_BUILD_TYPE}/generators)
+#elseif (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+#    set(CMAKE_CONAN_CONFIG_PATH build/conan/build/generators)
+#elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+#    set(CMAKE_CONAN_CONFIG_PATH build/conan/build/${CMAKE_BUILD_TYPE}/generators)
+#else()
+#    message(FATAL_ERROR "CMAKE_SYSTEM_NAME >>> ${CMAKE_SYSTEM_NAME} <<< *not* supported.")
+#endif()
+#
+#list(PREPEND CMAKE_PREFIX_PATH ${CMAKE_CONAN_CONFIG_PATH})
 
 find_package(Catch2 3 REQUIRED)
 

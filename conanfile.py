@@ -4,7 +4,7 @@ from conan.tools.cmake import CMakeToolchain
 
 class CompressorRecipe(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
-    generators = "CMakeDeps"
+    generators = "CMakeDeps" , "CMakeToolchain"
 
     def requirements(self):
         self.requires("catch2/3.7.1")
@@ -12,7 +12,7 @@ class CompressorRecipe(ConanFile):
     def layout(self):
         cmake_layout(self)
 
-    def generate(self):
-        tc = CMakeToolchain(self)
-        tc.user_presets_path = 'CMakeConanPresets.json'
-        tc.generate()
+#    def generate(self):
+#        tc = CMakeToolchain(self)
+#        tc.user_presets_path = 'CMakeConanPresets.json'
+#        tc.generate()

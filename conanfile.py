@@ -1,10 +1,9 @@
 from conan import ConanFile
-from conan.tools.cmake import cmake_layout
-from conan.tools.cmake import CMakeToolchain
+from conan.tools.cmake import CMakeToolchain, CMakeDeps, CMake, cmake_layout
 
 class CompressorRecipe(ConanFile):
+    # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
-    generators = "CMakeDeps" , "CMakeToolchain"
 
     def requirements(self):
         self.requires("catch2/3.7.1")
@@ -12,7 +11,9 @@ class CompressorRecipe(ConanFile):
     def layout(self):
         cmake_layout(self)
 
-#    def generate(self):
-#        tc = CMakeToolchain(self)
-#        tc.user_presets_path = 'CMakeConanPresets.json'
-#        tc.generate()
+    def generate(self):
+        deps = CMakeDeps(self)
+        deps.generate()
+        tc = CMakeToolchain(self)
+        tc.user_presets_path = "CMakeConanPresets.json"
+        tc.generate()

@@ -5,38 +5,38 @@
     ],
     "configurePresets": [
         {
-            "name": "compiler-msvc",
-            "description": "Microsoft Visual Studio C++ compiler",
+            "name": "compiler-clang-libc++",
+            "description": "Clang C/C++ language family frontend for LLVM",
             "hidden": true,
             "inherits": [],
             "cacheVariables": {
-                "CMAKE_C_COMPILER": "cl",
-                "CMAKE_CXX_COMPILER": "cl"
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++"
             }
         },
         {
-            "name": "msvc-release-build-type",
+            "name": "clang-libc++-release-build-type",
             "hidden": true,
             "inherits": [
-                "compiler-msvc",
+                "compiler-clang-libc++",
                 "release-build-type"
             ],
             "cacheVariables": {}
         },
         {
-            "name": "msvc-debug-build-type",
+            "name": "clang-libc++-debug-build-type",
             "hidden": true,
             "inherits": [
-                "compiler-msvc",
+                "compiler-clang-libc++",
                 "debug-build-type"
             ],
             "cacheVariables": {}
         },
         {
-            "name": "msvc-release-build-type-with-debug",
+            "name": "clang-libc++-release-build-type-with-debug",
             "hidden": true,
             "inherits": [
-                "compiler-msvc",
+                "compiler-clang-libc++",
                 "release-build-type-with-debug"
             ],
             "cacheVariables": {}

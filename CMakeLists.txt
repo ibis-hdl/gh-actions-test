@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.30.5)
+cmake_minimum_required(VERSION 3.29.5)      # MS VS limits us
 
 project(gh-action-test
     VERSION 0.0.1
@@ -10,21 +10,6 @@ project(gh-action-test
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-
-## CMake config modules from Conan2
-# Mote:
-# - Conan's path differ at Windows and Linux/macOS
-#if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-#    set(CMAKE_CONAN_CONFIG_PATH build/conan/build/${CMAKE_BUILD_TYPE}/generators)
-#elseif (CMAKE_SYSTEM_NAME STREQUAL "Windows")
-#    set(CMAKE_CONAN_CONFIG_PATH build/conan/build/generators)
-#elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-#    set(CMAKE_CONAN_CONFIG_PATH build/conan/build/${CMAKE_BUILD_TYPE}/generators)
-#else()
-#    message(FATAL_ERROR "CMAKE_SYSTEM_NAME >>> ${CMAKE_SYSTEM_NAME} <<< *not* supported.")
-#endif()
-#
-#list(PREPEND CMAKE_PREFIX_PATH ${CMAKE_CONAN_CONFIG_PATH})
 
 find_package(Catch2 3 REQUIRED)
 

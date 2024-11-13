@@ -1,35 +1,155 @@
 {
-    "version": 6,
+    "version": 8,
     "include": [
-        "cmake/presets/GnuC.json",
-        "cmake/presets/Clang.json",
+        "cmake/presets/os.json",
+        "cmake/presets/gnuc.json",
+        "cmake/presets/clang.json",
+        "cmake/presets/clang-libcpp.json",
         "cmake/presets/msvc.json",
-        "cmake/presets/OS.json",
-        "CMakeConanPresets.json"
+        "cmake/presets/msvc-cl.json",
+        "ConanCMakePresets.json"
     ],
     "configurePresets": [
         {
             "name": "gcc-release",
-            "displayName": "Linux GnuC: Release",
-            "description": "Linux/WSL2 GnuC compiler: Release",
+            "displayName": "GnuC: Release",
+            "description": "GnuC compiler: Release",
             "inherits": [
                 "condition-linux",
                 "ninja-config",
-                "gcc-build-type-release",
+                "gcc-release-build-type",
                 "conan-release",
+                "cmake-default-configure-settings",
                 "default-install-settings",
                 "default-environment"
             ]
         },
         {
             "name": "gcc-debug",
-            "displayName": "Linux GnuC: Debug",
-            "description": "Linux/WSL2 GnuC compiler: Debug",
+            "displayName": "GnuC: Debug",
+            "description": "GnuC compiler: Debug",
             "inherits": [
                 "condition-linux",
                 "ninja-config",
-                "gcc-build-type-debug",
+                "gcc-debug-build-type",
                 "conan-debug",
+                "cmake-default-configure-settings",
+                "default-install-settings",
+                "default-environment"
+            ]
+        },
+        {
+            "name": "clang-release",
+            "displayName": "Clang: Release",
+            "description": "Clang compiler: Release",
+            "inherits": [
+                "condition-anyOf-linux-or-darwin",
+                "ninja-config",
+                "clang-release-build-type",
+                "conan-release",
+                "cmake-default-configure-settings",
+                "default-install-settings",
+                "default-environment"
+            ]
+        },
+        {
+            "name": "clang-debug",
+            "displayName": "Clang: Debug",
+            "description": "Clang compiler: Debug",
+            "inherits": [
+                "condition-anyOf-linux-or-darwin",
+                "ninja-config",
+                "clang-debug-build-type",
+                "conan-debug",
+                "cmake-default-configure-settings",
+                "default-install-settings",
+                "default-environment"
+            ]
+        },
+        {
+            "name": "clang-libc++-release",
+            "displayName": "Clang-libc++: Release",
+            "description": "Clang-libc++ compiler: Release",
+            "inherits": [
+                "condition-linux",
+                "ninja-config",
+                "clang-libc++-release-build-type",
+                "conan-release",
+                "cmake-default-configure-settings",
+                "default-install-settings",
+                "default-environment"
+            ]
+        },
+        {
+            "name": "clang-libc++-debug",
+            "displayName": "Clang-libc++: Debug",
+            "description": "Clang-libc++ compiler: Debug",
+            "inherits": [
+                "condition-linux",
+                "ninja-config",
+                "clang-libc++-debug-build-type",
+                "conan-debug",
+                "cmake-default-configure-settings",
+                "default-install-settings",
+                "default-environment"
+            ]
+        },
+        {
+            "name": "msvc-release",
+            "displayName": "MSVC: Release",
+            "description": "Microsoft Visual Studio C++ compiler: Release",
+            "inherits": [
+                "condition-windows",
+                "windows-x64-arch",
+                "ninja-multi-config",
+                "msvc-release-build-type",
+                "conan-release",
+                "cmake-default-configure-settings",
+                "default-install-settings",
+                "default-environment"
+            ]
+        },
+        {
+            "name": "msvc-debug",
+            "displayName": "MSVC: Debug",
+            "description": "Microsoft Visual Studio C++ compiler: Debug",
+            "inherits": [
+                "condition-windows",
+                "windows-x64-arch",
+                "ninja-multi-config",
+                "msvc-debug-build-type",
+                "conan-debug",
+                "cmake-default-configure-settings",
+                "default-install-settings",
+                "default-environment"
+            ]
+        },
+        {
+            "name": "msvc-cl-release",
+            "displayName": "MSVC-Cl: Release",
+            "description": "Microsoft Visual Studio bundled Clang C++ compiler: Release",
+            "inherits": [
+                "condition-windows",
+                "windows-x64-arch",
+                "ninja-multi-config",
+                "msvc-clang-release-build-type",
+                "conan-release",
+                "cmake-default-configure-settings",
+                "default-install-settings",
+                "default-environment"
+            ]
+        },
+        {
+            "name": "msvc-cl-debug",
+            "displayName": "MSVC-Cl: Debug",
+            "description": "Microsoft Visual Studio  bundled Clang C++ compiler: Debug",
+            "inherits": [
+                "condition-windows",
+                "windows-x64-arch",
+                "ninja-multi-config",
+                "msvc-clang-debug-build-type",
+                "conan-debug",
+                "cmake-default-configure-settings",
                 "default-install-settings",
                 "default-environment"
             ]

@@ -1,49 +1,43 @@
 {
-    "version": 6,
-    "cmakeMinimumRequired": {
-        "major": 3,
-        "minor": 28,
-        "patch": 3
-    },
+    "version": 8,
     "include": [
-        "Common.json"
+        "common.json"
     ],
     "configurePresets": [
         {
             "name": "compiler-gcc",
             "description": "GNU Compiler Collection (GCC)",
             "hidden": true,
-            "inherits": [
-            ],
+            "inherits": [],
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "gcc",
                 "CMAKE_CXX_COMPILER": "g++"
             }
         },
         {
-            "name": "gcc-build-type-release",
+            "name": "gcc-release-build-type",
             "hidden": true,
             "inherits": [
                 "compiler-gcc",
-                "build-type-release"
+                "release-build-type"
             ],
             "cacheVariables": {}
         },
         {
-            "name": "gcc-build-type-debug",
+            "name": "gcc-debug-build-type",
             "hidden": true,
             "inherits": [
                 "compiler-gcc",
-                "build-type-debug"
+                "debug-build-type"
             ],
             "cacheVariables": {}
         },
         {
-            "name": "gcc-build-type-release-with-debug",
+            "name": "gcc-release-build-type-with-debug",
             "hidden": true,
             "inherits": [
                 "compiler-gcc",
-                "build-type-release-with-debug"
+                "release-build-type-with-debug"
             ],
             "cacheVariables": {}
         }

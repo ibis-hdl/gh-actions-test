@@ -2,23 +2,28 @@
     "version": 8,
     "configurePresets": [
         {
-            "name": "default-ninja-settings",
+            "name": "cmake-default-configure-settings",
+            "description": "Enable, Disable some CMake warnings, e.g. '--no-warn-unused-cli'",
+            "hidden": true,
+            "warnings": {
+                "unusedCli": false
+            },
+            "cacheVariables": {
+                "CMAKE_MAKE_PROGRAM": "ninja",
+                "CMAKE_POLICY_DEFAULT_CMP0167": "NEW"
+            }
+        },
+        {
+            "name": "ninja-default-settings",
             "description": "Common settings related to build tool Ninja.",
             "hidden": true,
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
-                "CMAKE_EXPORT_COMPILE_COMMANDS": true,
-                "CMAKE_CONFIGURATION_TYPES": "Debug;Release"
+                "CMAKE_EXPORT_COMPILE_COMMANDS": true
+            },
+            "environment": {
+                "NINJA_STATUS" : "[%f/%t (%es)] "
             }
-        },
-        {
-            "name": "ninja-multi-config",
-            "description": "Multiple configurations for Visual Studio and XCode.",
-            "hidden": true,
-            "generator": "Ninja Multi-Config",
-            "inherits": [
-                "default-ninja-settings"
-            ]
         },
         {
             "name": "ninja-config",
@@ -26,8 +31,21 @@
             "hidden": true,
             "generator": "Ninja",
             "inherits": [
-                "default-ninja-settings"
+                "ninja-default-settings"
             ]
+        },
+        {
+            "name": "ninja-multi-config",
+            "description": "Multiple configurations for Visual Studio and XCode.",
+            "hidden": true,
+            "generator": "Ninja Multi-Config",
+            "inherits": [
+                "ninja-default-settings"
+            ],
+            "cacheVariables": {
+                "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
+                "CMAKE_DEFAULT_BUILD_TYPE": "Release"
+            }
         },
         {
             "name": "settings-stdlib-libc++",
@@ -40,7 +58,7 @@
             }
         },
         {
-            "name": "build-type-release",
+            "name": "release-build-type",
             "description": "CMake Release build target",
             "hidden": true,
             "cacheVariables": {
@@ -48,7 +66,7 @@
             }
         },
         {
-            "name": "build-type-debug",
+            "name": "debug-build-type",
             "description": "CMake Debug build target",
             "hidden": true,
             "cacheVariables": {
@@ -56,7 +74,7 @@
             }
         },
         {
-            "name": "build-type-release-with-debug",
+            "name": "release-build-type-with-debug",
             "description": "CMake Release with Debug symbols build target",
             "hidden": true,
             "cacheVariables": {
@@ -117,5 +135,17 @@
         }
     ],
     "buildPresets": [],
-    "testPresets": []
+    "testPresets": [
+        {
+            "name": "default-testPreset",
+            "hidden": true,
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": false
+            }
+        }
+    ]
 }

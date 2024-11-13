@@ -5,38 +5,38 @@
     ],
     "configurePresets": [
         {
-            "name": "compiler-msvc",
-            "description": "Microsoft Visual Studio C++ compiler",
+            "name": "compiler-msvc-clang",
+            "description": "Microsoft Visual Studio bundled Clang-Cl",
             "hidden": true,
             "inherits": [],
             "cacheVariables": {
-                "CMAKE_C_COMPILER": "cl",
-                "CMAKE_CXX_COMPILER": "cl"
+                "CMAKE_C_COMPILER": "clang-cl",
+                "CMAKE_CXX_COMPILER": "clang-cl"
             }
         },
         {
-            "name": "msvc-release-build-type",
+            "name": "msvc-clang-release-build-type",
             "hidden": true,
             "inherits": [
-                "compiler-msvc",
+                "compiler-msvc-clang",
                 "release-build-type"
             ],
             "cacheVariables": {}
         },
         {
-            "name": "msvc-debug-build-type",
+            "name": "msvc-clang-debug-build-type",
             "hidden": true,
             "inherits": [
-                "compiler-msvc",
+                "compiler-msvc-clang",
                 "debug-build-type"
             ],
             "cacheVariables": {}
         },
         {
-            "name": "msvc-release-build-type-with-debug",
+            "name": "msvc-clang-release-build-type-with-debug",
             "hidden": true,
             "inherits": [
-                "compiler-msvc",
+                "compiler-msvc-clang",
                 "release-build-type-with-debug"
             ],
             "cacheVariables": {}

@@ -18,5 +18,7 @@ add_subdirectory(source)
 include(GNUInstallDirs)
 
 # Unit tests
+
+enable_testing()
 include(CTest)
 add_subdirectory(testsuite)

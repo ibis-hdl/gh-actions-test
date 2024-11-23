@@ -41,6 +41,8 @@ doc:
       - '**/*.dot'
     - all-globs-to-all-files:
       - '!**/CMakeLists.txt'
+      - '!requirements.txt'
+      - '!py_requirements.txt'
 
 l10n:
 - all:

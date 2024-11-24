@@ -4,7 +4,7 @@ set -ex
 
 # using docker volumes to store data; fix permissions as it's mounted as
 # root on Windows/Docker/WSL
-fix_container_permissions() {
+fix_volume_permissions() {
     # This script is running as user 'vscode'
     echo "[devcontainer] '${0##*/}' runs as user '${SUDO_USER:-$USER}'"
 
@@ -29,4 +29,4 @@ fix_container_permissions() {
     fi
 }
 
-fix_container_permissions
+fix_volume_permissions

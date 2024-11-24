@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.30.5)
 
 project(gh-action-test
     VERSION 0.0.1

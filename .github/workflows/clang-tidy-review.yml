@@ -51,14 +51,14 @@ jobs:
         
     - name: Run Clang tidy review
       id: clang-tidy-review
-      uses: ZedThree/clang-tidy-review@v0.19.0
+      uses: ZedThree/clang-tidy-review@v0.20.1
       # with: cmake_command: cmake --preset ci-linux-clang
       with:
         config_file: .clang-tidy
 
     - name: Uploads an artefact containing clang_fixes.json
       id: clang-tidy-upload-review
-      uses: ZedThree/clang-tidy-review/upload@v0.14.0
+      uses: ZedThree/clang-tidy-review/upload@v0.20.1
 
     - name: Passed C++ style guide checks?!
       if: steps.clang-tidy-review.outputs.total_comments > 0

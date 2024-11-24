@@ -70,13 +70,13 @@ testsuite:
 
 # branch related
 
-feature:
+feature-br:
  - head-branch: ['^feature', 'feature']
 
-update:
- - head-branch: ['^update', 'update']
+update-br:
+ - head-branch: ['^update', 'update', '^better', 'better']
 
-fix:
+fix-br:
  - head-branch: ['^fix', 'fix']
 
 # Add 'release' label to any PR that is opened against the `main` branch

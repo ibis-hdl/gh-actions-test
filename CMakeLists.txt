@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.30.5)
 
 project(gh-action-test
     VERSION 0.0.1
-    DESCRIPTION "Testing Github actions on simple C++ project"
+    DESCRIPTION "Testing Github actions using simple C++ project"
     HOMEPAGE_URL "https://github.com/ibis-hdl/gh-actions-test"
     LANGUAGES CXX
 )

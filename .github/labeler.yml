@@ -1,72 +1,54 @@
 # https://github.com/actions/labeler
 
 github_actions:
-- changed-files:
-  - any-glob-to-any-file:
+  changed-files:
     - '.github/**'
 
 dictionaries:
-- changed-files:
-  - any-glob-to-any-file:
+  any-glob-to-any-file:
     - '.dictionaries/**'
     - '.cspell.json'
 
 cmake:
-- changed-files:
-  - any-glob-to-any-file:
+  any-glob-to-any-file:
     - 'cmake/**/*.cmake'
     - '**/CMakeLists.txt'
     - 'CMakePresets.json'
     - 'conanfile.py'
 
 python:
-- all:
-  - changed-files:
-    - any-glob-to-any-file:
-      - '**/*.py'
-      - '**/*.py.in'
-      - 'requirements.txt'
-      - 'py_requirements.txt'
-    - all-globs-to-all-files:
-      - '!conanfile.py'
+  changed-files:
+    - '**/*.py'
+    - '**/*.py.in'
+    - 'requirements.txt'
+    - 'py_requirements.txt'
+    - '!conanfile.py'
 
 doc:
-- all:
-  - changed-files:
-    - any-glob-to-any-file:
-      - 'doc/**'
-      - 'doc_ng/**'
-      - '**/*.{md,rst,txt}'
-      - '**/doxyfile.in'
-      - '**/*.dot'
-    - all-globs-to-all-files:
-      - '!**/CMakeLists.txt'
-      - '!requirements.txt'
-      - '!py_requirements.txt'
+  changed-files:
+    - 'doc/**'
+    - 'doc_ng/**'
+    - '**/*.{md,rst,txt}'
+    - '**/doxyfile.in'
+    - '**/*.dot'
+    - '!**/CMakeLists.txt'
+    - '!requirements.txt'
+    - '!py_requirements.txt'
 
 l10n:
-- all:
-  - changed-files:
-    - any-glob-to-any-file:
-      - 'l10n/**'
-    - all-globs-to-all-files:
-      - '!**/CMakeLists.txt'
+  changed-files:
+    - 'l10n/**'
+    - '!**/CMakeLists.txt'
 
 source:
-- all:
-  - changed-files:
-    - any-glob-to-any-file:
-      - 'source/**'
-    - all-globs-to-all-files:
-      - '!**/CMakeLists.txt'
+  changed-files:
+    - 'source/**'
+    - '!**/CMakeLists.txt'
 
 testsuite:
-- all:
-  - changed-files:
-    - any-glob-to-any-file:
-      - 'testsuite/**'
-    - all-globs-to-all-files:
-      - '!**/CMakeLists.txt'
+  changed-files:
+    - 'testsuite/**'
+    - '!**/CMakeLists.txt'
 
 # branch related
 

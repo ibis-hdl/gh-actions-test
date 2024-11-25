@@ -6,45 +6,45 @@
 // - https://containers.dev/features, https://github.com/devcontainers/features
 // - https://aka.ms/dev-containers-non-root
 {
-    "name": "Ubuntu C++",
-    "build": {
-        "dockerfile": "Dockerfile",
+	"name": "Ubuntu C++",
+	"build": {
+		"dockerfile": "Dockerfile",
 		"args": {
 			"VARIANT": "ubuntu-24.04",
 			// Preset files specifying version 10 or above may include comments
 			"REINSTALL_CMAKE_VERSION_FROM_SOURCE": "3.30.5"
 		}
-    },
+	},
 	"features": {
+		// spell-checker: disable
 		// git is already here
 		// cmake feature won't build (old URL?), hence stick with 'reinstall-cmake.sh'
 		// "ghcr.io/devcontainers-community/features/cmake:2": { "version": "3.30.5" },
-        "ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {},
 		"ghcr.io/eliises/devcontainer-features/devcontainers-cli:1": {},
 		"ghcr.io/lee-orr/rusty-dev-containers/sccache:0": {}
-    },
-    // allows ptrace based debuggers like C++ to work in the container
-    "capAdd": [
-        "SYS_PTRACE"
-    ],
-    "runArgs": [
-        //"--dns=8.8.8.8",    // may help on DNS problems with pip, python.org et all
-        "--security-opt",
-        "seccomp=unconfined"
-    ],
-	"containerEnv": {
-		"NINJA_STATUS" : "[%f/%t (%es)] "
+		// spell-checker: enable
 	},
+	// allows ptrace based debuggers like C++ to work in the container
+	"capAdd": [
+		"SYS_PTRACE"			// cspell: disable-line
+	],
+	"runArgs": [
+		//"--dns=8.8.8.8",    	// may help on DNS problems with pip, python.org et all
+		"--security-opt",		// cspell: disable-line
+		"seccomp=unconfined"	// cspell: disable-line
+	],
+	"containerEnv": {},
 	"customizations": {
 		"vscode": {
 			"settings": {},
 			// IDs of extensions you want installed when the container is created.
+			// spell-checker: disable
 			"extensions": [
 				"ms-vscode.cpptools",
 				"ms-vscode.cmake-tools",
 				"ms-python.python",
 				"github.vscode-github-actions",
-				"mutantdino.resourcemonitor",
 				"streetsidesoftware.code-spell-checker",
 				"hbenl.vscode-test-explorer",
 				"matepek.vscode-catch2-test-adapter",
@@ -55,23 +55,21 @@
 				"psioniq.psi-header",
 				"cschlosser.doxdocgen"
 			]
+			// spell-checker: enable
 		}
 	},
 	"mounts": [
 		// if volume is not created automatically, run once e.g.
-		// $ docker volume create conan_data
+		// `docker volume create my_volume`
 		"source=conan2_data,target=/home/vscode/.conan2,type=volume",
 		"source=ccache_data,target=/home/vscode/.cache,type=volume",
 		// it's expected to work across Windows and Linux, as either one must be set depending on the OS.
 		// FixMe: On Windows ${localEnv:HOME} points to WSL user's home
-    	"source=${localEnv:USERPROFILE}${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
+		"source=${localEnv:USERPROFILE}${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
 	],
-
 	"forwardPorts": [],
-
 	"postCreateCommand": "/bin/sh .devcontainer/scripts/postCreateCommand.sh",
 	"postStartCommand": "/bin/sh .devcontainer/scripts/postStartCommand.sh",
-
 	"remoteUser": "vscode",
 	"containerUser": "vscode"
 }

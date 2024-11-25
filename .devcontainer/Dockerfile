@@ -13,6 +13,7 @@ RUN if [ "${REINSTALL_CMAKE_VERSION_FROM_SOURCE}" != "none" ]; then \
     fi \
     && rm -f /tmp/reinstall-cmake.sh
 
+# spell-checker: disable
 # devcontainer's cpp is shipped with tools (build-essential cmake, cppcheck, valgrind,
 # clang, lldb, llvm, gdb; vcpkg)
 RUN export DEBIAN_FRONTEND=noninteractive \
@@ -20,3 +21,6 @@ RUN export DEBIAN_FRONTEND=noninteractive \
        libc++-dev clang-tools clang-format clang-tidy ccache doxygen \
        python3-pip python3-venv pipx \
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+
+USER vscode
+RUN pipx install virtualenv conan

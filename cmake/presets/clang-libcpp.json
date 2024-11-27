@@ -1,0 +1,47 @@
+{
+    "version": 8,
+    "include": [
+        "common.json"
+    ],
+    "configurePresets": [
+        {
+            "name": "compiler-clang-libc++",
+            "description": "Clang C/C++ language family frontend for LLVM",
+            "hidden": true,
+            "inherits": [],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++"
+            }
+        },
+        {
+            "name": "clang-libc++-release-build-type",
+            "hidden": true,
+            "inherits": [
+                "compiler-clang-libc++",
+                "release-build-type"
+            ],
+            "cacheVariables": {}
+        },
+        {
+            "name": "clang-libc++-debug-build-type",
+            "hidden": true,
+            "inherits": [
+                "compiler-clang-libc++",
+                "debug-build-type"
+            ],
+            "cacheVariables": {}
+        },
+        {
+            "name": "clang-libc++-release-build-type-with-debug",
+            "hidden": true,
+            "inherits": [
+                "compiler-clang-libc++",
+                "release-build-type-with-debug"
+            ],
+            "cacheVariables": {}
+        }
+    ],
+    "buildPresets": [],
+    "testPresets": []
+}

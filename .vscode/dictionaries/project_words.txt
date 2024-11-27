@@ -1,5 +1,7 @@
 ccache
+conanfile
 devcontainers
+doxyfile
 gnuc
 libc
 libcpp

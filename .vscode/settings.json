@@ -1,3 +1,35 @@
 {
-    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "cmake.useCMakePresets": "auto",
+    "cmake.options.advanced": {
+        "cpack": {
+            "statusBarVisibility": "hidden"
+        },
+        "packagePreset": {
+            "statusBarVisibility": "hidden"
+        },
+        "workflow": {
+            "statusBarVisibility": "compact"
+        }
+    },
+    "cmake.allowCommentsInPresetsFile": false,
+    // https://stackoverflow.com/questions/72322120/vscode-import-x-could-not-be-resolved-even-though-listed-under-helpmodules
+    "python.analysis.extraPaths": [
+        "~/.local/share/pipx/venvs/conan/lib/python3.12/site-packages/",  // pipx
+        "${workspaceFolder}/.venv/lib/*/site-packages/",
+        "${workspaceFolder}/.win64-venv/"
+    ],
+    "terminal.integrated.shellIntegration.enabled": true,
+    // https://code.visualstudio.com/docs/terminal/profiles
+    "terminal.integrated.profiles.windows": {
+        "PowerShell (MSVC)": {
+        "path": "pwsh.exe",
+        "args": [
+            "-noexit",
+            "-file",
+            "${env:USERPROFILE}\\Documents\\PowerShell\\Microsoft.VSCode_profile.ps1"
+        ]
+        }
+    },
+    "terminal.integrated.defaultProfile.windows": "PowerShell (MSVC)"
 }

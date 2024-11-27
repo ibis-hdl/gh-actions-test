@@ -15,15 +15,15 @@
    "dictionaryDefinitions": [
       {
          "name": "c++-terms",
-         "path": ".dictionaries/cpp_terms.txt"
+         "path": "dictionaries/cpp_terms.txt"
       },
       {
          "name": "python-terms",
-         "path": ".dictionaries/python_terms.txt"
+         "path": "dictionaries/python_terms.txt"
       },
       {
          "name": "project",
-         "path": ".dictionaries/project_words.txt"
+         "path": "dictionaries/project_words.txt"
       }
    ],
    "dictionaries": [

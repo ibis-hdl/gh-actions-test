@@ -1,8 +1,10 @@
 build/**
 .venv/**
+.win64-venv/**
 
 *.url
 *.7z
 *.zip
 
 CMakeUserPresets.json
+ConanCMakePresets.json

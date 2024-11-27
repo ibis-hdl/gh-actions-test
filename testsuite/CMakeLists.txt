@@ -14,8 +14,8 @@ target_include_directories(${PROJECT_UNIT_TESTS_NAME} PRIVATE
 
 target_link_libraries(${PROJECT_UNIT_TESTS_NAME} PRIVATE Catch2::Catch2WithMain)
 
-enable_testing()
-
-catch_discover_tests(${PROJECT_UNIT_TESTS_NAME}
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+add_test(
+  NAME ${PROJECT_UNIT_TESTS_NAME}
+  COMMAND $<TARGET_FILE:${PROJECT_UNIT_TESTS_NAME}>
+# WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )

@@ -46,7 +46,7 @@ jobs:
 
     - name: Run cpp-linter (clang format && tidy)
       id: cpp-linter
-      uses: cpp-linter/cpp-linter-action@v2
+      uses: cpp-linter/cpp-linter-action@v3
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:

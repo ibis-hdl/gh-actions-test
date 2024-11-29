@@ -89,7 +89,6 @@ jobs:
           sed -i ~/.conan2/profiles/default -E \
                   -e "s|^(compiler\.cppstd\s*)=(.*)$|\1=17|g" \
                   -e "s|^(compiler\.libcxx\s*)=(.*)$|\1=libc++|g"
-          CXX=clang++ conan install . -s build_type=Release --output-folder build/conan --build=missing
         else
           conan profile detect --force --name default
         fi
@@ -109,7 +108,7 @@ jobs:
         pwd
         echo "GITHUB_WORKSPACE = ${{ env.GITHUB_WORKSPACE }}"
         ls -alF  ~/.conan2
-        ls -alFR build/conan
+        (cd ~/.conan2 && pwd)
 
     - name: CMake configuration
       run: |
@@ -296,16 +295,22 @@ jobs:
         ls -alF .
         echo ${{ env.GITHUB_WORKSPACE }}
         ls -alF  ~/.conan2
-        # ls -alF build/conan
+        (cd ~/.conan2 && pwd)
 
     - name: CMake configuration
       run: |
-        cmake -DCMAKE_CXX_COMPILER=clang++ --preset ${{ matrix.config.configure_preset }}
+        source .venv/bin/activate
+        cmake --preset ${{ matrix.config.configure_preset }}
+        deactivate
 
     - name: CMake build
       run: |
+        source .venv/bin/activate
         cmake --build --preset ${{ matrix.config.build_preset }}
+        deactivate
 
     - name: Run Unit Test
       run: |
+        source .venv/bin/activate
         ctest --preset ${{ matrix.config.test_preset }}
+        deactivate

@@ -14,6 +14,8 @@ env:
 
 jobs:
 
+  # Note: [GHA Default environment variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables)
+
   # --------------------------------- Linux ------------------------------------------
   Linux:
     name: Ubuntu Linux ${{ matrix.config.compiler }}
@@ -25,17 +27,23 @@ jobs:
         os:       [ linux ]
         config:
         - {
-            compiler:       "clang",
-            cmake_preset:   "linux-clang-release",
+            compiler:           "gcc",
+            configure_preset:   "gcc",
+            build_preset:       "gcc-release",
+            test_preset:        "test-gcc-release"
           }
         - {
-            compiler:       "gcc",
-            cmake_preset:   "linux-gcc-release",
+            compiler:           "clang",
+            configure_preset:   "clang",
+            build_preset:       "clang-release",
+            test_preset:        "test-clang-release"
           }
         - {
-            compiler:       "clang-libc++",
-            cmake_preset:   "linux-clang-libc++-release",
-            apt-pkgs:       "libc++-dev",
+            compiler:           "clang-libc++",
+            configure_preset:   "clang-libc++",
+            build_preset:       "clang-libc++-release",
+            test_preset:        "test-clang-libc++-release",
+            apt-pkgs:           "libc++-dev"
           }
 
     steps:
@@ -69,10 +77,9 @@ jobs:
       id: conan2-cache
       uses: actions/cache@v4
       with:
-        key: ${{ runner.os }}-conan-${{ matrix.config.compiler }}-${{ hashFiles('conanfile.py') }}
+        key: ${{ runner.os }}-conan-${{ hashFiles('conanfile.py') }}
         path: |
           ~/.conan2
-          build/conan
 
     - name: Check the state of installed dependencies by Conan2
       if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
@@ -85,7 +92,6 @@ jobs:
           CXX=clang++ conan install . -s build_type=Release --output-folder build/conan --build=missing
         else
           conan profile detect --force --name default
-          conan install . -s build_type=Release --output-folder build/conan --build=missing
         fi
 
     - name: Setup Github cache for compiler cache (ccache)
@@ -107,11 +113,11 @@ jobs:
 
     - name: CMake configuration
       run: |
-        cmake --preset ${{ matrix.config.cmake_preset }}
+        cmake --preset ${{ matrix.config.configure_preset }}
 
     - name: CMake build
       run: |
-        cmake --build --preset ${{ matrix.config.cmake_preset }}
+        cmake --build --preset ${{ matrix.config.build_preset }}
 
     - name: CCache statistics
       run: |
@@ -119,7 +125,7 @@ jobs:
 
     - name: Run Unit Test
       run: |
-        ctest --preset ${{ matrix.config.cmake_preset }}
+        ctest --preset ${{ matrix.config.test_preset }}
 
 
   # --------------------------------- Windows ------------------------------------------
@@ -134,14 +140,18 @@ jobs:
         os:       [ windows ]
         config:
         - {
-            compiler:       "msvc",
-            cmake_preset:   "windows-msvc-release",
-            vcvars:         "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat",
+            compiler:           "msvc",
+            configure_preset:   "msvc",
+            build_preset:       "msvc-release",
+            test_preset:        "test-msvc-release",
+            vcvars:             "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat",
           }
         - {
-            compiler:       "clang",
-            cmake_preset:   "windows-msvc-clang-release",
-            vcvars:         "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat",
+            compiler:           "msvc-clang",
+            configure_preset:   "msvc-cl",
+            build_preset:       "msvc-cl-release",
+            test_preset:        "test-msvc-cl-release",
+            vcvars:             "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat",
           }
 
     steps:
@@ -168,7 +178,7 @@ jobs:
       id: conan2-cache
       uses: actions/cache@v4
       with:
-        key: ${{ matrix.os }}-conan-${{ matrix.config.compiler }}-${{ hashFiles('conanfile.py') }}
+        key: ${{ matrix.os }}-conan-${{ hashFiles('conanfile.py') }}
         path: |
           C:\\Users\\runneradmin\\.conan2
 
@@ -176,7 +186,6 @@ jobs:
       # if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
       run: |
         conan profile detect --force --name default
-        conan install . --settings=compiler.cppstd=17 -s build_type=Release --output-folder build/conan --build=missing
 
     - name: Run Mozilla sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.6
@@ -197,17 +206,17 @@ jobs:
       shell: cmd
       run: |
         call "${{ matrix.config.vcvars }}"
-        cmake --preset ${{ matrix.config.cmake_preset }}
+        cmake --preset ${{ matrix.config.configure_preset }}
 
     - name: CMake build
       shell: cmd
       run: |
         call "${{ matrix.config.vcvars }}"
-        cmake --build --preset ${{ matrix.config.cmake_preset }}
+        cmake --build --preset ${{ matrix.config.build_preset }}
 
     - name: Run Unit Test
       run: |
-        ctest --preset ${{ matrix.config.cmake_preset }}
+        ctest --preset ${{ matrix.config.test_preset }}
 
   # ----------------------------------- macOS ----------------------------------------
   macOS:
@@ -222,8 +231,10 @@ jobs:
         os:       [ macos ]
         config:
         - {
-            compiler:       "clang",
-            cmake_preset:   "macos-clang-release",
+            compiler:           "clang",
+            configure_preset:   "clang",
+            build_preset:       "clang-release",
+            test_preset:        "test-clang-release"
           }
 
     steps:
@@ -260,7 +271,7 @@ jobs:
       id: conan2-cache
       uses: actions/cache@v4
       with:
-        key: ${{ matrix.os }}-conan-${{ matrix.config.compiler }}-${{ hashFiles('conanfile.py') }}
+        key: ${{ matrix.os }}-conan-${{ hashFiles('conanfile.py') }}
         path: |
           ~/.conan2
 
@@ -269,7 +280,6 @@ jobs:
       run: |
         source .venv/bin/activate
         conan profile detect --force --name default
-        conan install . --settings=compiler.cppstd=17 -s build_type=Release --output-folder build/conan --build=missing
         deactivate
 
     - name: Run Mozilla sccache-cache
@@ -290,12 +300,12 @@ jobs:
 
     - name: CMake configuration
       run: |
-        cmake -DCMAKE_CXX_COMPILER=clang++ --preset ${{ matrix.config.cmake_preset }}
+        cmake -DCMAKE_CXX_COMPILER=clang++ --preset ${{ matrix.config.configure_preset }}
 
     - name: CMake build
       run: |
-        cmake --build --preset ${{ matrix.config.cmake_preset }}
+        cmake --build --preset ${{ matrix.config.build_preset }}
 
     - name: Run Unit Test
       run: |
-        ctest --preset ${{ matrix.config.cmake_preset }}
+        ctest --preset ${{ matrix.config.test_preset }}

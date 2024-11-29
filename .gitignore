@@ -6,5 +6,7 @@ build/**
 *.7z
 *.zip
 
+Testing/**
+
 CMakeUserPresets.json
 ConanCMakePresets.json

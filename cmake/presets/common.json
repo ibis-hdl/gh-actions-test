@@ -3,16 +3,38 @@
     "include": [ "os.json" ],
     "configurePresets": [
         {
+            "name": "cmake-default-policies",
+            "description": "Set CMake policies",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_POLICY_DEFAULT_CMP0167": "NEW"
+            }
+        },
+        {
             "name": "cmake-default-configure-settings",
             "description": "Enable, Disable some CMake warnings, e.g. '--no-warn-unused-cli'",
             "hidden": true,
             "warnings": {
                 "unusedCli": false
             },
-            "cacheVariables": {
-                "CMAKE_MAKE_PROGRAM": "ninja",
-                "CMAKE_POLICY_DEFAULT_CMP0167": "NEW"
-            }
+            "inherits": [
+                "cmake-default-policies"
+            ]
+        },
+        {
+            "name": "cmake-pedantic-configure-settings",
+            "description": "Enable CMake pedantic warnings",
+            "hidden": true,
+            "warnings": {
+              "dev": true,
+              "deprecated": true,
+              "uninitialized": false,
+              "unusedCli": true,
+              "systemVars": false
+            },
+            "inherits": [
+                "cmake-default-policies"
+            ]
         },
         {
             "name": "ninja-default-settings",
@@ -20,6 +42,7 @@
             "hidden": true,
             "binaryDir": "${sourceDir}/build/",
             "cacheVariables": {
+                "CMAKE_MAKE_PROGRAM": "ninja",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": true
             },
             "environment": {
@@ -27,7 +50,7 @@
             }
         },
         {
-            "name": "ninja-config",
+            "name": "ninja-single-config",
             "description": "Traditional single-config Ninja generator.",
             "hidden": true,
             "generator": "Ninja",

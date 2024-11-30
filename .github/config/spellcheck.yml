@@ -1,7 +1,8 @@
+jobs: 4
 matrix:
 - name: Markdown
   sources:
-  - '**/*.md'
+  - ${{ env.MARKDOWN_FILES }}
   default_encoding: utf-8
   aspell:
     lang: en

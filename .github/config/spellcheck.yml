@@ -1,7 +1,5 @@
 matrix:
 - name: Markdown
-  sources:
-  - '!.venv/**/*.md|**/*.md'
   default_encoding: utf-8
   aspell:
     lang: en

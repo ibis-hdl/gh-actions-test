@@ -1,4 +1,4 @@
-name: 'C/C++ Lint'
+name: 'C++ Lint'
 
 on:
   pull_request:

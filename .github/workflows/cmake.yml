@@ -104,11 +104,12 @@ jobs:
     - name: Check CMake configure and build pre-conditions
       if: true
       run: |
-        # env
+        env
         pwd
         echo "GITHUB_WORKSPACE = ${{ env.GITHUB_WORKSPACE }}"
         ls -alF  ~/.conan2
         (cd ~/.conan2 && pwd)
+        echo $HOME
 
     - name: CMake configuration
       run: |
@@ -199,7 +200,7 @@ jobs:
         echo %cd%
         dir
         rem dir /s /b C:\\Users\\runneradmin\\.conan2
-        rem dir /s /b build\\conan
+        echo $HOME
 
     - name: CMake configuration
       shell: cmd
@@ -296,6 +297,7 @@ jobs:
         echo ${{ env.GITHUB_WORKSPACE }}
         ls -alF  ~/.conan2
         (cd ~/.conan2 && pwd)
+        echo $HOME
 
     - name: CMake configuration
       run: |

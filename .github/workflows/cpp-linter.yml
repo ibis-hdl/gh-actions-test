@@ -28,21 +28,19 @@ jobs:
       id: conan2-cache
       uses: actions/cache@v4
       with:
-        key: ${{ runner.os }}-conan-${{ hashFiles('conanfile.txt') }}
+        key: ${{ runner.os }}-conan-${{ hashFiles('conanfile.py') }}
         path: |
           ~/.conan2
-          build/conan
 
     - name: Check the state of installed dependencies by Conan2
       if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
       # note, no build required for linting but it fills the cache!
       run: |
-        conan profile detect --force --name default
-        conan install . --settings=compiler.cppstd=17 -s build_type=Release --output-folder build/conan --build=missing
+        CXX=clang conan profile detect --force --name default
 
     - name: CMake configuration
       run: |
-        cmake --preset ci-linux-clang
+        cmake --preset clang
 
     - name: Run cpp-linter (clang format && tidy)
       id: cpp-linter
@@ -54,7 +52,7 @@ jobs:
         ignore: '.github|scripts|docs'
         style: 'file'     # Use .clang-format config file
         tidy-checks: ''   # appended to the value of the 'Checks' option in a .clang-tidy file
-        database: build/ci-linux-clang  #  directory containing compilation database (like compile_commands.json) file.
+        database: build   #  directory containing compilation database (like compile_commands.json) file.
         # only 'update' a single comment in a pull request thread.
         thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
 

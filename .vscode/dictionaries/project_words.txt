@@ -5,6 +5,7 @@ cppstd
 ctest
 devcontainers
 doxyfile
+gitmodules
 gnuc
 libc
 libcpp

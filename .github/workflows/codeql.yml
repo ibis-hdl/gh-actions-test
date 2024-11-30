@@ -43,7 +43,6 @@ jobs:
         conan profile detect --force --name default
         cmake --preset gcc
         cmake --build --preset gcc-release
-        exit 1
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3

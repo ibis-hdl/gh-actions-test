@@ -35,6 +35,8 @@ jobs:
     - if: ${{ matrix.build-mode == 'manual' }}
       name: Build C++ code
       run: |
+        sudo apt-get update && sudo apt-get install --no-install-recommends -y \
+          cmake ninja-build g++
         pip --disable-pip-version-check --no-cache-dir install wheel conan
         # conan profile detect --force --name default
         cmake --preset gcc

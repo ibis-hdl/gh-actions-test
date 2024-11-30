@@ -38,7 +38,7 @@ jobs:
         sudo apt-get update && sudo apt-get install --no-install-recommends -y \
           cmake ninja-build g++
         pip --disable-pip-version-check --no-cache-dir install wheel conan
-        # conan profile detect --force --name default
+        conan profile detect --force --name default
         cmake --preset gcc
         cmake --build --preset gcc-release
         exit 1

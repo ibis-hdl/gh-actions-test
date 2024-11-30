@@ -17,7 +17,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'cpp', 'python' ]
+        include:
+          - language: cpp
+            build-mode: manual
+          - language: python
+            build-mode: autobuild
 
     steps:
     - name: Checkout repository
@@ -28,8 +32,14 @@ jobs:
       with:
         languages: ${{ matrix.language }}
 
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v3
+    - if: ${{ matrix.build-mode == 'manual' }}
+      name: Build C++ code
+      run: |
+        pip --disable-pip-version-check --no-cache-dir install wheel conan
+        # conan profile detect --force --name default
+        cmake --preset gcc
+        cmake --build --preset gcc-release
+        exit 1
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3

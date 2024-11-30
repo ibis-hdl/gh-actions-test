@@ -7,8 +7,9 @@ matrix:
     lang: en
   dictionary:
     wordlists:
-    - .vscode/dictionaries/dev_terms.txt
-    - .vscode/dictionaries/words.txt
+    - .vscode/dictionaries/cpp_terms.txt
+    - .vscode/dictionaries/python_terms.txt
+    - .vscode/dictionaries/project_words.txt
     encoding: utf-8
   pipeline:
   - pyspelling.filters.markdown:

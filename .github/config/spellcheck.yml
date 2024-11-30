@@ -2,7 +2,7 @@ jobs: 4
 matrix:
 - name: Markdown
   sources:
-  - ${{ env.MARKDOWN_FILES }}
+  - '!cmake/cmake-conan|**/*.md'
   default_encoding: utf-8
   aspell:
     lang: en

@@ -13,8 +13,11 @@ MAXSIZE
 msvc
 pkgs
 ptrace
+pyspelling
 runneradmin
 sccache
 vcvars
 venv
+wordlist
+wordlists
 zstd

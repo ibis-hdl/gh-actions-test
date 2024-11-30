@@ -42,9 +42,9 @@ jobs:
       run: |
         cmake --preset clang
 
-    - name: Run cpp-linter (clang format && tidy)
+    - name: Run cpp-linter (clang-format & clang-tidy)
       id: cpp-linter
-      uses: cpp-linter/cpp-linter-action@v3
+      uses: cpp-linter/cpp-linter-action@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:

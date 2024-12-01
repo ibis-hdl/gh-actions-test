@@ -54,7 +54,11 @@
                 "cmake-default-configure-settings",
                 "default-install-settings",
                 "default-environment"
-            ]
+            ],
+            "cacheVariables": {
+                "CONAN_HOST_PROFILE": "clang-libc++",
+                "CONAN_BUILD_PROFILE": "clang-libc++"
+            }
         },
         {
             "name": "msvc",

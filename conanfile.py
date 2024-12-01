@@ -5,7 +5,7 @@ from conan.tools.files import load, save
 import json
 import os
 
-class CompressorRecipe(ConanFile):
+class ActionTestRecipe(ConanFile):
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
 

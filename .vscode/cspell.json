@@ -3,7 +3,7 @@
    "language": "en",
    "cache": {
       "useCache": true,
-      "cacheLocation": ".dictionaries/.cspellcache",
+      "cacheLocation": "dictionaries/.cspellcache",
       "cacheStrategy": "content"
    },
    "ignorePaths": [

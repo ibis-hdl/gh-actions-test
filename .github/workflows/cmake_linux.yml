@@ -92,6 +92,7 @@ jobs:
           sed -i ~/.conan2/profiles/default -E \
                   -e "s|^(compiler\.cppstd\s*)=(.*)$|\1=20|g" \
                   -e "s|^(compiler\.libcxx\s*)=(.*)$|\1=libc++|g"
+          cp ~/.conan2/profiles/default ~/.conan2/profiles/${{ matrix.cmake.configure_preset }}
         else
           echo "... not required."
         fi

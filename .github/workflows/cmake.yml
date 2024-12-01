@@ -86,6 +86,7 @@ jobs:
       if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
       shell: bash
       run: |
+        echo "Check to tweak to use libc++"
         if [[ "${{ matrix.cmake.configure_preset }}" ==  *"libc++"* ]]; then
           echo "tweak Conan profile to use libc++"
           conan profile detect --force --name default

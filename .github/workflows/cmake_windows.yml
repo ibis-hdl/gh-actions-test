@@ -1,0 +1,110 @@
+name: 'CMake build'
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  # GitHub actions automatically zstd compresses caches
+  CCACHE_NOCOMPRESS : true
+  # 3GB; 10GB total for 4 compile jobs and conan data
+  CCACHE_MAXSIZE : 3G
+  SCCACHE_CACHE_SIZE : 3G
+
+jobs:
+
+  # Note: [GHA Default environment variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables)
+
+  Windows:
+    name: Windows ${{ matrix.cmake.configure_preset }}
+    runs-on: ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
+        image:    [ windows-2022 ]
+        os:       [ windows ]
+        cmake:
+        - {
+            compiler:           "cl",
+            configure_preset:   "msvc",
+            build_preset:       "msvc-release",
+            test_preset:        "test-msvc-release",
+            vcvars:             "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat",
+          }
+        - {
+            compiler:           "clang-cl",
+            configure_preset:   "msvc-cl",
+            build_preset:       "msvc-cl-release",
+            test_preset:        "test-msvc-cl-release",
+            vcvars:             "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat",
+          }
+
+    steps:
+
+    - name: Trigger event
+      run: |
+        echo "Triggered by ${{ github.event_name }}"
+
+    - name: Install required build dependencies on ${{matrix.image}}
+      run: |
+        choco install cmake ninja
+
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    - name: Set Github runner's env (CXX=${{ matrix.cmake.compiler }})
+      run: |
+        echo "CXX=${{ matrix.cmake.compiler }}" >> $GITHUB_ENV
+
+    - name: Install conan package manager
+      id: conan2
+      run: |
+        pip --disable-pip-version-check --no-cache-dir install wheel conan
+
+    - name: Cache Conan2 dependencies
+      id: conan2-cache
+      uses: actions/cache@v4
+      with:
+        key: ${{ runner.os }}-conan-${{ hashFiles('conanfile.py') }}
+        path: |
+          C:\\Users\\runneradmin\\.conan2
+
+    - name: Create Conan2 (default) profile
+      # if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
+      run: |
+        conan profile detect --force --name default
+
+    - name: Setup Github cache for compiler cache (Mozilla sccache-cache)
+      uses: mozilla-actions/sccache-action@v0.0.6
+      env:
+        SCCACHE_GHA_ENABLED: "true"
+
+    - name: Show CMake configure and build pre-conditions
+      if: true
+      shell: cmd
+      run: |
+        rem env
+        echo %cd%
+        dir
+        rem dir /s /b C:\\Users\\runneradmin\\.conan2
+        echo $HOME
+
+    - name: CMake configuration
+      shell: cmd
+      run: |
+        call "${{ matrix.cmake.vcvars }}"
+        cmake --preset ${{ matrix.cmake.configure_preset }}
+
+    - name: CMake build
+      shell: cmd
+      run: |
+        call "${{ matrix.cmake.vcvars }}"
+        cmake --build --preset ${{ matrix.cmake.build_preset }}
+
+    - name: Run Unit Test
+      run: |
+        ctest --preset ${{ matrix.cmake.test_preset }}

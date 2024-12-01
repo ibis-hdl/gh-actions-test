@@ -24,7 +24,6 @@ jobs:
       fail-fast: false
       matrix:
         image:                  [ ubuntu-24.04 ]
-        image_extra_pkg:        ["libc++-dev"]
         os:                     [ linux ]
         cmake:
         - {
@@ -43,7 +42,8 @@ jobs:
             compiler:           "clang++",
             configure_preset:   "clang-libc++",
             build_preset:       "clang-libc++-release",
-            test_preset:        "test-clang-libc++-release"
+            test_preset:        "test-clang-libc++-release",
+            depend_pkgs:        "libc++-dev"
           }
 
     steps:
@@ -58,7 +58,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install --no-install-recommends -y \
-          cmake ninja-build ccache g++ clang "${{ matrix.image_extra_pkg }}"
+          cmake ninja-build ccache g++ clang "${{ matrix.cmake.depend_pkgs }}"
 
     - name: Checkout Repo
       uses: actions/checkout@v4
@@ -140,7 +140,7 @@ jobs:
         # https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
         image:    [ windows-2022 ]
         os:       [ windows ]
-        config:
+        cmake:
         - {
             compiler:           "cl",
             configure_preset:   "msvc",
@@ -236,7 +236,7 @@ jobs:
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md
         image:    [ macos-15 ]
         os:       [ macos ]
-        config:
+        cmake:
         - {
             compiler:           "clang++",
             configure_preset:   "clang",

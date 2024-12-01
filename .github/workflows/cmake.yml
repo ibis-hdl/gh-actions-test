@@ -84,12 +84,13 @@ jobs:
 
     - name: Check the state of installed dependencies by Conan2
       if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
+      shell: bash
       run: |
         if [[ "${{ matrix.cmake.configure_preset }}" ==  *"libc++"* ]]; then
           echo "tweak Conan profile to use libc++"
           conan profile detect --force --name default
           sed -i ~/.conan2/profiles/default -E \
-                  -e "s|^(compiler\.cppstd\s*)=(.*)$|\1=17|g" \
+                  -e "s|^(compiler\.cppstd\s*)=(.*)$|\1=20|g" \
                   -e "s|^(compiler\.libcxx\s*)=(.*)$|\1=libc++|g"
         else
           conan profile detect --force --name default

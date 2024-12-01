@@ -6,8 +6,12 @@ Testing Github actions on simple C++ project
 
 ### branch on push
 
-### build:
-[![CMake build](https://github.com/ibis-hdl/gh-actions-test/actions/workflows/cmake.yml/badge.svg?event=push)](https://github.com/ibis-hdl/gh-actions-test/actions/workflows/cmake.yml)
+### CMake build:
+
+[![Linux](https://github.com/ibis-hdl/gh-actions-test/actions/workflows/cmake_linux.yml/badge.svg)](https://github.com/ibis-hdl/gh-actions-test/actions/workflows/cmake_linux.yml)
+[![Windows](https://github.com/ibis-hdl/gh-actions-test/actions/workflows/cmake_windows.yml/badge.svg)](https://github.com/ibis-hdl/gh-actions-test/actions/workflows/cmake_windows.yml)
+[![macOS](https://github.com/ibis-hdl/gh-actions-test/actions/workflows/cmake_macos.yml/badge.svg)](https://github.com/ibis-hdl/gh-actions-test/actions/workflows/cmake_macos.yml)
+
 
 ### code quality:
 

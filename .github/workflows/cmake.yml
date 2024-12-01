@@ -18,7 +18,7 @@ jobs:
 
   # --------------------------------- Linux ------------------------------------------
   Linux:
-    name: Ubuntu Linux ${{ matrix.cmake.compiler }}
+    name: Ubuntu Linux ${{ matrix.cmake.configure_preset }}
     runs-on: ${{ matrix.image }}
     strategy:
       fail-fast: false
@@ -132,7 +132,7 @@ jobs:
 
   # --------------------------------- Windows ------------------------------------------
   Windows:
-    name: Windows ${{ matrix.cmake.compiler }}
+    name: Windows ${{ matrix.cmake.configure_preset }}
     runs-on: ${{ matrix.image }}
     strategy:
       fail-fast: false
@@ -227,7 +227,7 @@ jobs:
   # ----------------------------------- macOS ----------------------------------------
 
   macOS:
-    name: macOS ${{ matrix.cmake.compiler }}
+    name: macOS ${{ matrix.cmake.configure_preset }}
     runs-on: ${{ matrix.image }}
     # if: false # always skip job
     strategy:

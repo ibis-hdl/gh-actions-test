@@ -82,20 +82,22 @@ jobs:
         path: |
           ~/.conan2
 
-    - name: Check the state of installed dependencies by Conan2
+    - name: Create Conan2 (default) profile
       # if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
       shell: bash
       run: |
-        echo "Check to tweak to use libc++"
+        conan profile detect --force --name default
+        echo "Check to tweak Conan's profile to use libc++ ..."
         if [[ "${{ matrix.cmake.configure_preset }}" ==  *"libc++"* ]]; then
-          echo "tweak Conan profile to use libc++"
-          conan profile detect --force --name default
+          echo "... apply tweaks."
           sed -i ~/.conan2/profiles/default -E \
                   -e "s|^(compiler\.cppstd\s*)=(.*)$|\1=20|g" \
                   -e "s|^(compiler\.libcxx\s*)=(.*)$|\1=libc++|g"
         else
-          conan profile detect --force --name default
+          echo "... not required."
         fi
+        echo "using Conan's profile:"
+        conan profile show -pr default
 
     - name: Setup Github cache for compiler cache (ccache)
       uses: actions/cache@v4
@@ -105,7 +107,7 @@ jobs:
           ~/.config/ccache
           ~/.cache/ccache
 
-    - name: Check CMake configure and build pre-conditions
+    - name: Show CMake configure and build pre-conditions
       if: true
       run: |
         env
@@ -200,7 +202,7 @@ jobs:
       env:
         SCCACHE_GHA_ENABLED: "true"
 
-    - name: Check CMake configure and build pre-conditions
+    - name: Show CMake configure and build pre-conditions
       if: true
       shell: cmd
       run: |
@@ -300,7 +302,7 @@ jobs:
       env:
         SCCACHE_GHA_ENABLED: "true"
 
-    - name: Check CMake configure and build pre-conditions
+    - name: Show CMake configure and build pre-conditions
       if: true
       shell: bash
       run: |

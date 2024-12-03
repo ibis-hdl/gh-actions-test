@@ -6,10 +6,6 @@ on:
   workflow_dispatch:
 
 env:
-  # GitHub actions automatically zstd compresses caches
-  CCACHE_NOCOMPRESS : true
-  # 3GB; 10GB total for 4 compile jobs and conan data
-  CCACHE_MAXSIZE : 3G
   SCCACHE_CACHE_SIZE : 3G
 
 jobs:
@@ -64,9 +60,16 @@ jobs:
       with:
         submodules: true
 
-    - name: Set Github runner's env (CXX=${{ matrix.cmake.compiler }})
+    - name: Set Github runner's env (CXX=${{ matrix.cmake.compiler }} etc.)
       run: |
-        echo "CXX=${{ matrix.cmake.compiler }}" >> $GITHUB_ENV
+        {
+          echo CXX=${{ matrix.cmake.compiler }}
+          echo CCACHE_DIR=${HOME}/.cache/ccache
+          echo CCACHE_NOCOMPRESS=true   # GitHub actions automatically zstd compresses caches
+        } >> "$GITHUB_ENV"
+        # 10GB total for compile jobs and conan data, unlimited files
+        ccache --max-size 3GB --max-files 0
+        echo ${CCACHE_DIR}
 
     - name: Install Conan package manager
       id: conan2
@@ -81,6 +84,14 @@ jobs:
         path: |
           ~/.conan2
 
+    - name: Check Conan Cache on TRUE
+      if: ${{ steps.conan2-cache.outputs.cache-hit == 'true' }}
+      run: echo 'steps.conan2-cache.outputs.cache-hit TRUE'
+
+    - name: Check Conan Cache on FALSE
+      if: ${{ steps.conan2-cache.outputs.cache-hit == 'false' }}
+      run: echo 'steps.conan2-cache.outputs.cache-hit FALSE'
+
     - name: Create Conan2 (default) profile
       # if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
       shell: bash
@@ -88,16 +99,16 @@ jobs:
         conan profile detect --force --name default
         echo "Check to tweak Conan's profile to use libc++ ..."
         if [[ "${{ matrix.cmake.configure_preset }}" ==  *"libc++"* ]]; then
-          echo "... and have to apply libc++ tweaks."
+          echo "... *is* required, add ${{ matrix.cmake.configure_preset }}"
           sed -i ~/.conan2/profiles/default -E \
                   -e "s|^(compiler\.cppstd\s*)=(.*)$|\1=20|g" \
                   -e "s|^(compiler\.libcxx\s*)=(.*)$|\1=libc++|g"
           cp ~/.conan2/profiles/default ~/.conan2/profiles/${{ matrix.cmake.configure_preset }}
+          conan profile show -pr ${{ matrix.cmake.configure_preset }}
         else
           echo "... not required."
         fi
-        echo "using Conan's profile:"
-        conan profile show -pr default
+
 
     - name: Setup Github cache for compiler cache (ccache)
       uses: actions/cache@v4

@@ -79,21 +79,9 @@ jobs:
       id: conan2-cache
       uses: actions/cache@v4
       with:
-        key: ${{ runner.os }}-${{ matrix.cmake.compiler }}-conan-${{ hashFiles('conanfile.py') }}
+        key: ${{ runner.os }}-${{ matrix.cmake.configure_preset }}-conan-${{ hashFiles('conanfile.py') }}
         path: |
           ~/.conan2
-
-    - name: Check Conan Cache on TRUE
-      if: steps.conan2-cache.outputs.cache-hit == 'true'
-      run: |
-        conan list '*'
-        conan profile show
-
-    - name: Check Conan Cache on FALSE
-      if: steps.conan2-cache.outputs.cache-hit == 'false'
-      run: |
-        conan list '*'
-        conan profile show
 
     - name: Create Conan2 (default) profile
       if: steps.conan2-cache.outputs.cache-hit != 'true'

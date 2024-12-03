@@ -85,15 +85,15 @@ jobs:
           ~/.conan2
 
     - name: Check Conan Cache on TRUE
-      if: ${{ steps.conan2-cache.outputs.cache-hit == 'true' }}
+      if: steps.conan2-cache.outputs.cache-hit == 'true
       run: echo 'steps.conan2-cache.outputs.cache-hit TRUE'
 
     - name: Check Conan Cache on FALSE
-      if: ${{ steps.conan2-cache.outputs.cache-hit == 'false' }}
+      if: steps.conan2-cache.outputs.cache-hit == 'false'
       run: echo 'steps.conan2-cache.outputs.cache-hit FALSE'
 
     - name: Create Conan2 (default) profile
-      # if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
+      if: steps.conan2-cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
         conan profile detect --force --name default
@@ -109,7 +109,6 @@ jobs:
           echo "... not required."
         fi
 
-
     - name: Setup Github cache for compiler cache (ccache)
       uses: actions/cache@v4
       with:
@@ -119,7 +118,7 @@ jobs:
           ~/.cache/ccache
 
     - name: Show CMake configure and build pre-conditions
-      if: true
+      if: false
       run: |
         env
         pwd

@@ -69,12 +69,12 @@ jobs:
       id: conan2-cache
       uses: actions/cache@v4
       with:
-        key: ${{ runner.os }}-${{ matrix.cmake.compiler }}-conan-${{ hashFiles('conanfile.py') }}
+        key: ${{ matrix.os }}-${{ matrix.cmake.configure_preset }}-conan-${{ hashFiles('conanfile.py') }}
         path: |
           C:\\Users\\runneradmin\\.conan2
 
     - name: Create Conan2 (default) profile
-      # if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
+      if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
       run: |
         conan profile detect --force --name default
 
@@ -84,7 +84,7 @@ jobs:
         SCCACHE_GHA_ENABLED: "true"
 
     - name: Show CMake configure and build pre-conditions
-      if: true
+      if: false
       shell: cmd
       run: |
         rem env

@@ -79,7 +79,7 @@ jobs:
       id: conan2-cache
       uses: actions/cache@v4
       with:
-        key: ${{ runner.os }}-${{ matrix.cmake.configure_preset }}-conan-${{ hashFiles('conanfile.py') }}
+        key: ${{ matrix.os }}-${{ matrix.cmake.configure_preset }}-conan-${{ hashFiles('conanfile.py') }}
         path: |
           ~/.conan2
 
@@ -104,7 +104,7 @@ jobs:
     - name: Setup Github cache for compiler cache (ccache)
       uses: actions/cache@v4
       with:
-        key: ${{ runner.os }}-${{ matrix.cmake.compiler }}-ccache
+        key: ${{ matrix.os }}-${{ matrix.cmake.compiler }}-ccache
         path: |
           ~/.config/ccache
           ~/.cache/ccache
@@ -121,7 +121,7 @@ jobs:
 
     - name: CMake configuration
       run: |
-        conan list '*'
+        # conan list '*'
         conan profile show
         cmake --preset ${{ matrix.cmake.configure_preset }}
 

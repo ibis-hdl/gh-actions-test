@@ -72,7 +72,7 @@ jobs:
       id: conan2-cache
       uses: actions/cache@v4
       with:
-        key: ${{ runner.os }}-conan-${{ hashFiles('conanfile.py') }}
+        key: ${{ runner.os }}-${{ matrix.cmake.compiler }}-conan-${{ hashFiles('conanfile.py') }}
         path: |
           ~/.conan2
 

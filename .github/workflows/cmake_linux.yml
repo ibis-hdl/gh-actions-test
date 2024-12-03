@@ -85,7 +85,7 @@ jobs:
           ~/.conan2
 
     - name: Check Conan Cache on TRUE
-      if: steps.conan2-cache.outputs.cache-hit == 'true
+      if: steps.conan2-cache.outputs.cache-hit == 'true'
       run: echo 'steps.conan2-cache.outputs.cache-hit TRUE'
 
     - name: Check Conan Cache on FALSE

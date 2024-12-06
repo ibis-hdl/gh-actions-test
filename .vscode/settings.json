@@ -1,6 +1,7 @@
 {
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "cmake.useCMakePresets": "auto",
+    "cmake.options.statusBarVisibility": "compact",
     "cmake.options.advanced": {
         "cpack": {
             "statusBarVisibility": "hidden"
@@ -12,6 +13,7 @@
             "statusBarVisibility": "compact"
         }
     },
+    "python.terminal.activateEnvironment": true,
     // https://stackoverflow.com/questions/72322120/vscode-import-x-could-not-be-resolved-even-though-listed-under-helpmodules
     "python.analysis.extraPaths": [
         "~/.local/share/pipx/venvs/conan/lib/python3.12/site-packages/",  // pipx

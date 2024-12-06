@@ -19,7 +19,10 @@
             },
             "inherits": [
                 "cmake-default-policies"
-            ]
+            ],
+            "cacheVariables": {
+                "CMAKE_VERBOSE_MAKEFILE": "ON"
+            }
         },
         {
             "name": "cmake-pedantic-configure-settings",
@@ -34,7 +37,10 @@
             },
             "inherits": [
                 "cmake-default-policies"
-            ]
+            ],
+            "cacheVariables": {
+                "CMAKE_VERBOSE_MAKEFILE": "ON"
+            }
         },
         {
             "name": "ninja-default-settings",

@@ -97,85 +97,75 @@
             "displayName": "Release",
             "description": "Release build with GnuC",
             "configuration": "Release",
-            "configurePreset": "gcc",
-            "inherits": []
+            "configurePreset": "gcc"
         },
         {
             "name": "gcc-debug",
             "displayName": "Debug",
             "description": "Debug build with GnuC",
             "configuration": "Debug",
-            "configurePreset": "gcc",
-            "inherits": []
+            "configurePreset": "gcc"
         },
         {
             "name": "clang-release",
             "displayName": "Release",
             "description": "Release build with Clang",
             "configuration": "Release",
-            "configurePreset": "clang",
-            "inherits": []
+            "configurePreset": "clang"
         },
         {
             "name": "clang-debug",
             "displayName": "Debug",
             "description": "Debug build with Clang",
             "configuration": "Debug",
-            "configurePreset": "clang",
-            "inherits": []
+            "configurePreset": "clang"
         },
         {
             "name": "clang-libc++-release",
             "displayName": "Release",
             "description": "Release build with Clang libc++",
             "configuration": "Release",
-            "configurePreset": "clang-libc++",
-            "inherits": []
+            "configurePreset": "clang-libc++"
         },
         {
             "name": "clang-libc++-debug",
             "displayName": "Debug",
             "description": "Debug build with Clang libc++",
             "configuration": "Debug",
-            "configurePreset": "clang-libc++",
-            "inherits": []
+            "configurePreset": "clang-libc++"
         },
         {
             "name": "msvc-release",
             "displayName": "Release",
             "description": "Release build with Microsoft Visual Studio",
             "configuration": "Release",
-            "configurePreset": "msvc",
-            "inherits": []
+            "configurePreset": "msvc"
         },
         {
             "name": "msvc-debug",
             "displayName": "Debug",
             "description": "Debug build with Microsoft Visual Studio",
             "configuration": "Debug",
-            "configurePreset": "msvc",
-            "inherits": []
+            "configurePreset": "msvc"
         },
         {
             "name": "msvc-cl-release",
             "displayName": "Release",
             "description": "Release build with Microsoft Visual Studio bundled Clang C++ compiler",
             "configuration": "Release",
-            "configurePreset": "msvc-cl",
-            "inherits": []
+            "configurePreset": "msvc-cl"
         },
         {
             "name": "msvc-cl-debug",
             "displayName": "Debug",
             "description": "Debug build with Microsoft Visual Studio bundled Clang C++ compiler",
             "configuration": "Debug",
-            "configurePreset": "msvc-cl",
-            "inherits": []
+            "configurePreset": "msvc-cl"
         }
     ],
     "testPresets": [
         {
-            "name": "test-gcc-release",
+            "name": "gcc-release-test",
             "displayName": "Release Test",
             "description": "Test GnuC build",
             "configuration": "Release",
@@ -185,7 +175,7 @@
             ]
         },
         {
-            "name": "test-gcc-debug",
+            "name": "gcc-debug-test",
             "displayName": "Debug Test",
             "description": "Test GnuC build",
             "configuration": "Debug",
@@ -195,7 +185,7 @@
             ]
         },
         {
-            "name": "test-clang-release",
+            "name": "clang-release-test",
             "displayName": "Release Test",
             "description": "Test Clang build",
             "configuration": "Release",
@@ -205,7 +195,7 @@
             ]
         },
         {
-            "name": "test-clang-debug",
+            "name": "clang-debug-test",
             "displayName": "Debug Test",
             "description": "Test Clang build",
             "configuration": "Release",
@@ -215,7 +205,7 @@
             ]
         },
         {
-            "name": "test-clang-libc++-release",
+            "name": "clang-libc++-release-test",
             "displayName": "Release Test",
             "description": "Test Clang libc++ build",
             "configuration": "Release",
@@ -225,7 +215,7 @@
             ]
         },
         {
-            "name": "test-clang-libc++-debug",
+            "name": "clang-libc++-debug-test",
             "displayName": "Debug Test",
             "description": "Test Clang libc++ build",
             "configuration": "Release",
@@ -235,7 +225,7 @@
             ]
         },
         {
-            "name": "test-msvc-release",
+            "name": "msvc-release-test",
             "displayName": "Release Test",
             "description": "Test Microsoft Visual Studio build",
             "configuration": "Release",
@@ -245,7 +235,7 @@
             ]
         },
         {
-            "name": "test-msvc-debug",
+            "name": "msvc-debug-test",
             "displayName": "Debug Test",
             "description": "Test Microsoft Visual Studio build",
             "configuration": "Release",
@@ -255,7 +245,7 @@
             ]
         },
         {
-            "name": "test-msvc-cl-release",
+            "name": "msvc-cl-release-test",
             "displayName": "Release Test",
             "description": "Test Microsoft Visual Studio bundled Clang build",
             "configuration": "Release",
@@ -265,7 +255,7 @@
             ]
         },
         {
-            "name": "test-msvc-cl-debug",
+            "name": "msvc-cl-debug-test",
             "displayName": "Debug Test",
             "description": "Test Microsoft Visual Studio bundled Clang build",
             "configuration": "Release",
@@ -291,7 +281,7 @@
                 },
                 {
                     "type": "test",
-                    "name": "test-gcc-debug"
+                    "name": "gcc-debug-test"
                 }
             ]
         },
@@ -310,7 +300,7 @@
                 },
                 {
                     "type": "test",
-                    "name": "test-gcc-release"
+                    "name": "gcc-release-test"
                 }
             ]
         },
@@ -329,7 +319,7 @@
                 },
                 {
                     "type": "test",
-                    "name": "test-clang-release"
+                    "name": "clang-release-test"
                 }
             ]
         },
@@ -337,7 +327,7 @@
             "name": "Clang libc++ Release",
             "displayName": "CI/CD Clang libc++",
             "description": "Continuous Integration/Continuous Delivery using GnUC with libc++ Release",
-           "steps": [
+            "steps": [
                 {
                     "type": "configure",
                     "name": "clang-libc++"
@@ -348,7 +338,7 @@
                 },
                 {
                     "type": "test",
-                    "name": "test-clang-libc++-release"
+                    "name": "clang-libc++-release-test"
                 }
             ]
         },
@@ -367,7 +357,7 @@
                 },
                 {
                     "type": "test",
-                    "name": "test-msvc-release"
+                    "name": "msvc-release-test"
                 }
             ]
         },
@@ -386,7 +376,7 @@
                 },
                 {
                     "type": "test",
-                    "name": "test-msvc-cl-release"
+                    "name": "msvc-cl-release-test"
                 }
             ]
         }

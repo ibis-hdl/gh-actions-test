@@ -1,6 +1,8 @@
 {
     "version": 8,
-    "include": [ "os.json" ],
+    "include": [
+        "os.json"
+    ],
     "configurePresets": [
         {
             "name": "cmake-default-policies",
@@ -29,11 +31,11 @@
             "description": "Enable CMake pedantic warnings",
             "hidden": true,
             "warnings": {
-              "dev": true,
-              "deprecated": true,
-              "uninitialized": false,
-              "unusedCli": true,
-              "systemVars": false
+                "dev": true,
+                "deprecated": true,
+                "uninitialized": false,
+                "unusedCli": true,
+                "systemVars": false
             },
             "inherits": [
                 "cmake-default-policies"
@@ -52,7 +54,7 @@
                 "CMAKE_EXPORT_COMPILE_COMMANDS": true
             },
             "environment": {
-                "NINJA_STATUS" : "[%f/%t (%es)] "
+                "NINJA_STATUS": "[%f/%t (%es)] "
             }
         },
         {
@@ -164,8 +166,7 @@
             }
         }
     ],
-    "buildPresets": [
-    ],
+    "buildPresets": [],
     "testPresets": [
         {
             "name": "default-testPreset",

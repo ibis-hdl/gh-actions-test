@@ -40,9 +40,10 @@ jobs:
             test_preset:        "test-clang-libc++-release",
             depend_pkgs:        "libc++-dev"
           }
-        # exclude temporary clang-libc++ due to conan/cmake problems
+        # exclude temporary clang-libc++ due to conan/cmake issues
+        # see: https://github.com/actions/runner/issues/1512
         exclude:
-          - configure_preset:   "clang-libc++"
+          - { cmake: {configure_preset: "clang-libc++" } }
 
     steps:
 

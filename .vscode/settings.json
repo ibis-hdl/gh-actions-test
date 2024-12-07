@@ -1,5 +1,6 @@
 {
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "cmake.configureOnOpen": false,
     "cmake.useCMakePresets": "auto",
     "cmake.options.statusBarVisibility": "compact",
     "cmake.options.advanced": {

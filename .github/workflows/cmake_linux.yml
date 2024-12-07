@@ -40,6 +40,9 @@ jobs:
             test_preset:        "test-clang-libc++-release",
             depend_pkgs:        "libc++-dev"
           }
+        # exclude temporary clang-libc++ due to conan/cmake problems
+        exclude:
+          - configure_preset:   "clang-libc++"
 
     steps:
 

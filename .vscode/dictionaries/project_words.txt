@@ -12,6 +12,7 @@ libc
 libcpp
 MAXSIZE
 msvc
+NOCOMPRESS
 pkgs
 ptrace
 pyspelling

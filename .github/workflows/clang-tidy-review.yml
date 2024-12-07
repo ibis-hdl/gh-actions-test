@@ -24,6 +24,10 @@ jobs:
       with:
         submodules: true
 
+    - name: Set Github runner's env (CXX=clang++)
+      run: |
+        echo "CXX=clang++" >> "$GITHUB_ENV"
+                
     - name: Install Conan package manager
       id: conan2
       run: |
@@ -37,21 +41,23 @@ jobs:
         path: |
           ~/.conan2
 
-    - name: Check the state of installed dependencies by Conan2
-      if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
-      # note, no build required, but it fills the cache!
-      run: |
-        CXX=clang conan profile detect --force --name default
+    #- name: Check the state of installed dependencies by Conan2
+    #  if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
+    #  run: |
+    #    conan profile detect --force --name default
 
-    - name: CMake configuration
-      run: |
-        cmake --preset clang
+    #- name: CMake configuration
+    #  run: |
+    #    cmake --preset clang
 
     - name: Run Clang tidy review
       id: clang-tidy-review
       uses: ZedThree/clang-tidy-review@v0.20.1
-      # with: cmake_command: cmake --preset clang
       with:
+        build_dir: ${{ github.workspace }}/build
+        cmake_command: |
+          conan profile detect --force --name default
+          cmake --preset clang
         config_file: .clang-tidy
 
     - name: Uploads an artefact containing clang_fixes.json

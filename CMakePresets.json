@@ -33,7 +33,7 @@
             "displayName": "Clang",
             "description": "Clang compiler",
             "inherits": [
-                "condition-anyOf-linux-or-darwin",
+                "condition-linux-or-macos",
                 "ninja-multi-config",
                 "clang-release-build-type",
                 "conan-provider",

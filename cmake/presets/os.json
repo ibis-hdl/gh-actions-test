@@ -29,59 +29,38 @@
             }
         },
         {
-            "name": "condition-anyOf-linux-or-windows",
+            "name": "condition-linux-or-windows",
             "hidden": true,
             "condition": {
-                "type": "anyOf",
-                "conditions": [
-                    {
-                        "type": "equals",
-                        "lhs": "${hostSystemName}",
-                        "rhs": "Linux"
-                    },
-                    {
-                        "type": "equals",
-                        "lhs": "${hostSystemName}",
-                        "rhs": "Windows"
-                    }
+                "type": "inList",
+                "string": "${hostSystemName}",
+                "list": [
+                    "Linux",
+                    "Windows"
                 ]
             }
         },
         {
-            "name": "condition-anyOf-linux-or-darwin",
+            "name": "condition-linux-or-macos",
             "hidden": true,
             "condition": {
-                "type": "anyOf",
-                "conditions": [
-                    {
-                        "type": "equals",
-                        "lhs": "${hostSystemName}",
-                        "rhs": "Linux"
-                    },
-                    {
-                        "type": "equals",
-                        "lhs": "${hostSystemName}",
-                        "rhs": "Darwin"
-                    }
+                "type": "inList",
+                "string": "${hostSystemName}",
+                "list": [
+                    "Linux",
+                    "Darwin"
                 ]
             }
         },
         {
-            "name": "condition-anyOf-windows-or-darwin",
+            "name": "condition-windows-or-macos",
             "hidden": true,
             "condition": {
-                "type": "anyOf",
-                "conditions": [
-                    {
-                        "type": "equals",
-                        "lhs": "${hostSystemName}",
-                        "rhs": "Windows"
-                    },
-                    {
-                        "type": "equals",
-                        "lhs": "${hostSystemName}",
-                        "rhs": "Darwin"
-                    }
+                "type": "inList",
+                "string": "${hostSystemName}",
+                "list": [
+                    "Windows",
+                    "Darwin"
                 ]
             }
         },

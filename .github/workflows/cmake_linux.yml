@@ -25,19 +25,19 @@ jobs:
             compiler:           "g++",
             configure_preset:   "gcc",
             build_preset:       "gcc-release",
-            test_preset:        "test-gcc-release"
+            test_preset:        "gcc-release-test"
           }
         - {
             compiler:           "clang++",
             configure_preset:   "clang",
             build_preset:       "clang-release",
-            test_preset:        "test-clang-release"
+            test_preset:        "clang-release-test"
           }
         - {
             compiler:           "clang++",
             configure_preset:   "clang-libc++",
             build_preset:       "clang-libc++-release",
-            test_preset:        "test-clang-libc++-release",
+            test_preset:        "clang-libc++-release-test",
             depend_pkgs:        "libc++-dev"
           }
         # exclude temporary clang-libc++ due to conan/cmake issues

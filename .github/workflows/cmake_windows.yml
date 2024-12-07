@@ -30,14 +30,14 @@ jobs:
             compiler:           "cl",
             configure_preset:   "msvc",
             build_preset:       "msvc-release",
-            test_preset:        "test-msvc-release",
+            test_preset:        "msvc-release-test",
             vcvars:             "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat",
           }
         - {
             compiler:           "clang-cl",
             configure_preset:   "msvc-cl",
             build_preset:       "msvc-cl-release",
-            test_preset:        "test-msvc-cl-release",
+            test_preset:        "msvc-cl-release-test",
             vcvars:             "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build\\vcvars64.bat",
           }
 

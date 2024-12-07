@@ -31,7 +31,7 @@ jobs:
             compiler:           "clang++",
             configure_preset:   "clang",
             build_preset:       "clang-release",
-            test_preset:        "test-clang-release"
+            test_preset:        "clang-release-test"
           }
 
     steps:

@@ -48,7 +48,7 @@ jobs:
 
     - name: Install required build dependencies on ${{matrix.image}}
       run: |
-        choco install --limit-output cmake ninja
+        choco install --limit-output ninja
 
     - name: Checkout Repo
       uses: actions/checkout@v4

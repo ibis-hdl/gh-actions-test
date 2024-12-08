@@ -56,7 +56,6 @@ jobs:
     - name: Set Github runner's env (CXX=${{ matrix.cmake.compiler }})
       run: |
         echo "CXX=${{ matrix.cmake.compiler }}" >> $GITHUB_ENV
-        echo "CMAKE_CXX_COMPILER_LAUNCHER=sccache" >> $GITHUB_ENV
 
     - name: Install conan package manager
       id: conan2
@@ -101,6 +100,8 @@ jobs:
         echo $HOME
 
     - name: CMake configuration
+      env:
+        CMAKE_CXX_COMPILER_LAUNCHER: "sccache"
       run: |
         source .venv/bin/activate
         cmake --preset ${{ matrix.cmake.configure_preset }}

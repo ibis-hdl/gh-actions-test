@@ -42,7 +42,7 @@ jobs:
     - name: Setup Github's cache for conan
       uses: actions/cache@v4
       with:
-        key: ${{ runner.os }}-${{ matrix.config.compiler }}-conan-${{ hashFiles('conanfile.txt') }}
+        key: ${{ runner.os }}-conan-${{ hashFiles('conanfile.py') }}
         path: |
           ~/.conan2
 
@@ -56,8 +56,8 @@ jobs:
 
     - name: Configuration and build
       run: |
-        cmake --preset ci-linux-${{ matrix.config.compiler }}
-        cmake --build --preset ci-linux-${{ matrix.config.compiler }}
+        cmake --preset ${{ matrix.config.compiler }}
+        cmake --build --preset ${{ matrix.config.compiler }}-release
 
     - name: CCache statistics
       run: |
@@ -65,4 +65,4 @@ jobs:
 
     - name: Run Unit Test
       run: |
-        ctest --preset ci-linux-${{ matrix.config.compiler }}
+        ctest --preset test-${{ matrix.config.compiler }}-release

@@ -5,19 +5,38 @@ github_actions:
   - any-glob-to-any-file:
     - '.github/**'
 
-dictionaries:
+git:
+- all:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.gitignore'
+      - '.gitattributes'
+      - '.gitmodules'
+
+vscode:
+- all:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.vscode/settings.json'
+      - '.vscode/tasks.json'
+      - '.vscode/launch.json'
+
+cspell:
 - changed-files:
   - any-glob-to-any-file:
-    - '.dictionaries/**'
-    - '.cspell.json'
+    - '.vscode/dictionaries/**'
+    - '.vscode/cspell.json'
 
 cmake:
-- changed-files:
-  - any-glob-to-any-file:
-    - 'cmake/**/*.cmake'
-    - '**/CMakeLists.txt'
-    - 'CMakePresets.json'
-    - 'conanfile.py'
+- all:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'cmake/**/*.cmake'
+      - '**/CMakeLists.txt'
+      - 'CMakePresets.json'
+      - 'conanfile.py'
+    - all-globs-to-all-files:
+      - '!cmake/cmake-conan/**'
 
 python:
 - all:
@@ -70,13 +89,13 @@ testsuite:
 
 # branch related
 
-feature-br:
- - head-branch: ['^feature', 'feature']
+feature:
+ - head-branch: ['^feature', 'feature', '^next', 'next']
 
-update-br:
+update:
  - head-branch: ['^update', 'update', '^better', 'better']
 
-fix-br:
+fix:
  - head-branch: ['^fix', 'fix']
 
 # Add 'release' label to any PR that is opened against the `main` branch

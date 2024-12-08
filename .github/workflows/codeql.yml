@@ -8,7 +8,7 @@ on:
 jobs:
   analyze:
     name: Analyze
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       actions: read
       contents: read
@@ -17,19 +17,32 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'cpp', 'python' ]
+        include:
+          - language: cpp
+            build-mode: manual
+          - language: python
+            build-mode: autobuild
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        submodules: true
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
 
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v3
+    - if: ${{ matrix.build-mode == 'manual' }}
+      name: Build C++ code
+      run: |
+        sudo apt-get update && sudo apt-get install --no-install-recommends -y \
+          cmake ninja-build g++
+        pip --disable-pip-version-check --no-cache-dir install wheel conan
+        conan profile detect --force --name default
+        cmake --preset gcc
+        cmake --build --preset gcc-release
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3

@@ -1,8 +1,18 @@
+# build and Python's virtual env related
 build/**
 .venv/**
+.win64-venv/**
 
+# git submodule
+cmake/cmake-conan/**
+
+# archives
 *.url
 *.7z
 *.zip
 
+# CMake related
+Testing/**
+
 CMakeUserPresets.json
+ConanCMakePresets.json

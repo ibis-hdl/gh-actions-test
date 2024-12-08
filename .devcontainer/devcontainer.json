@@ -43,6 +43,7 @@
 			"extensions": [
 				"ms-vscode.cpptools",
 				"ms-vscode.cmake-tools",
+				"ms-vscode.cpptools-extension-pack",
 				"ms-python.python",
 				"github.vscode-github-actions",
 				"streetsidesoftware.code-spell-checker",

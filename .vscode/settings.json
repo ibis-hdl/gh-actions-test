@@ -1,3 +1,29 @@
 {
-    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "C_Cpp.codeAnalysis.clangTidy.enabled": false,
+    "C_Cpp.codeAnalysis.clangTidy.args": [
+        " -extra-arg=-std=c++20"
+    ],    
+    "C_Cpp.codeAnalysis.clangTidy.useBuildPath": true,
+    "cmake.configureOnOpen": false,
+    "cmake.useCMakePresets": "auto",
+    "cmake.options.statusBarVisibility": "compact",
+    "cmake.options.advanced": {
+        "cpack": {
+            "statusBarVisibility": "hidden"
+        },
+        "packagePreset": {
+            "statusBarVisibility": "hidden"
+        },
+        "workflow": {
+            "statusBarVisibility": "compact"
+        }
+    },
+    "python.terminal.activateEnvironment": true,
+    // https://stackoverflow.com/questions/72322120/vscode-import-x-could-not-be-resolved-even-though-listed-under-helpmodules
+    "python.analysis.extraPaths": [
+        "~/.local/share/pipx/venvs/conan/lib/python3.12/site-packages/",  // pipx
+        "${workspaceFolder}/.venv/lib/*/site-packages/",
+        "${workspaceFolder}/.win64-venv/"
+    ]
 }

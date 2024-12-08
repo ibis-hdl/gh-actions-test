@@ -1,0 +1,140 @@
+name: 'CMake Linux'
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+
+  # Note: [GHA Default environment variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables)
+
+  Linux:
+    name: Ubuntu Linux ${{ matrix.cmake.configure_preset }}
+    runs-on: ${{ matrix.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        image:                  [ ubuntu-24.04 ]
+        os:                     [ linux ]
+        cmake:
+        - {
+            compiler:           "g++",
+            configure_preset:   "gcc",
+            build_preset:       "gcc-release",
+            test_preset:        "gcc-release-test"
+          }
+        - {
+            compiler:           "clang++",
+            configure_preset:   "clang",
+            build_preset:       "clang-release",
+            test_preset:        "clang-release-test"
+          }
+        - {
+            compiler:           "clang++",
+            configure_preset:   "clang-libc++",
+            build_preset:       "clang-libc++-release",
+            test_preset:        "clang-libc++-release-test",
+            depend_pkgs:        "libc++-dev"
+          }
+        # exclude temporary clang-libc++ due to conan/cmake issues
+        # see: https://github.com/actions/runner/issues/1512
+        exclude:
+          - { cmake: {configure_preset: "clang-libc++" } }
+
+    steps:
+
+    - name: Trigger event
+      run: |
+        echo "Triggered by ${{ github.event_name }}"
+
+    - name: Install required build dependencies on ${{ matrix.image }}
+      # fail-safe check - only Ubuntu this days
+      if: startsWith(matrix.image, 'ubuntu')
+      run: |
+        sudo apt-get update
+        sudo apt-get install --no-install-recommends -y \
+          cmake ninja-build ccache g++ clang "${{ matrix.cmake.depend_pkgs }}"
+
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    - name: Set Github runner's env (CXX=${{ matrix.cmake.compiler }} etc.)
+      run: |
+        {
+          echo CXX=${{ matrix.cmake.compiler }}
+          echo CMAKE_CXX_COMPILER_LAUNCHER="$(which ccache)"
+          echo CCACHE_DIR=${HOME}/.cache/ccache
+          echo CCACHE_NOCOMPRESS=true   # GitHub actions automatically zstd compresses caches
+        } >> "$GITHUB_ENV"
+        # 10GB total for compile jobs and conan data, unlimited files
+        ccache --max-size 3GB --max-files 0
+
+    - name: Install Conan package manager
+      id: conan2
+      run: |
+        pip --disable-pip-version-check --no-cache-dir install wheel conan
+
+    - name: Cache Conan2 dependencies
+      id: conan2-cache
+      uses: actions/cache@v4
+      with:
+        key: ${{ matrix.os }}-${{ matrix.cmake.configure_preset }}-conan-${{ hashFiles('conanfile.py') }}
+        path: |
+          ~/.conan2
+
+    - name: Create Conan2 (default) profile
+      if: steps.conan2-cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        conan profile detect --force --name default
+        echo "Check to tweak Conan's profile to use libc++ ..."
+        if [[ "${{ matrix.cmake.configure_preset }}" ==  *"libc++"* ]]; then
+          echo "... *is* required, add ${{ matrix.cmake.configure_preset }}"
+          sed -i ~/.conan2/profiles/default -E \
+                  -e "s|^(compiler\.cppstd\s*)=(.*)$|\1=20|g" \
+                  -e "s|^(compiler\.libcxx\s*)=(.*)$|\1=libc++|g"
+          cp ~/.conan2/profiles/default ~/.conan2/profiles/${{ matrix.cmake.configure_preset }}
+          conan profile show -pr default # ${{ matrix.cmake.configure_preset }}
+        else
+          echo "... not required."
+          conan profile show -pr default
+        fi
+
+    - name: Setup Github cache for compiler cache (ccache)
+      uses: actions/cache@v4
+      with:
+        key: ${{ matrix.os }}-${{ matrix.cmake.compiler }}-ccache
+        path: |
+          ~/.config/ccache
+          ~/.cache/ccache
+
+    - name: Show CMake configure and build pre-conditions
+      if: false
+      run: |
+        env
+        pwd
+        echo "GITHUB_WORKSPACE = ${{ env.GITHUB_WORKSPACE }}"
+        ls -alF  ~/.conan2
+        (cd ~/.conan2 && pwd)
+        echo $HOME
+
+    - name: CMake configuration
+      run: |
+        # conan list '*'
+        conan profile show
+        cmake --preset ${{ matrix.cmake.configure_preset }}
+
+    - name: CMake build
+      run: |
+        cmake --build --preset ${{ matrix.cmake.build_preset }}
+
+    - name: Run Unit Test
+      run: |
+        ctest --preset ${{ matrix.cmake.test_preset }}
+
+    - name: CCache statistics
+      run: |
+        ccache --show-stats

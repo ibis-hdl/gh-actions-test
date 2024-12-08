@@ -1,0 +1,47 @@
+{
+    "version": 8,
+    "include": [
+        "common.json"
+    ],
+    "configurePresets": [
+        {
+            "name": "compiler-msvc",
+            "description": "Microsoft Visual Studio C++ compiler",
+            "hidden": true,
+            "inherits": [],
+            "cacheVariables": {
+                "CMAKE_C_COMPILER": "cl",
+                "CMAKE_CXX_COMPILER": "cl"
+            }
+        },
+        {
+            "name": "msvc-release-build-type",
+            "hidden": true,
+            "inherits": [
+                "compiler-msvc",
+                "release-build-type"
+            ],
+            "cacheVariables": {}
+        },
+        {
+            "name": "msvc-debug-build-type",
+            "hidden": true,
+            "inherits": [
+                "compiler-msvc",
+                "debug-build-type"
+            ],
+            "cacheVariables": {}
+        },
+        {
+            "name": "msvc-release-build-type-with-debug",
+            "hidden": true,
+            "inherits": [
+                "compiler-msvc",
+                "release-build-type-with-debug"
+            ],
+            "cacheVariables": {}
+        }
+    ],
+    "buildPresets": [],
+    "testPresets": []
+}

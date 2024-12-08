@@ -1,0 +1,185 @@
+{
+    "version": 8,
+    "include": [
+        "os.json"
+    ],
+    "configurePresets": [
+        {
+            "name": "cmake-default-policies",
+            "description": "Set CMake policies",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_POLICY_DEFAULT_CMP0167": "NEW"
+            }
+        },
+        {
+            "name": "cmake-default-configure-settings",
+            "description": "Enable, Disable some CMake warnings, e.g. '--no-warn-unused-cli'",
+            "hidden": true,
+            "warnings": {
+                "unusedCli": false
+            },
+            "inherits": [
+                "cmake-default-policies"
+            ],
+            "cacheVariables": {
+                "CMAKE_VERBOSE_MAKEFILE": "ON"
+            }
+        },
+        {
+            "name": "cmake-pedantic-configure-settings",
+            "description": "Enable CMake pedantic warnings",
+            "hidden": true,
+            "warnings": {
+                "dev": true,
+                "deprecated": true,
+                "uninitialized": false,
+                "unusedCli": true,
+                "systemVars": false
+            },
+            "inherits": [
+                "cmake-default-policies"
+            ],
+            "cacheVariables": {
+                "CMAKE_VERBOSE_MAKEFILE": "ON"
+            }
+        },
+        {
+            "name": "ninja-default-settings",
+            "description": "Common settings related to build tool Ninja.",
+            "hidden": true,
+            "binaryDir": "${sourceDir}/build/",
+            "cacheVariables": {
+                "CMAKE_MAKE_PROGRAM": "ninja",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": true
+            },
+            "environment": {
+                "NINJA_STATUS": "[%f/%t (%es)] "
+            }
+        },
+        {
+            "name": "ninja-single-config",
+            "description": "Traditional single-config Ninja generator.",
+            "hidden": true,
+            "generator": "Ninja",
+            "inherits": [
+                "ninja-default-settings"
+            ]
+        },
+        {
+            "name": "ninja-multi-config",
+            "description": "Multiple configurations for Visual Studio and XCode.",
+            "hidden": true,
+            "generator": "Ninja Multi-Config",
+            "inherits": [
+                "ninja-default-settings"
+            ],
+            "cacheVariables": {
+                "CMAKE_CONFIGURATION_TYPES": "Debug;Release;RelWithDebInfo",
+                "CMAKE_DEFAULT_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "settings-stdlib-libc++",
+            "description": "Settings to compile and link with libc++",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_CXX_FLAGS": "-stdlib=libc++",
+                "CMAKE_EXE_LINKER_FLAGS": "-stdlib=libc++",
+                "CMAKE_SHARED_LINKER_FLAGS": "-stdlib=libc++"
+            }
+        },
+        {
+            "name": "release-build-type",
+            "description": "CMake Release build target",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "debug-build-type",
+            "description": "CMake Debug build target",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "release-build-type-with-debug",
+            "description": "CMake Release with Debug symbols build target",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "name": "clang-tidy",
+            "description": "CMake Clang-Tidy build target",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_CXX_CLANG_TIDY": "clang-tidy"
+            }
+        },
+        {
+            "name": "default-install-settings",
+            "description": "Default build and install directories",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/${presetName}/install"
+            }
+        },
+        {
+            "name": "default-environment",
+            "description": "Default environment variables for the CMake process",
+            "hidden": true,
+            "environment": {}
+        },
+        {
+            "name": "default-compiler-cache-settings",
+            "hidden": true,
+            "environment": {
+                "CCACHE_BASEDIR": "${sourceDir}",
+                "CCACHE_SLOPPINESS": "pch_defines,time_macros"
+            }
+        },
+        {
+            "name": "ccache",
+            "description": "Ccache compiler cache.",
+            "hidden": true,
+            "inherits": [
+                "default-compiler-cache-settings"
+            ],
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER_LAUNCHER": "sccache"
+            }
+        },
+        {
+            "name": "sccache",
+            "description": "Mozilla's sccache ccache-like tool.",
+            "hidden": true,
+            "inherits": [
+                "default-compiler-cache-settings"
+            ],
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER_LAUNCHER": "sccache"
+            }
+        }
+    ],
+    "buildPresets": [],
+    "testPresets": [
+        {
+            "name": "default-testPreset",
+            "hidden": true,
+            "output": {
+                "outputOnFailure": true,
+                "verbosity": "verbose"
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": false,
+                "timeout": 60
+            }
+        }
+    ]
+}

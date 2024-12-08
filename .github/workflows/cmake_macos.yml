@@ -1,0 +1,120 @@
+name: 'CMake macOS'
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  # https://github.com/Mozilla-Actions/sccache-action
+  SCCACHE_GHA_ENABLED: "true"
+  # 3GB; 10GB total for 4 compile jobs and conan data
+  SCCACHE_CACHE_SIZE : 3G
+
+jobs:
+
+  # Note: [GHA Default environment variables](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#default-environment-variables)
+
+  macOS:
+    name: macOS ${{ matrix.cmake.configure_preset }}
+    runs-on: ${{ matrix.image }}
+    # if: false # always skip job
+    strategy:
+      fail-fast: false
+      matrix:
+        # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md
+        image:    [ macos-15 ]
+        os:       [ macos ]
+        cmake:
+        - {
+            compiler:           "clang++",
+            configure_preset:   "clang",
+            build_preset:       "clang-release",
+            test_preset:        "clang-release-test"
+          }
+
+    steps:
+
+    - name: Trigger event
+      run: |
+        echo "Triggered by ${{ github.event_name }}"
+
+    - name: Install required build dependencies on ${{ matrix.image }}
+      # [macOS15](
+      #  https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md)
+      run: |
+        brew update
+        brew install ninja
+        # set the path to homebrew's LLVM
+        echo "$(brew --prefix llvm@18)/bin" >> $GITHUB_PATH
+
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    - name: Set Github runner's env (CXX=${{ matrix.cmake.compiler }})
+      run: |
+        echo "CXX=${{ matrix.cmake.compiler }}" >> $GITHUB_ENV
+
+    - name: Install conan package manager
+      id: conan2
+      # cope with [PEP 668 – Marking Python base environments as “externally managed”](
+      #  https://peps.python.org/pep-0668/).
+      run: |
+        python3 -m venv .venv
+        source .venv/bin/activate
+        pip3 --disable-pip-version-check --no-cache-dir install wheel conan
+        deactivate
+
+    - name: Cache Conan2 dependencies
+      id: conan2-cache
+      uses: actions/cache@v4
+      with:
+        key: ${{ matrix.os }}-${{ matrix.cmake.configure_preset }}-conan-${{ hashFiles('conanfile.py') }}
+        path: |
+          ~/.conan2
+
+    - name: Create Conan2 (default) profile
+      if: ${{ steps.conan2-cache.outputs.cache-hit != 'true' }}
+      run: |
+        source .venv/bin/activate
+        conan profile detect --force --name default
+        deactivate
+
+    - name: Setup Github cache for compiler cache (Mozilla sccache-cache)
+      uses: mozilla-actions/sccache-action@v0.0.6
+      env:
+        SCCACHE_GHA_ENABLED: "true"
+
+    - name: Show CMake configure and build pre-conditions
+      if: false
+      shell: bash
+      run: |
+        # env
+        pwd
+        ls -alF .
+        echo ${{ env.GITHUB_WORKSPACE }}
+        ls -alF  ~/.conan2
+        (cd ~/.conan2 && pwd)
+        echo $HOME
+
+    - name: CMake configuration
+      env:
+        CMAKE_CXX_COMPILER_LAUNCHER: "sccache"
+      run: |
+        source .venv/bin/activate
+        cmake --preset ${{ matrix.cmake.configure_preset }}
+        deactivate
+
+    - name: CMake build
+      run: |
+        source .venv/bin/activate
+        cmake --build --preset ${{ matrix.cmake.build_preset }}
+        deactivate
+
+    - name: Run Unit Test
+      run: |
+        source .venv/bin/activate
+        ctest --preset ${{ matrix.cmake.test_preset }}
+        deactivate

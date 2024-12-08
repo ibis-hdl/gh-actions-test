@@ -96,7 +96,9 @@ jobs:
     - name: CMake configuration
       shell: cmd
       env:
-        CMAKE_CXX_COMPILER_LAUNCHER: "sccache"
+        # Did run into trouble with Conan-CMake provider and sccache on build of
+        # Debug build (Release works fine) ...
+        CMAKE_CXX_COMPILER_LAUNCHER: ${{ matrix.cmake.configure_preset != 'msvc' && 'sccache' || '' }}
       run: |
         call "${{ matrix.cmake.vcvars }}"
         cmake --preset ${{ matrix.cmake.configure_preset }}

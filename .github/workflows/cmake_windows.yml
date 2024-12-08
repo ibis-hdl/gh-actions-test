@@ -55,9 +55,10 @@ jobs:
       with:
         submodules: true
 
-    - name: Set Github runner's env (CXX=${{ matrix.cmake.compiler }}) 
-      env:
-        CXX=${{ matrix.cmake.compiler }}
+    - name: Set Github runner's env (CXX=${{ matrix.cmake.compiler }})
+      shell: cmd    
+      run: |
+        echo "CXX=${{ matrix.cmake.compiler }}" >> $GITHUB_ENV
 
     - name: Install conan package manager
       id: conan2
@@ -92,14 +93,12 @@ jobs:
         rem dir /s /b C:\\Users\\runneradmin\\.conan2
         echo $HOME
 
-    - name: Conditionally set CMAKE_CXX_COMPILER_LAUNCHER
-      # Run into trouble using Conan-CMake (only Debug, Release success) and sccache on MSVC
-      if: ${{ matrix.cmake.configure_preset != "msvc" }}
-      env:
-        CMAKE_CXX_COMPILER_LAUNCHER: "sccache"         
-                
     - name: CMake configuration
       shell: cmd
+      env:
+        # Did run into trouble with Conan-CMake provider and sccache on build of
+        # Debug build (Release works fine) ...
+        CMAKE_CXX_COMPILER_LAUNCHER: if ${{ matrix.cmake.configure_preset != 'msvc' && 'sccache' || '' }}
       run: |
         call "${{ matrix.cmake.vcvars }}"
         cmake --preset ${{ matrix.cmake.configure_preset }}

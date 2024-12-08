@@ -8,6 +8,8 @@ on:
 env:
   # https://github.com/Mozilla-Actions/sccache-action
   SCCACHE_GHA_ENABLED: "true"
+  # 3GB; 10GB total for 4 compile jobs and conan data
+  SCCACHE_CACHE_SIZE : 3G
 
 jobs:
 
@@ -46,9 +48,7 @@ jobs:
 
     - name: Install required build dependencies on ${{matrix.image}}
       run: |
-        choco --limit-output install ninja
-        # with cmake.install v3.31.2 got Generic MSI Error....
-        choco --limit-output install cmake --version=3.30.6
+        choco install --limit-output cmake ninja
 
     - name: Checkout Repo
       uses: actions/checkout@v4

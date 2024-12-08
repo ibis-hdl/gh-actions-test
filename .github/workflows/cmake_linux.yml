@@ -68,7 +68,7 @@ jobs:
       run: |
         {
           echo CXX=${{ matrix.cmake.compiler }}
-          echo CMAKE_CXX_COMPILER_LAUNCHER=${which ccache}
+          echo CMAKE_CXX_COMPILER_LAUNCHER="$(which ccache)"
           echo CCACHE_DIR=${HOME}/.cache/ccache
           echo CCACHE_NOCOMPRESS=true   # GitHub actions automatically zstd compresses caches
         } >> "$GITHUB_ENV"

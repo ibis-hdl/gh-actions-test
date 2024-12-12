@@ -79,7 +79,7 @@ jobs:
         conan profile detect --force --name default
 
     - name: Setup Github cache for compiler cache (Mozilla sccache-cache)
-      uses: mozilla-actions/sccache-action@v0.0.6
+      uses: mozilla-actions/sccache-action@v0.0.7
       env:
         SCCACHE_GHA_ENABLED: "true"
 

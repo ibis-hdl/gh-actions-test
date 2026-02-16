@@ -30,7 +30,7 @@ jobs:
 
     - name: Check Spelling [Markdown]
       id: spellcheck
-      uses: rojopolis/spellcheck-github-actions@0.45.0
+      uses: rojopolis/spellcheck-github-actions@0.58.0
       with:
         config_path: .github/config/spellcheck.yml
         source_files: ${{ env.MARKDOWN_FILES }}

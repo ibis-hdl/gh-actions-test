@@ -16,7 +16,7 @@ jobs:
         sudo apt-get install --no-install-recommends -y cmake ninja-build ccache clang clang-tools
 
     - name: Checkout Repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         submodules: true
 

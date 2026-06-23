@@ -67,7 +67,7 @@ jobs:
 
     - name: Cache Conan2 dependencies
       id: conan2-cache
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         key: ${{ matrix.os }}-${{ matrix.cmake.configure_preset }}-conan-${{ hashFiles('conanfile.py') }}
         path: |
